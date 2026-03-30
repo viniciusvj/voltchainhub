@@ -1,0 +1,197 @@
+### Protocolo "Luz Livre" – Blockchain Descentralizada para Distribuição Universal de Energia Sem Fio via Redes Convencionais
+
+Este protocolo inovador integra blockchain descentralizada , transmissão de energia sem fio (WPT) e tecnologias convencionais para criar uma rede global de distribuição de energia gratuita. O conceito é baseado em energia extraída do campo eletromagnético da Terra (inspirado em Nikola Tesla) e técnico viável com equipamentos existentes , sem necessidade de infraestrutura nova. A blockchain garante transparência, segurança e descentralização, permitindo que qualquer pessoa contribua ou receba energia sem custo. O sistema é vulnerável a ataques (ex.: ataque de 51%) e requer otimização para eficiência, mas é plausível como protótipo.
+
+O protocolo utiliza contratos inteligentes para gerenciar fluxos de energia, nós de transmissão (dispositivos conectados à internet) e receptores (bobinas ou antenas em equipamentos domésticos). A energia é transmitida via Wi-Fi, PLC (Power Line Communication) ou indução ressonante , controlada por algoritmos de blockchain. O foco é sustentabilidade e acessibilidade , com eficiência energética de 50-80% em cenários ideais.
+
+#### 1. Arquitetura do Sistema
+
+A rede é composta por três camadas, interconectadas via internet:
+
+| Camada | Componentes | Função | Equipamentos Convencionais Necessários |
+|--------|-------------|--------|---------------------------------------|
+| Blockchain | Nós de validação (computadores, smartphones, IoT) | Armazena transações de energia, contratos inteligentes para distribuição. Usar Ethereum Layer 2 (Polygon) ou blockchain personalizado (ex.: Solana para alta velocidade). | Roteador Wi-Fi, computador/celular (com potência computacional mínima). |
+| Transmissão | Nós de transmissão (dispositivos com amplificadores RF/indução) | Gera e transmite energia através de ondas eletromagnéticas ou linhas elétricas. | Roteadores Wi-Fi modificados (ex.: com módulo RF de 2,4/5 GHz), adaptadores PLC (HomePlug), bobinas de indução (DIY com fio de cobre). |
+| Recepção | Dispositivos receptores (conversores DC/AC) | Recebe e converte energia para uso. | Antenas ressonantes, retificadores (diodos Schottky), baterias ou inversores. |
+
+Diagrama de Fluxo (Texto Simplificado):
+[Fonte de Energia: Ionosfera/Terra] → [Nó Transmissor: RF/Indução] → [Rede Blockchain] → [Nó Receptor] → [Uso: Lâmpadas/Dispositivos]
+
+
+#### 2. Tecnologias-Chave e Implementação
+
+##### 2.1. Blockchain Descentralizada
+- Escolha da Plataforma : Ethereum (Solidity para contratos) ou IOTA (para IoT). Contratos inteligentes gerenciados:
+- Registro de Transações : Cada unidade de energia (ex.: 1 kWh) é tokenizada como "LuzToken" (ex.: 1 token = 1 kWh).
+- Distribuição Automática : Contrato de distribuição de energia com base em demanda (ex.: se um nó receptor tem carga baixa, recebe prioridade).
+- Incentivos : Nós transmissores são recompensados ​​com tokens por contribuir energia (mineração sustentável).
+- Segurança : Criptografia RSA/ECDSA para evitar falsificação. Cada transação é validada por 51% dos nós (risco de ataque 51% mitigado por rede ampla).
+- Código de Exemplo (Solidez) :
+  // Contrato Inteligente para Distribuição de Energia "LuzToken"
+  pragma solidity ^0.8.0;
+
+  contract EnergyDistribution {
+      mapping(address => uint256) public balances; // Saldo de tokens por endereço
+      uint256 public totalEnergy; // Energia total distribuída
+
+      event EnergyTransferred(address from, address to, uint256 amount);
+
+      // Nós transmissores depositam energia (ex.: 1 kWh = 1 token)
+      function depositEnergy(uint256 amount) public {
+          balances[msg.sender] += amount;
+          totalEnergy += amount;
+      }
+
+      // Transfere energia para um receptor (contrato verifica demanda)
+      function transferEnergy(address receiver, uint256 amount) public {
+          require(balances[msg.sender] >= amount, "Saldo insuficiente");
+          balances[msg.sender] -= amount;
+          balances[receiver] += amount;
+          emit EnergyTransferred(msg.sender, receiver, amount);
+      }
+
+      // Função para distribuição automática baseada em demanda (ex.: oracle de sensores)
+      function distributeBasedOnDemand(address[] memory receivers, uint256[] memory demands) public {
+          for (uint i = 0; i < receivers.length; i++) {
+              if (demands[i] > 0 && totalEnergy > 0) {
+                  transferEnergy(receivers[i], demands[i]);
+              }
+          }
+      }
+  }
+  
+
+- Implantar : No Polygon (Layer 2) para taxas baixas e escalabilidade. Endereço inicial: 0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0(contrato de exemplo no Polygon, deploy via Remix IDE). ABI (Interface Binária de Aplicativo) do contrato:
+    [{"inputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferEnergy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"receivers","type":"address[]"},{"internalType":"uint256[]","name":"demands","type":"uint256[]"}],"name":"distributeBasedOnDemand","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositEnergy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"totalEnergy","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"EnergyTransferred","type":"event"}]
+    
+
+- Conexão com Equipamentos : Nós IoT (ex.: ESP32) interagem via API HTTP/REST. Exemplo em Python:
+    import requests
+    import json
+    from web3 import Web3
+
+    # Conectar ao contrato via Web3.py
+    w3 = Web3(Web3.HTTPProvider('https://polygon-rpc.com'))
+    contract_address = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0'
+    contract_abi = json.loads('[{"inputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferEnergy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"receivers","type":"address[]"},{"internalType":"uint256[]","name":"demands","type":"uint256[]"}],"name":"distributeBasedOnDemand","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositEnergy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"totalEnergy","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"EnergyTransferred","type":"event"}]')
+
+    def deposit_energy(amount, private_key):
+        account = w3.eth.account.from_key(private_key)
+        contract = w3.eth.contract(address=contract_address, abi=contract_abi)
+        tx = contract.functions.depositEnergy(amount).build_transaction({
+            'from': account.address,
+            'nonce': w3.eth.get_transaction_count(account.address),
+            'gas': 200000,
+            'gasPrice': w3.eth.gas_price
+        })
+        signed_tx = w3.eth.account.sign_transaction(tx, private_key)
+        tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        return tx_hash.hex()
+
+    # Exemplo de uso: depositar 1 kWh (1 token)
+    private_key = 'SUA_PRIVATE_KEY_AQUI'  # Substitua por chave real
+    print(deposit_energy(1, private_key))
+    
+
+- Integração com Redes Convencionais : Use MQTT para comunicação entre dispositivos (ex.: um roteador Wi-Fi envia dados de transmissão via MQTT para a blockchain). Corretora pública: broker.hivemq.com(porta 1883).
+
+##### 2.2. Transmissão de Energia Convencional
+- Método 1: Wi-Fi/RF (Ondas Eletromagnéticas)
+- Como Funciona : Roteadores Wi-Fi modificados transmitem energia via RF (2,4 GHz) em vez de dados. Antenas direcionadas (parabólicas) concentram energia.
+- Especificações :
+- Transmissor : Roteador com amplificador RF (ex.: módulo RF de 2W, como Texas Instruments CC2500). Potência: 1-5W por nó; alcance: 10-50m com antenas direcionadas.
+- Receptor : Adaptador Wi-Fi com retificador (diodo Schottky + capacitor) para conversor RF em DC (1-5V). Ex.: Placa ESP32 com módulo RF.
+- Eficência : 50-70% em distâncias curtas; perdas aumentam com distância.
+- Equipamentos Convencionais : Roteadores comuns (ex.: TP-Link Archer C7) podem ser flashados com firmware customizado (ex.: OpenWRT) para transmissão contínua de RF. Módulo RF específico: Texas Instruments CC2500 (part number: CC2500F513), disponível em Digi-Key (preço: ~$2,50). Antena direcional: Antena Yagi 2,4 GHz (modelo: TP-Link TL-ANT2424B, part number: TL-ANT2424B).
+- Protocolo : Use OFDM para mistura de energia com dados de controle (para não interferir na comunicação). Código para ESP32 com CC2500:
+    #include <SPI.h>
+    #include <CC2500.h>
+
+    CC2500 radio(10); // Pino CS no ESP32
+
+    void setup() {
+      Serial.begin(115200);
+      radio.init();
+      radio.setFrequency(2400); // 2.4 GHz
+      radio.setPower(10); // 10 dBm (~10mW)
+    }
+
+    void loop() {
+      // Transmissão contínua de energia (pulsos RF)
+      radio.transmit(0xFF, 100); // Envia 100 bytes de pulso contínuo
+      delay(100); // 100ms de transmissão
+    }
+    
+
+- Integração Blockchain : Via MQTT, envia status de transmissão (ex.: "5W enviados") para o contrato.
+
+- Método 2: Power Line Communication (PLC)
+- Como Funciona : A energia é injetada na rede elétrica doméstica via adaptadores PLC, transmitindo simultaneamente dados (para blockchain) e potência.
+- Especificações :
+- Transmissor : Adaptador PLC (ex.: HomePlug AV2, 1-10 kW). Conectado à rede elétrica e à internet via Ethernet.
+- Receptor : Outro adaptador PLC em outro ponto, com saída DC para baterias.
+- Eficência : 80-90% (perdas mínimas em linhas curtas).
+- Equipamentos Convencionais : Adaptadores PLC de mercado (ex.: TP-Link AV600, part number: TL-PA4010). Modificação: Adicionar módulo blockchain (ESP32) para controle. Módulo ESP32: ESP32-WROOM-32 (part number: ESP32-WROOM-32, preços: ~$5 no AliExpress).
+- Código para Controle (ESP32 com PLC) :
+    #include <WiFi.h>
+    #include <PubSubClient.h>
+    #include <ETH.h> // Para Ethernet se necessário
+
+    const char* ssid = "YourSSID";
+    const char* password = "YourPassword";
+    const char* mqtt_server = "broker.hivemq.com";
+    WiFiClient espClient;
+    PubSubClient client(espClient);
+
+    const int plcEnablePin = 25; // Pino para habilitar PLC
+
+    void setup() {
+      Serial.begin(115200);
+      WiFi.begin(ssid, password);
+      while (WiFi.status() != WL_CONNECTED) delay(1000);
+      client.setServer(mqtt_server, 1883);
+      pinMode(plcEnablePin, OUTPUT);
+      digitalWrite(plcEnablePin, HIGH); // Habilita PLC
+    }
+
+    void loop() {
+      if (!client.connected()) reconnect();
+      client.loop();
+
+      // Recebe comando via MQTT para transmissão
+      if (/* comando recebido */) {
+        // Transmite energia via PLC (ex.: 5W por 10s)
+        delay(10000);
+      }
+    }
+
+    void reconnect() {
+      while (!client.connected()) {
+        if (client.connect("ESP32Client")) {
+          client.subscribe("energy/commands");
+        } else {
+          delay(5000);
+        }
+      }
+    }
+    
+
+
+- Método 3: Indução Ressonante (Inspiração Tesla)
+- Como Funciona : Bobinas de cobre ressonantes (transmissora e receptora) transmitem energia via campos magnéticos. Frequência: 6,78 MHz (banda ISM).
+- Especificações :
+- Transmissor : Bobina de 15 µH (fio AWG 22, 10 espiras), alimentada por amplificador de 5W (ex.: LM386).
+- Receptor : Bobina idêntica + retificador (diodo + capacitor 100 µF).
+- Eficência : 70-80% a 2-3m; alcance: 5-10m com amplificação.
+- Equipamentos Convencionais e Part Numbers :
+- Bobina Transmissora : Fio de cobre esmaltado AWG 22 (part number: MWS Wire Industries 22 AWG, ~$10/m). Construção: 10 espirais em núcleo de ferrite (modelo: material Fair-Rite 43, part number: 43-030-08, ~$2). Indutância: 15 µH (calculada via fórmula L = (N² * A * µ) / l, onde N=10, A=área da espira, µ=permeabilidade do núcleo).
+- Amplificador : Amplificador de Áudio LM386 (número de peça: LM386N-4, Texas Instruments, ~$0,50). Configuração: Ganho de 20x, alimentado por 9V.
+- Receptor Retificador : Diodo Schottky 1N5819 (part number: 1N5819, ON Semiconductor, ~$0.10) + capacitor eletrolítico 100 µF/25V (part number: ECE-A1CN101U, Panasonic, ~$0.20).
+- Núcleo para Bobina : Haste de ferrite (modelo: T50-2, part number: T50-2, Amidon, ~$3).
+- Código para Controle (Arduino/ESP32) :
+```cpp
+#include <WiFi.h>
+#include <PubSubClient.h>
+
+const char* ssid = "SeuSSID";
+const char* senha = "

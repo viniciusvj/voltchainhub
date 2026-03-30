@@ -1,0 +1,33 @@
+# Node
+node_modules/
+.env
+.env.local
+dist/
+build/
+
+# Java / OpenEMS
+*.class
+*.jar
+target/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Hardhat
+artifacts/
+cache/
+typechain-types/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
