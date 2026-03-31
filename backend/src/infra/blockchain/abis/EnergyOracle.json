@@ -1,0 +1,5 @@
+[
+  "function submitReading(string deviceId, uint256 wattsH, uint256 timestamp, uint256 nonce, bytes32 sigR, bytes32 sigS) external",
+  "function submitReadingsBatch(string[] deviceIds, uint256[] wattsH, uint256[] timestamps, uint256[] nonces) external",
+  "event ReadingVerified(string indexed deviceId, uint256 wattsH, uint256 timestamp)"
+]

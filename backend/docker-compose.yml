@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - LOG_LEVEL=info
+      - MQTT_URL=mqtt://mosquitto:1883
+      - DB_PATH=/app/data/voltchain.db
+      - RPC_URL=${RPC_URL:-https://polygon-rpc.com}
+      - CHAIN_ID=137
+      - ORACLE_PRIVATE_KEY=${ORACLE_PRIVATE_KEY:-}
+      - ENERGY_ORACLE_ADDRESS=${ENERGY_ORACLE_ADDRESS:-}
+      - LUZ_TOKEN_ADDRESS=${LUZ_TOKEN_ADDRESS:-}
+      - DEVICE_REGISTRY_ADDRESS=${DEVICE_REGISTRY_ADDRESS:-}
+      - ENERGY_VAULT_ADDRESS=${ENERGY_VAULT_ADDRESS:-}
+      - OPENEMS_URL=http://host.docker.internal:8084
+      - OPENEMS_USERNAME=admin
+      - OPENEMS_PASSWORD=admin
+      - MARKET_CYCLE_SECONDS=300
+      - MIN_MARKET_PARTICIPANTS=2
+      - ANOMALY_ZSCORE_THRESHOLD=3.0
+      - ORACLE_BATCH_INTERVAL_SECONDS=60
+    volumes:
+      - sqlite-data:/app/data
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+    restart: unless-stopped
+
+volumes:
+  sqlite-data:
+  mosquitto-data:
+  mosquitto-log:

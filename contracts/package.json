@@ -1,0 +1,33 @@
+{
+  "name": "voltchainhub-contracts",
+  "version": "0.1.0",
+  "description": "VoltchainHub - Decentralized P2P Energy Protocol Smart Contracts",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "deploy:mumbai": "hardhat run scripts/deploy.ts --network mumbai",
+    "deploy:amoy": "hardhat run scripts/deploy.ts --network amoy",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost"
+  },
+  "keywords": [
+    "energy",
+    "p2p",
+    "blockchain",
+    "polygon",
+    "solidity"
+  ],
+  "author": "Vinicius",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "hardhat": "^2.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^17.3.1"
+  }
+}

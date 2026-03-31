@@ -1,0 +1,9 @@
+[
+  "function lock(address buyer, address seller, uint256 amountKWh, uint256 pricePerKWh) external returns (bytes32 tradeId)",
+  "function release(bytes32 tradeId) external",
+  "function cancel(bytes32 tradeId) external",
+  "function getTrade(bytes32 tradeId) view returns (address buyer, address seller, uint256 amount, uint256 price, uint8 status)",
+  "event EscrowLocked(bytes32 indexed tradeId, address buyer, address seller, uint256 amount)",
+  "event EscrowReleased(bytes32 indexed tradeId)",
+  "event TransactionSettled(bytes32 indexed tradeId, address buyer, address seller, uint256 kWh, uint256 totalPrice)"
+]

@@ -1,0 +1,6 @@
+[
+  "function registerDevice(string deviceId, bytes publicKey, string deviceType) external",
+  "function getDevice(string deviceId) view returns (address owner, bytes publicKey, string deviceType, bool active)",
+  "function suspendDevice(string deviceId) external",
+  "event DeviceRegistered(string indexed deviceId, address indexed owner)"
+]

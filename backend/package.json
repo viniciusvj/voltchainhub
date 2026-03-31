@@ -1,0 +1,42 @@
+{
+  "name": "voltchainhub-backend",
+  "version": "0.1.0",
+  "description": "VoltChainHub — Decentralized P2P Energy Protocol Backend",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "fastify": "^5.2.0",
+    "@fastify/cors": "^11.0.0",
+    "@fastify/swagger": "^9.4.0",
+    "@fastify/swagger-ui": "^5.2.0",
+    "ethers": "^6.13.0",
+    "mqtt": "^5.10.0",
+    "better-sqlite3": "^11.7.0",
+    "@noble/curves": "^1.7.0",
+    "@noble/hashes": "^1.6.0",
+    "zod": "^3.24.0",
+    "pino": "^9.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.10.0",
+    "@types/better-sqlite3": "^7.6.12",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^9.16.0",
+    "tsx": "^4.19.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "license": "Apache-2.0"
+}
