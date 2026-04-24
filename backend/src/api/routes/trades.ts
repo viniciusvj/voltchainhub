@@ -31,14 +31,14 @@ export function registerTradeRoutes(
         return reply.status(400).send({ error: 'Missing required fields: sessionId, seller, buyer, kWh, pricePerKWh' });
       }
 
-      const trade = {
+      const trade: import('../../domain/entities/Trade.js').Trade = {
         id: crypto.randomUUID(),
         sessionId,
         seller,
         buyer,
         kWh,
         pricePerKWh,
-        status: 'pending' as const,
+        status: 'pending',
         txHash: null,
         createdAt: Date.now(),
         settledAt: null,
