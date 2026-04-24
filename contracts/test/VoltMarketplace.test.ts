@@ -323,4 +323,96 @@ describe("VoltMarketplace", function () {
       ).to.be.revertedWithCustomError(marketplace, "ZeroAddress");
     });
   });
+
+  describe("Event payload", function () {
+    it("should emit PaymentSettled with the complete Settlement struct", async function () {
+      const gross = ethers.parseEther("1000");
+      const expectedFee = (gross * 50n) / 10_000n;
+      const expectedNet = gross - expectedFee;
+
+      await brz.connect(operator).approve(await marketplace.getAddress(), gross);
+
+      const tx = await marketplace.connect(operator).settle(
+        orderId,
+        buyer.address,
+        seller.address,
+        await brz.getAddress(),
+        await brz.getAddress(),
+        gross,
+        expectedNet,
+      );
+      const receipt = await tx.wait();
+      const block = await ethers.provider.getBlock(receipt!.blockNumber!);
+      const log = receipt!.logs.find((l: any) => {
+        try {
+          return marketplace.interface.parseLog({ topics: [...l.topics], data: l.data })?.name === "PaymentSettled";
+        } catch { return false; }
+      });
+      const parsed = marketplace.interface.parseLog({ topics: [...log!.topics], data: log!.data });
+      const settlement = parsed!.args.settlement;
+
+      expect(parsed!.args.orderId).to.equal(orderId);
+      expect(parsed!.args.buyer).to.equal(buyer.address);
+      expect(parsed!.args.seller).to.equal(seller.address);
+      expect(settlement.buyer).to.equal(buyer.address);
+      expect(settlement.seller).to.equal(seller.address);
+      expect(settlement.payToken).to.equal(await brz.getAddress());
+      expect(settlement.receiveToken).to.equal(await brz.getAddress());
+      expect(settlement.grossAmount).to.equal(gross);
+      expect(settlement.feeAmount).to.equal(expectedFee);
+      expect(settlement.sellerReceived).to.equal(expectedNet);
+      expect(settlement.settledAt).to.equal(BigInt(block!.timestamp));
+    });
+  });
+
+  describe("Default pool fee", function () {
+    it("FEE_MANAGER_ROLE can update defaultPoolFee", async function () {
+      await expect(marketplace.setDefaultPoolFee(500))
+        .to.emit(marketplace, "PoolFeeUpdated")
+        .withArgs(3000, 500);
+      expect(await marketplace.defaultPoolFee()).to.equal(500);
+    });
+
+    it("non-manager cannot update defaultPoolFee", async function () {
+      await expect(marketplace.connect(random).setDefaultPoolFee(500))
+        .to.be.revertedWithCustomError(marketplace, "AccessControlUnauthorizedAccount");
+    });
+  });
+
+  describe("Reentrancy", function () {
+    it("should block re-entry from malicious ERC20 via nonReentrant guard", async function () {
+      const MaliciousF = await ethers.getContractFactory("MaliciousERC20");
+      const mal = await MaliciousF.deploy();
+      await mal.waitForDeployment();
+      await registry.addToken(await mal.getAddress(), Category.OTHER, 18, "MAL");
+      await mal.setTarget(await marketplace.getAddress());
+
+      const gross = ethers.parseEther("100");
+      await mal.mint(operator.address, gross * 2n);
+      await mal.connect(operator).approve(await marketplace.getAddress(), gross * 2n);
+
+      // Arm the malicious token so its _update tries to call settle again
+      await mal.arm(
+        orderId,
+        buyer.address,
+        seller.address,
+        await mal.getAddress(),
+        await mal.getAddress(),
+        gross,
+        0,
+      );
+
+      await expect(
+        marketplace.connect(operator).settle(
+          orderId,
+          buyer.address,
+          seller.address,
+          await mal.getAddress(),
+          await mal.getAddress(),
+          gross,
+          0,
+        )
+      ).to.be.revertedWithCustomError(marketplace, "ReentrancyGuardReentrantCall");
+    });
+  });
 });
