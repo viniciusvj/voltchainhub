@@ -1,4 +1,4 @@
-# VoltchainHub — Whitepaper v0.1
+# VoltchainHub | Whitepaper v0.1
 ## Protocolo Aberto de Energia Descentralizada para o Brasil
 
 **Versão:** 0.1-draft | **Data:** Março 2026 | **Licença:** Apache 2.0  
@@ -16,7 +16,7 @@ O Brasil caminha para 20 milhões de prosumidores solares até 2030, mas carece 
 
 ### 1.1 Energia Centralizada: Ineficiência e Custo
 
-O modelo elétrico brasileiro é estruturalmente centralizador. Geração em usinas distantes, transmissão em linhas de alta tensão com perdas médias de 14,9% (ANEEL, 2024), distribuição por concessionárias regionais com poder de monopólio legal — e o consumidor final pagando a conta de toda essa cadeia.
+O modelo elétrico brasileiro é estruturalmente centralizador. Geração em usinas distantes, transmissão em linhas de alta tensão com perdas médias de 14,9% (ANEEL, 2024), distribuição por concessionárias regionais com poder de monopólio legal. E o consumidor final pagando a conta de toda essa cadeia.
 
 A tarifa residencial média nacional ultrapassou **R$ 0,90/kWh** em 2025. Nesse valor estão embutidos: encargos setoriais (CDE, PROINFA, EER), perdas técnicas, perdas comerciais (furtos, inadimplência), custos de manutenção de infraestrutura do século XX e margem das distribuidoras. O brasileiro paga uma das tarifas mais caras do mundo em proporção à renda per capita.
 
@@ -26,7 +26,7 @@ O modelo funciona como um funil: energia entra no topo (grandes geradoras), perc
 
 A ANEEL REN 1000/2021 criou o marco legal da geração distribuída no Brasil. Em 2025, o país já ultrapassava **5 milhões de unidades** de micro e minigeração distribuída, majoritariamente solar fotovoltaica. A projeção é alcançar 20 milhões de prosumidores até 2030.
 
-O prosumidor brasileiro investe R$ 15.000–50.000 em um sistema solar, gera excedente de energia durante o dia e recebe em troca **créditos de energia** na distribuidora local — créditos que se expiram em 60 meses e são compensados em tarifas cheias de distribuição. Não há mercado real. Não há precificação dinâmica. Não há peer-to-peer.
+O prosumidor brasileiro investe R$ 15.000–50.000 em um sistema solar, gera excedente de energia durante o dia e recebe em troca **créditos de energia** na distribuidora local, créditos que expiram em 60 meses e são compensados em tarifas cheias de distribuição. Não há mercado real. Não há precificação dinâmica. Não há peer-to-peer.
 
 O resultado: prosumidores que poderiam vender energia a **R$ 0,05–0,15/kWh** para vizinhos são obrigados a "ceder" essa energia para a distribuidora a custo zero, que a revende com toda a sua estrutura de custos.
 
@@ -44,29 +44,29 @@ Nenhum desses padrões foi adaptado ao contexto brasileiro. Não existe implemen
 
 ### 2.1 Inspiração Tesla: Energia como Bem Comum
 
-Nikola Tesla dedicou sua vida a uma ideia radical: energia deveria ser tão acessível quanto o ar. Seu projeto Wardenclyffe Tower foi destruído não por falha técnica, mas por resistência econômica — porque energia livre não tem dono, não tem monopólio, não tem tarifa.
+Nikola Tesla dedicou sua vida a uma ideia radical: energia deveria ser tão acessível quanto o ar. Seu projeto Wardenclyffe Tower foi destruído não por falha técnica, mas por resistência econômica. Porque energia livre não tem dono, não tem monopólio, não tem tarifa.
 
-VoltchainHub herda esse espírito. Não porque acreditamos em física impossível, mas porque acreditamos que a tecnologia de 2026 — blockchain, IoT, protocolos abertos — nos dá as ferramentas para criar o que Tesla imaginou: uma infraestrutura de energia que serve ao povo, não ao monopólio.
+VoltchainHub herda esse espírito. Não porque acreditamos em física impossível, mas porque acreditamos que a tecnologia de 2026 (blockchain, IoT, protocolos abertos) nos dá as ferramentas para criar o que Tesla imaginou: uma infraestrutura de energia que serve ao povo, não ao monopólio.
 
 ### 2.2 O Que "Energia Livre" Realmente Significa
 
 "Energia livre" no contexto VoltchainHub não é violação da termodinâmica. É **liberdade de mercado**:
 
-- **Livre para gerar** — qualquer pessoa pode instalar geração e participar do protocolo
-- **Livre para vender** — sem intermediário obrigatório entre produtor e consumidor
-- **Livre para auditar** — todo código, todo contrato, toda transação é pública e verificável
-- **Livre de rent-seeking** — o protocolo não extrai valor, apenas facilita a troca
+- **Livre para gerar:** qualquer pessoa pode instalar geração e participar do protocolo
+- **Livre para vender:** sem intermediário obrigatório entre produtor e consumidor
+- **Livre para auditar:** todo código, todo contrato, toda transação é pública e verificável
+- **Livre de rent-seeking:** o protocolo não extrai valor, apenas facilita a troca
 
-O preço de equilíbrio no mercado P2P VoltchainHub converge para o custo marginal real de produção — próximo de zero para solar durante o dia. Esse é o "livre" que importa.
+O preço de equilíbrio no mercado P2P VoltchainHub converge para o custo marginal real de produção, próximo de zero para solar durante o dia. Esse é o "livre" que importa.
 
 ### 2.3 Princípios do Protocolo
 
-1. **Abertura total** — Apache 2.0, nenhum componente proprietário obrigatório
-2. **Soberania do dado** — medições ficam no dispositivo do prosumidor; blockchain registra apenas hashes e saldos
-3. **Composabilidade** — cada camada pode ser substituída; o protocolo não impõe lock-in
-4. **Neutralidade de rede** — o protocolo não favorece nenhum prosumidor, região ou tamanho de instalação
-5. **Conformidade regulatória** — opera dentro da ANEEL REN 1000, não contra ela
-6. **Progressividade** — começa simples (créditos tokenizados), evolui para mercado totalmente autônomo
+1. **Abertura total:** Apache 2.0, nenhum componente proprietário obrigatório
+2. **Soberania do dado:** medições ficam no dispositivo do prosumidor; blockchain registra apenas hashes e saldos
+3. **Composabilidade:** cada camada pode ser substituída; o protocolo não impõe lock-in
+4. **Neutralidade de rede:** o protocolo não favorece nenhum prosumidor, região ou tamanho de instalação
+5. **Conformidade regulatória:** opera dentro da ANEEL REN 1000, não contra ela
+6. **Progressividade:** começa simples (créditos tokenizados), evolui para mercado totalmente autônomo
 
 ---
 
@@ -78,7 +78,7 @@ O preço de equilíbrio no mercado P2P VoltchainHub converge para o custo margin
 ┌─────────────────────────────────────────────────────────────┐
 │  FRONTEND  │  Dashboard Web (React) + App Mobile           │
 ├─────────────────────────────────────────────────────────────┤
-│  BLOCKCHAIN│  Polygon PoS — LuzToken, DeviceRegistry,      │
+│  BLOCKCHAIN│  Polygon PoS: LuzToken, DeviceRegistry,      │
 │            │  EnergyOracle, EnergyVault                    │
 ├─────────────────────────────────────────────────────────────┤
 │  PROTOCOLO │  S2 Protocol (CEM↔RM) + SHIP (TLS over Wi-Fi) │
@@ -93,7 +93,7 @@ Cada camada é independente e substituível. Um prosumidor pode participar do pr
 
 ### 3.2 Camada Hardware: ESP32-S3 + PLC + WPT
 
-**ESP32-S3 — O Nó de Medição**
+**ESP32-S3: O Nó de Medição**
 
 O ESP32-S3 é o coração do dispositivo VoltchainHub. Com núcleo Xtensa LX7 dual-core a 240 MHz, 8MB PSRAM e suporte a ARM TrustZone via extensões de segurança, é o microcontrolador mais capaz da família Espressif no segmento de custo (< $5 USD).
 
@@ -105,7 +105,7 @@ Funções no protocolo:
 
 **PLC HomePlug AV — Transmissão pela Rede Elétrica**
 
-O HomePlug AV utiliza a própria fiação elétrica como meio de transmissão. Eficiência de até **88%** na transmissão de dados/comandos pelo cabo. Permite comunicação entre medidores sem infraestrutura adicional de rede — especialmente relevante para condomínios e microrredes industriais.
+O HomePlug AV utiliza a própria fiação elétrica como meio de transmissão. Eficiência de até **88%** na transmissão de dados/comandos pelo cabo. Permite comunicação entre medidores sem infraestrutura adicional de rede, especialmente relevante para condomínios e microrredes industriais.
 
 No contexto VoltchainHub, o PLC serve como backbone de comunicação local entre nós da microrrede, complementando (não substituindo) Wi-Fi/Ethernet onde disponível.
 
@@ -115,7 +115,7 @@ Para ambientes de curta distância (< 5m), o protocolo suporta transferência de
 
 ### 3.3 Camada Edge: OpenEMS + PowerMatcher
 
-**OpenEMS — Sistema de Gestão Energética**
+**OpenEMS: Sistema de Gestão Energética**
 
 OpenEMS (Open Energy Management System) é um framework Java open-source desenvolvido originalmente pela FENECON GmbH, hoje mantido por uma comunidade global. Compatível com **50+ fabricantes** de inversores, baterias, medidores e controladores (Fronius, SMA, Huawei, BYD, Victron, entre outros presentes no mercado brasileiro).
 
@@ -125,7 +125,7 @@ No VoltchainHub, o OpenEMS roda no edge node (Raspberry Pi 4 ou equivalente ARM)
 - Exposição de dados via REST API e WebSocket para o agente PowerMatcher
 - Interface com o contrato EnergyOracle via serviço de oracle
 
-**PowerMatcher — Mercado Multi-Agente**
+**PowerMatcher: Mercado Multi-Agente**
 
 PowerMatcher implementa um algoritmo de market clearing descentralizado. Cada dispositivo de energia (gerador, bateria, carga flexível) age como um **agente autônomo** que publica curvas de oferta/demanda. O concentrador (auctioneer) calcula o preço de equilíbrio local a cada **5 minutos**.
 
@@ -144,13 +144,13 @@ Resultado: precificação dinâmica local que reflete disponibilidade real de en
 
 **S2 Protocol (IEC 62746-10-3)**
 
-S2 define a interface entre o **Customer Energy Manager (CEM)** — o sistema que decide como usar a energia — e o **Resource Manager (RM)** — o dispositivo que executa. Implementado em Python (referência) e Rust (produção) no VoltchainHub.
+S2 define a interface entre o **Customer Energy Manager (CEM)**, o sistema que decide como usar a energia, e o **Resource Manager (RM)**, o dispositivo que executa. Implementado em Python (referência) e Rust (produção) no VoltchainHub.
 
 Modelos de controle suportados:
-- **FRBC** (Fill Rate Based Control) — baterias e armazenamento
-- **DDBC** (Demand Driven Based Control) — cargas flexíveis
-- **PEBC** (Power Envelope Based Control) — geração solar
-- **OMBC** (Operation Mode Based Control) — EVs e carregadores
+- **FRBC** (Fill Rate Based Control): baterias e armazenamento
+- **DDBC** (Demand Driven Based Control): cargas flexíveis
+- **PEBC** (Power Envelope Based Control): geração solar
+- **OMBC** (Operation Mode Based Control): EVs e carregadores
 
 **SHIP (Smart Home IP)**
 
@@ -167,10 +167,10 @@ SHIP provê a camada de transporte segura (TLS 1.3) para comunicação local ent
 
 | Contrato | Função |
 |---|---|
-| `LuzToken` | ERC-1155 multitoken — cada token ID representa 1 kWh de uma fonte/período específico |
+| `LuzToken` | ERC-1155 multitoken. Cada token ID representa 1 kWh de uma fonte/período específico |
 | `DeviceRegistry` | Registro e attestation de dispositivos ESP32-S3 |
 | `EnergyOracle` | Recebe leituras assinadas dos edge nodes e as valida on-chain |
-| `EnergyVault` | Escrow de transações P2P — bloqueia tokens até confirmação de entrega |
+| `EnergyVault` | Escrow de transações P2P. Bloqueia tokens até confirmação de entrega |
 
 ### 3.6 Diagrama de Fluxo Completo
 
@@ -207,7 +207,7 @@ SHIP provê a camada de transporte segura (TLS 1.3) para comunicação local ent
 ### 4.1 Tokenomics (ERC-1155)
 
 **Padrão:** ERC-1155 (multitoken)  
-**Razão do ERC-1155:** Permite que cada kWh carregue metadados de fonte (solar/eólico/bateria), timestamp e localização do gerador — essencial para certificados de energia renovável e rastreabilidade.
+**Razão do ERC-1155:** Permite que cada kWh carregue metadados de fonte (solar/eólico/bateria), timestamp e localização do gerador. Essencial para certificados de energia renovável e rastreabilidade.
 
 **Supply:** LuzToken não tem supply fixo. Tokens são **mintados** na medida em que energia é medida e verificada, e **queimados** quando energia é consumida. O supply total reflete o estoque verificado de energia disponível no protocolo.
 
@@ -296,19 +296,19 @@ A partir da **Fase 3**, o treasury é controlado pela DAO. Antes disso, por mult
 
 ### 5.1 Device Attestation (TrustZone + ECDSA)
 
-O maior vetor de ataque em um sistema de energia tokenizada é a **fraude de medição** — um dispositivo que reporta mais energia do que gerou. O VoltchainHub endereça isso em múltiplas camadas:
+O maior vetor de ataque em um sistema de energia tokenizada é a **fraude de medição**: um dispositivo que reporta mais energia do que gerou. O VoltchainHub endereça isso em múltiplas camadas:
 
-**Camada 1 — Hardware Security:**
+**Camada 1 – Hardware Security:**
 - Chave privada ECDSA P-256 gerada durante provisionamento no ESP32-S3
 - Chave armazenada em eFuse (one-time programmable, não legível por software)
 - TrustZone separa execução de assinatura do firmware principal
 
-**Camada 2 — Attestation On-Chain:**
+**Camada 2 – Attestation On-Chain:**
 - Durante registro, o dispositivo assina um challenge do contrato `DeviceRegistry`
 - A chave pública é registrada on-chain vinculada ao endereço do proprietário
 - Cada leitura subsequente inclui assinatura + nonce sequencial (previne replay attacks)
 
-**Camada 3 — Validação Estatística:**
+**Camada 3 – Validação Estatística:**
 - `EnergyOracle` mantém histórico de leituras por dispositivo
 - Anomalias (pico súbito, padrão impossível) geram flag e revisão manual
 - Threshold configurável por tipo de instalação (residencial vs. industrial)
@@ -318,7 +318,7 @@ O maior vetor de ataque em um sistema de energia tokenizada é a **fraude de med
 O `EnergyOracle` é o ponto crítico de confiança entre o mundo físico e a blockchain. O design segue o princípio de **minimização de confiança**:
 
 - **Multi-oracle:** Pelo menos 3 oracles independentes devem concordar para mint de tokens acima de 100 kWh
-- **Stake de operador:** Operadores de oracle fazem stake em MATIC — comportamento malicioso resulta em slash
+- **Stake de operador:** Operadores de oracle fazem stake em MATIC. Comportamento malicioso resulta em slash
 - **Janela de contestação:** 30 minutos após cada leitura para contestação por qualquer participante com evidência
 - **Fallback:** Se oracle principal offline > 15 min, ciclo de clearing é pausado (sem perda, sem fraude)
 
@@ -326,11 +326,11 @@ O `EnergyOracle` é o ponto crítico de confiança entre o mundo físico e a blo
 
 Antes do deploy em mainnet (Fase 2), todos os contratos passam por:
 
-1. **Análise estática automatizada** — Slither, MythX
-2. **Testes de fuzzing** — Echidna para invariantes críticos (supply conservation, vault balance)
-3. **Revisão de código por pares** — mínimo 2 revisores externos
-4. **Audit profissional** — mínimo 1 firma de auditoria reconhecida antes de Fase 3
-5. **Bug bounty público** — programa ativo a partir da Fase 2
+1. **Análise estática automatizada:** Slither, MythX
+2. **Testes de fuzzing:** Echidna para invariantes críticos (supply conservation, vault balance)
+3. **Revisão de código por pares:** mínimo 2 revisores externos
+4. **Audit profissional:** mínimo 1 firma de auditoria reconhecida antes de Fase 3
+5. **Bug bounty público:** programa ativo a partir da Fase 2
 
 Todos os resultados de auditoria são publicados no repositório público.
 

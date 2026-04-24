@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whitepaper v0.1 — VoltchainHub</title>
+  <meta name="description" content="VoltchainHub Whitepaper v0.1 — Protocolo Aberto de Energia Descentralizada para o Brasil" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+</head>
+<body>
+  <div id="scroll-progress"></div>
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo">
+      <span class="bolt">⚡</span>
+      <span>Volt<span>chain</span>Hub</span>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="whitepaper.html" class="active">Whitepaper</a>
+      <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener">GitHub</a>
+      <a href="#" title="Em breve">Discord</a>
+    </nav>
+  </header>
+
+  <!-- SIDEBAR ROADMAP -->
+  <aside class="sidebar">
+    <div class="sidebar-title">📋 Roadmap</div>
+
+    <div class="roadmap-phase">
+      <div class="phase-title">Fase 1 — MVP (30 dias)</div>
+      <div class="phase-item"><span class="check"></span>Firmware ESP32-S3</div>
+      <div class="phase-item"><span class="check"></span>Smart Contracts testnet</div>
+      <div class="phase-item"><span class="check"></span>Backend OpenEMS</div>
+      <div class="phase-item"><span class="check"></span>Bridge S2↔MQTT</div>
+      <div class="phase-item"><span class="check"></span>Dashboard básico</div>
+    </div>
+
+    <hr />
+
+    <div class="roadmap-phase">
+      <div class="phase-title">Fase 2 — Piloto MG (90d)</div>
+      <div class="phase-item"><span class="check"></span>10 prosumidores</div>
+      <div class="phase-item"><span class="check"></span>3 modelos inversores</div>
+      <div class="phase-item"><span class="check"></span>Mainnet deploy</div>
+      <div class="phase-item"><span class="check"></span>500 kWh P2P</div>
+    </div>
+
+    <hr />
+
+    <div class="roadmap-phase">
+      <div class="phase-title">Fase 3 — DAO (180d)</div>
+      <div class="phase-item"><span class="check"></span>Auditoria contratos</div>
+      <div class="phase-item"><span class="check"></span>Aragon OSx DAO</div>
+      <div class="phase-item"><span class="check"></span>SDK público</div>
+    </div>
+
+    <hr />
+
+    <div class="roadmap-phase">
+      <div class="phase-title">Fase 4 — 1000 nós (1 ano)</div>
+      <div class="phase-item"><span class="check"></span>Expansão 5 estados</div>
+      <div class="phase-item"><span class="check"></span>100k kWh/mês</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="wp-layout">
+
+      <!-- TOC -->
+      <div class="wp-toc" id="toc">
+        <div class="toc-title">Conteúdo</div>
+        <a href="#abstract">Abstract</a>
+        <a href="#s1">1. O Problema</a>
+        <a href="#s1-1" class="toc-h3">1.1 Energia Centralizada</a>
+        <a href="#s1-2" class="toc-h3">1.2 O Prosumidor</a>
+        <a href="#s1-3" class="toc-h3">1.3 Gap Tecnológico</a>
+        <a href="#s2">2. A Visão</a>
+        <a href="#s2-1" class="toc-h3">2.1 Inspiração Tesla</a>
+        <a href="#s2-2" class="toc-h3">2.2 Energia Livre</a>
+        <a href="#s2-3" class="toc-h3">2.3 Princípios</a>
+        <a href="#s3">3. Arquitetura</a>
+        <a href="#s3-1" class="toc-h3">3.1 Visão das Camadas</a>
+        <a href="#s3-2" class="toc-h3">3.2 Hardware</a>
+        <a href="#s3-3" class="toc-h3">3.3 Edge</a>
+        <a href="#s3-4" class="toc-h3">3.4 S2 / SHIP</a>
+        <a href="#s3-5" class="toc-h3">3.5 Blockchain</a>
+        <a href="#s3-6" class="toc-h3">3.6 Fluxo Completo</a>
+        <a href="#s4">4. LuzToken</a>
+        <a href="#s4-1" class="toc-h3">4.1 Tokenomics</a>
+        <a href="#s4-2" class="toc-h3">4.2 Ciclo de Vida</a>
+        <a href="#s4-3" class="toc-h3">4.3 Precificação P2P</a>
+        <a href="#s4-4" class="toc-h3">4.4 Sustentabilidade</a>
+        <a href="#s5">5. Segurança</a>
+        <a href="#s6">6. Roadmap</a>
+        <a href="#s7">7. Diferenciais</a>
+        <a href="#s8">8. Governança</a>
+        <a href="#s9">9. Equipe</a>
+        <a href="#s10">10. Conclusão</a>
+        <a href="#apendice-a">Apêndice A</a>
+        <a href="#apendice-b">Apêndice B</a>
+        <a href="#apendice-c">Apêndice C</a>
+      </div>
+
+      <!-- ARTICLE -->
+      <main class="wp-body">
+        <article class="article">
+
+          <span class="section-anchor" id="top"></span>
+          <h1>VoltchainHub — Whitepaper v0.1</h1>
+          <div class="meta">
+            <span>v0.1-draft</span>
+            <span>Março 2026</span>
+            <span>Apache 2.0</span>
+            <span>Status: Draft público para contribuição</span>
+          </div>
+
+          <span class="section-anchor" id="abstract"></span>
+          <h2>Abstract</h2>
+          <div class="abstract">
+            O Brasil caminha para 20 milhões de prosumidores solares até 2030, mas carece de infraestrutura aberta para que esses produtores troquem energia entre si. VoltchainHub é um protocolo open-source que une IoT de borda (ESP32-S3), padrões europeus de gestão energética (OpenEMS, S2 Protocol, PowerMatcher) e blockchain Polygon PoS para criar um mercado P2P de energia com custo de transação inferior a $0,001. O LuzToken (ERC-1155) tokeniza kWh como unidade de valor transferível, rastreável e auditável. O protocolo opera dentro do marco legal da ANEEL REN 1000/2021 e é o primeiro protocolo nacional de energia descentralizada totalmente open-source. A visão é simples: <strong>energia como bem comum, não commodity de monopólio.</strong>
+          </div>
+
+          <hr />
+
+          <!-- SEÇÃO 1 -->
+          <span class="section-anchor" id="s1"></span>
+          <h2>1. O Problema</h2>
+
+          <span class="section-anchor" id="s1-1"></span>
+          <h3>1.1 Energia Centralizada: Ineficiência e Custo</h3>
+          <p>
+            O modelo elétrico brasileiro é estruturalmente centralizador. Geração em usinas distantes, transmissão em linhas de alta tensão com perdas médias de <strong>14,9%</strong> (ANEEL, 2024), distribuição por concessionárias regionais com poder de monopólio legal — e o consumidor final pagando a conta de toda essa cadeia.
+          </p>
+          <p>
+            A tarifa residencial média nacional ultrapassou <strong>R$ 0,90/kWh</strong> em 2025. Nesse valor estão embutidos: encargos setoriais (CDE, PROINFA, EER), perdas técnicas, perdas comerciais (furtos, inadimplência), custos de manutenção de infraestrutura do século XX e margem das distribuidoras. O brasileiro paga uma das tarifas mais caras do mundo em proporção à renda per capita.
+          </p>
+          <p>
+            O modelo funciona como um funil: energia entra no topo (grandes geradoras), percorre milhares de quilômetros, e chega ao consumidor final tributada, perdida e cara. Não há mecanismo de mercado local. Vizinhos com painéis solares não podem vender energia diretamente uns aos outros.
+          </p>
+
+          <span class="section-anchor" id="s1-2"></span>
+          <h3>1.2 O Prosumidor Brasileiro Sem Infraestrutura</h3>
+          <p>
+            A ANEEL REN 1000/2021 criou o marco legal da geração distribuída no Brasil. Em 2025, o país já ultrapassava <strong>5 milhões de unidades</strong> de micro e minigeração distribuída, majoritariamente solar fotovoltaica. A projeção é alcançar 20 milhões de prosumidores até 2030.
+          </p>
+          <p>
+            O prosumidor brasileiro investe R$ 15.000–50.000 em um sistema solar, gera excedente de energia durante o dia e recebe em troca <strong>créditos de energia</strong> na distribuidora local — créditos que se expiram em 60 meses e são compensados em tarifas cheias de distribuição. Não há mercado real. Não há precificação dinâmica. Não há peer-to-peer.
+          </p>
+          <p>
+            O resultado: prosumidores que poderiam vender energia a <strong>R$ 0,05–0,15/kWh</strong> para vizinhos são obrigados a "ceder" essa energia para a distribuidora a custo zero, que a revende com toda a sua estrutura de custos.
+          </p>
+
+          <span class="section-anchor" id="s1-3"></span>
+          <h3>1.3 Gap Tecnológico: Standards Europeus Inexplorados no Brasil</h3>
+          <p>
+            A Europa resolveu boa parte desse problema. O protocolo <strong>S2</strong> (IEC 62746-10-3) padroniza a comunicação entre dispositivos de energia e sistemas de controle. O <strong>OpenEMS</strong> conecta mais de 50 fabricantes de inversores, baterias e medidores. O <strong>PowerMatcher</strong> implementa mercados multi-agente de energia em tempo real.
+          </p>
+          <p>
+            Nenhum desses padrões foi adaptado ao contexto brasileiro. Não existe implementação nacional. Não existe protocolo open-source que una a infraestrutura de IoT com blockchain e com o marco regulatório da ANEEL.
+          </p>
+          <blockquote><strong>Esse é o gap que VoltchainHub preenche.</strong></blockquote>
+
+          <hr />
+
+          <!-- SEÇÃO 2 -->
+          <span class="section-anchor" id="s2"></span>
+          <h2>2. A Visão: Luz Livre</h2>
+
+          <span class="section-anchor" id="s2-1"></span>
+          <h3>2.1 Inspiração Tesla: Energia como Bem Comum</h3>
+          <p>
+            Nikola Tesla dedicou sua vida a uma ideia radical: energia deveria ser tão acessível quanto o ar. Seu projeto Wardenclyffe Tower foi destruído não por falha técnica, mas por resistência econômica — porque energia livre não tem dono, não tem monopólio, não tem tarifa.
+          </p>
+          <p>
+            VoltchainHub herda esse espírito. Não porque acreditamos em física impossível, mas porque acreditamos que a tecnologia de 2026 — blockchain, IoT, protocolos abertos — nos dá as ferramentas para criar o que Tesla imaginou: uma infraestrutura de energia que serve ao povo, não ao monopólio.
+          </p>
+
+          <span class="section-anchor" id="s2-2"></span>
+          <h3>2.2 O Que "Energia Livre" Realmente Significa</h3>
+          <p>"Energia livre" no contexto VoltchainHub não é violação da termodinâmica. É <strong>liberdade de mercado</strong>:</p>
+          <ul>
+            <li><strong>Livre para gerar</strong> — qualquer pessoa pode instalar geração e participar do protocolo</li>
+            <li><strong>Livre para vender</strong> — sem intermediário obrigatório entre produtor e consumidor</li>
+            <li><strong>Livre para auditar</strong> — todo código, todo contrato, toda transação é pública e verificável</li>
+            <li><strong>Livre de rent-seeking</strong> — o protocolo não extrai valor, apenas facilita a troca</li>
+          </ul>
+          <p>
+            O preço de equilíbrio no mercado P2P VoltchainHub converge para o custo marginal real de produção — próximo de zero para solar durante o dia. Esse é o "livre" que importa.
+          </p>
+
+          <span class="section-anchor" id="s2-3"></span>
+          <h3>2.3 Princípios do Protocolo</h3>
+          <ol>
+            <li><strong>Abertura total</strong> — Apache 2.0, nenhum componente proprietário obrigatório</li>
+            <li><strong>Soberania do dado</strong> — medições ficam no dispositivo do prosumidor; blockchain registra apenas hashes e saldos</li>
+            <li><strong>Composabilidade</strong> — cada camada pode ser substituída; o protocolo não impõe lock-in</li>
+            <li><strong>Neutralidade de rede</strong> — o protocolo não favorece nenhum prosumidor, região ou tamanho de instalação</li>
+            <li><strong>Conformidade regulatória</strong> — opera dentro da ANEEL REN 1000, não contra ela</li>
+            <li><strong>Progressividade</strong> — começa simples (créditos tokenizados), evolui para mercado totalmente autônomo</li>
+          </ol>
+
+          <hr />
+
+          <!-- SEÇÃO 3 -->
+          <span class="section-anchor" id="s3"></span>
+          <h2>3. Arquitetura Técnica</h2>
+
+          <span class="section-anchor" id="s3-1"></span>
+          <h3>3.1 Visão Geral das Camadas</h3>
+<pre><code class="language-plaintext">┌─────────────────────────────────────────────────────────────┐
+│  FRONTEND  │  Dashboard Web (React) + App Mobile           │
+├─────────────────────────────────────────────────────────────┤
+│  BLOCKCHAIN│  Polygon PoS — LuzToken, DeviceRegistry,      │
+│            │  EnergyOracle, EnergyVault                    │
+├─────────────────────────────────────────────────────────────┤
+│  PROTOCOLO │  S2 Protocol (CEM↔RM) + SHIP (TLS over Wi-Fi) │
+├─────────────────────────────────────────────────────────────┤
+│  EDGE      │  OpenEMS (Java) + PowerMatcher (market agent) │
+├─────────────────────────────────────────────────────────────┤
+│  HARDWARE  │  ESP32-S3 + PLC HomePlug AV + WPT local       │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+          <p>Cada camada é independente e substituível. Um prosumidor pode participar do protocolo com apenas um medidor ESP32-S3 conectado ao inversor solar via Modbus.</p>
+
+          <span class="section-anchor" id="s3-2"></span>
+          <h3>3.2 Camada Hardware: ESP32-S3 + PLC + WPT</h3>
+          <p><strong>ESP32-S3 — O Nó de Medição</strong></p>
+          <p>
+            O ESP32-S3 é o coração do dispositivo VoltchainHub. Com núcleo Xtensa LX7 dual-core a 240 MHz, 8MB PSRAM e suporte a ARM TrustZone, é o microcontrolador mais capaz da família Espressif no segmento de custo (&lt;$5 USD).
+          </p>
+          <ul>
+            <li>Leitura de medidores via <strong>Modbus RTU/TCP</strong> (compatível com 90%+ dos inversores brasileiros)</li>
+            <li>Assinatura criptográfica de leituras com <strong>ECDSA P-256</strong> usando chave privada armazenada em eFuse + TrustZone</li>
+            <li>Publicação de telemetria via <strong>MQTT over TLS</strong></li>
+            <li>Capacidade de operação offline com buffer de 72h (SPIFFS)</li>
+          </ul>
+          <p><strong>PLC HomePlug AV — Transmissão pela Rede Elétrica</strong></p>
+          <p>
+            O HomePlug AV utiliza a própria fiação elétrica como meio de transmissão. Eficiência de até <strong>88%</strong>. Permite comunicação entre medidores sem infraestrutura adicional de rede — especialmente relevante para condomínios e microrredes industriais.
+          </p>
+          <p><strong>WPT — Transferência de Energia por Indução Ressonante</strong></p>
+          <p>
+            Para ambientes de curta distância (&lt;5m), o protocolo suporta transferência de energia por acoplamento ressonante magnético, com eficiência de <strong>72%</strong>.
+          </p>
+
+          <span class="section-anchor" id="s3-3"></span>
+          <h3>3.3 Camada Edge: OpenEMS + PowerMatcher</h3>
+          <p><strong>OpenEMS — Sistema de Gestão Energética</strong></p>
+          <p>
+            OpenEMS é um framework Java open-source desenvolvido originalmente pela FENECON GmbH, compatível com <strong>50+ fabricantes</strong> de inversores, baterias e medidores (Fronius, SMA, Huawei, BYD, Victron).
+          </p>
+          <p><strong>PowerMatcher — Mercado Multi-Agente</strong></p>
+          <p>
+            PowerMatcher implementa um algoritmo de market clearing descentralizado. Cada dispositivo de energia age como um <strong>agente autônomo</strong> que publica curvas de oferta/demanda. O concentrador calcula o preço de equilíbrio local a cada <strong>5 minutos</strong>.
+          </p>
+<pre><code class="language-plaintext">Ciclo de clearing:
+  1. Cada agente publica bid (curva preço × quantidade)
+  2. Auctioneer agrega bids de todos os agentes
+  3. Preço de equilíbrio = interseção oferta/demanda
+  4. Agentes recebem sinal de despacho
+  5. Resultado é commitado no contrato EnergyVault</code></pre>
+
+          <span class="section-anchor" id="s3-4"></span>
+          <h3>3.4 Camada Protocolo: S2 / SHIP</h3>
+          <p>
+            <strong>S2 Protocol (IEC 62746-10-3)</strong> define a interface entre o Customer Energy Manager (CEM) e o Resource Manager (RM). Implementado em Python (referência) e Rust (produção) no VoltchainHub.
+          </p>
+          <p>Modelos de controle suportados:</p>
+          <ul>
+            <li><strong>FRBC</strong> — Fill Rate Based Control (baterias e armazenamento)</li>
+            <li><strong>DDBC</strong> — Demand Driven Based Control (cargas flexíveis)</li>
+            <li><strong>PEBC</strong> — Power Envelope Based Control (geração solar)</li>
+            <li><strong>OMBC</strong> — Operation Mode Based Control (EVs e carregadores)</li>
+          </ul>
+          <p>
+            <strong>SHIP (Smart Home IP)</strong> provê a camada de transporte segura (TLS 1.3) para comunicação local entre dispositivos. Resolve o problema de discovery e autenticação em redes residenciais sem dependência de servidor central.
+          </p>
+
+          <span class="section-anchor" id="s3-5"></span>
+          <h3>3.5 Camada Blockchain: Contratos Inteligentes</h3>
+          <p><strong>Rede:</strong> Polygon PoS &nbsp;·&nbsp; <strong>Custo:</strong> &lt;$0,001 &nbsp;·&nbsp; <strong>Finalidade:</strong> ~2s &nbsp;·&nbsp; <strong>Framework:</strong> Hardhat + OpenZeppelin v5</p>
+          <table>
+            <thead>
+              <tr><th>Contrato</th><th>Função</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>LuzToken</code></td><td>ERC-1155 multitoken — cada token ID representa 1 kWh de uma fonte/período específico</td></tr>
+              <tr><td><code>DeviceRegistry</code></td><td>Registro e attestation de dispositivos ESP32-S3</td></tr>
+              <tr><td><code>EnergyOracle</code></td><td>Recebe leituras assinadas dos edge nodes e as valida on-chain</td></tr>
+              <tr><td><code>EnergyVault</code></td><td>Escrow de transações P2P — bloqueia tokens até confirmação de entrega</td></tr>
+            </tbody>
+          </table>
+
+          <span class="section-anchor" id="s3-6"></span>
+          <h3>3.6 Diagrama de Fluxo Completo</h3>
+<pre><code class="language-plaintext">[Painel Solar] → [Inversor] → [ESP32-S3]
+                                    │
+                              Modbus RTU
+                                    │
+                              [OpenEMS Edge]
+                                    │
+                         S2 Protocol / SHIP
+                                    │
+                          [PowerMatcher Agent]
+                                    │
+                           5-min market clearing
+                                    │
+                    ┌───────────────┴───────────────┐
+                    │                               │
+              [Comprador]                     [Vendedor]
+                    │                               │
+              EnergyVault.lock()           LuzToken.mint()
+                    │                               │
+              [Entrega de energia]          [Confirma entrega]
+                    │                               │
+              EnergyVault.release()        LuzToken.transfer()
+                    │
+              [Saldo atualizado on-chain]</code></pre>
+
+          <hr />
+
+          <!-- SEÇÃO 4 -->
+          <span class="section-anchor" id="s4"></span>
+          <h2>4. LuzToken — Modelo Econômico</h2>
+
+          <span class="section-anchor" id="s4-1"></span>
+          <h3>4.1 Tokenomics (ERC-1155)</h3>
+          <p>
+            <strong>Padrão:</strong> ERC-1155 (multitoken). Permite que cada kWh carregue metadados de fonte (solar/eólico/bateria), timestamp e localização do gerador.
+          </p>
+          <p>
+            LuzToken não tem supply fixo. Tokens são <strong>mintados</strong> na medida em que energia é medida e verificada, e <strong>queimados</strong> quando energia é consumida.
+          </p>
+<pre><code class="language-plaintext">100 kWh gerados e verificados
+  └─ 98 kWh → LuzToken para o prosumidor vendedor
+  └─  1 kWh → Treasury do protocolo (fee de 1%)
+  └─  1 kWh → Pool de liquidez para equalização de rede</code></pre>
+          <p>Token IDs são determinísticos:</p>
+<pre><code class="language-solidity">tokenId = keccak256(deviceAddress, timestamp_slot, sourceType)</code></pre>
+
+          <span class="section-anchor" id="s4-2"></span>
+          <h3>4.2 Ciclo de Vida de uma Transação Energética</h3>
+<pre><code class="language-plaintext">1. GERAÇÃO
+   Prosumidor A gera 10 kWh excedentes às 13h
+   → ESP32-S3 mede, assina com ECDSA
+   → OpenEMS envia leitura assinada ao EnergyOracle
+
+2. VERIFICAÇÃO
+   EnergyOracle valida assinatura + consistência histórica
+   → Se válido: emite evento ReadingVerified
+   → LuzToken.mint(prosumidorA, 9.9 kWh) // 1% fee retido
+
+3. OFERTA
+   PowerMatcher agent de A publica bid:
+   "10 kWh disponíveis @ R$0,08/kWh"
+
+4. MATCHING
+   PowerMatcher clearing encontra comprador B
+   Preço de equilíbrio: R$0,10/kWh
+
+5. ESCROW
+   EnergyVault.lock(comprador=B, vendedor=A, amount=5, price=0.10)
+
+6. ENTREGA
+   Energia flui fisicamente (rede distribuidora como carrier)
+   Após 5 min, OpenEMS de B confirma recebimento
+
+7. LIQUIDAÇÃO
+   EnergyVault.release()
+   → 5 LuzToken transferidos A→B (e queimados pelo B)
+   → MATIC transferido B→A</code></pre>
+          <p>Tempo total do ciclo: <strong>~7 minutos</strong> (5 min de ciclo PowerMatcher + ~2 min blockchain)</p>
+
+          <span class="section-anchor" id="s4-3"></span>
+          <h3>4.3 Precificação P2P via PowerMatcher</h3>
+          <table>
+            <thead>
+              <tr><th>Referência</th><th>R$/kWh</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Tarifa distribuidora (piso do comprador)</td><td>~0,90</td></tr>
+              <tr><td>Preço P2P esperado (equilíbrio)</td><td>0,05–0,15</td></tr>
+              <tr><td>Custo marginal solar residencial</td><td>~0,02–0,05</td></tr>
+              <tr><td>Fee do protocolo</td><td>1% do valor transacionado</td></tr>
+            </tbody>
+          </table>
+
+          <span class="section-anchor" id="s4-4"></span>
+          <h3>4.4 Sustentabilidade do Protocolo</h3>
+          <p><strong>Destino do treasury:</strong></p>
+          <ul>
+            <li>60% → Desenvolvimento e manutenção do protocolo</li>
+            <li>25% → Grants para contribuidores open-source</li>
+            <li>15% → Fundo de emergência (bugs críticos, auditorias)</li>
+          </ul>
+          <p>A partir da <strong>Fase 3</strong>, o treasury é controlado pela DAO. Antes disso, por multisig 3/5.</p>
+
+          <hr />
+
+          <!-- SEÇÃO 5 -->
+          <span class="section-anchor" id="s5"></span>
+          <h2>5. Segurança e Confiança</h2>
+
+          <h3>5.1 Device Attestation (TrustZone + ECDSA)</h3>
+          <ul>
+            <li><strong>Camada 1 — Hardware Security:</strong> Chave privada ECDSA P-256 gerada durante provisionamento; armazenada em eFuse (não legível por software); TrustZone separa execução de assinatura</li>
+            <li><strong>Camada 2 — Attestation On-Chain:</strong> Durante registro, o dispositivo assina um challenge do contrato <code>DeviceRegistry</code>; nonce sequencial previne replay attacks</li>
+            <li><strong>Camada 3 — Validação Estatística:</strong> <code>EnergyOracle</code> mantém histórico de leituras; anomalias geram flag e revisão manual</li>
+          </ul>
+
+          <h3>5.2 Oracle Security Model</h3>
+          <ul>
+            <li><strong>Multi-oracle:</strong> Mínimo 3 oracles independentes para mint acima de 100 kWh</li>
+            <li><strong>Stake de operador:</strong> Operadores fazem stake em MATIC — comportamento malicioso resulta em slash</li>
+            <li><strong>Janela de contestação:</strong> 30 minutos após cada leitura</li>
+            <li><strong>Fallback:</strong> Oracle offline &gt;15 min → ciclo de clearing pausado</li>
+          </ul>
+
+          <h3>5.3 Smart Contract Audit Approach</h3>
+          <ol>
+            <li>Análise estática automatizada — Slither, MythX</li>
+            <li>Testes de fuzzing — Echidna para invariantes críticos</li>
+            <li>Revisão de código por pares — mínimo 2 revisores externos</li>
+            <li>Audit profissional — mínimo 1 firma de auditoria reconhecida antes de Fase 3</li>
+            <li>Bug bounty público — programa ativo a partir da Fase 2</li>
+          </ol>
+
+          <h3>5.4 Regulatório: ANEEL REN 1000</h3>
+<pre><code class="language-plaintext">Prosumidor A gera excedente
+  → Injeta na rede da distribuidora (como sempre, conforme REN 1000)
+  → Distribuidora credita kWh na conta
+  → VoltchainHub tokeniza esse crédito como LuzToken
+  → Prosumidor pode vender LuzToken para vizinhos
+  → Vizinhos usam LuzToken para abater suas próprias faturas</code></pre>
+
+          <hr />
+
+          <!-- SEÇÃO 6 -->
+          <span class="section-anchor" id="s6"></span>
+          <h2>6. Roadmap</h2>
+
+          <h3>Fase 1 — MVP Técnico (30 dias)</h3>
+          <ul>
+            <li>Firmware ESP32-S3: leitura Modbus + assinatura ECDSA + MQTT</li>
+            <li>Contratos Solidity: LuzToken, DeviceRegistry, EnergyOracle (testnet Polygon Mumbai)</li>
+            <li>OpenEMS adapter: publicação de leituras para oracle</li>
+            <li>PowerMatcher: instância local com 2 agentes simulados</li>
+            <li>Dashboard básico: saldo LuzToken, histórico de transações</li>
+          </ul>
+          <p><strong>Critério de sucesso:</strong> Transação end-to-end simulada com hardware real</p>
+
+          <h3>Fase 2 — Piloto 10 Prosumidores MG (90 dias)</h3>
+          <ul>
+            <li>Deploy em 10 residências na Região Metropolitana de BH</li>
+            <li>Integração com 3 modelos de inversores populares (Fronius, Growatt, Deye)</li>
+            <li>Contratos em Polygon mainnet com valor real</li>
+            <li>Análise estatística de fraude em produção</li>
+            <li>Relatório técnico público de resultados</li>
+          </ul>
+          <p><strong>Critério de sucesso:</strong> ≥ 500 kWh transacionados P2P com latência &lt;10 min</p>
+
+          <h3>Fase 3 — Protocolo Público + DAO (180 dias)</h3>
+          <ul>
+            <li>Auditoria de segurança por firma externa</li>
+            <li>Deploy de governança Aragon OSx</li>
+            <li>SDK público (TypeScript + Python) para integradores</li>
+            <li>Documentação completa (pt-BR + en)</li>
+            <li>Programa de grants para contribuidores</li>
+          </ul>
+          <p><strong>Critério de sucesso:</strong> ≥ 3 integradores independentes usando o protocolo</p>
+
+          <h3>Fase 4 — 1000 Nós Ativos (1 ano)</h3>
+          <ul>
+            <li>1000+ dispositivos registrados on-chain</li>
+            <li>Expansão para 5 estados brasileiros</li>
+            <li>Parceria com pelo menos 1 distribuidora piloto</li>
+            <li>Mercado de certificados de energia renovável sobre LuzToken</li>
+            <li>Bridge para outros protocolos de energia (Energy Web Chain)</li>
+          </ul>
+          <p><strong>Critério de sucesso:</strong> ≥ 100.000 kWh mensais transacionados no protocolo</p>
+
+          <hr />
+
+          <!-- SEÇÃO 7 -->
+          <span class="section-anchor" id="s7"></span>
+          <h2>7. Diferenciais Competitivos</h2>
+
+          <h3>vs. Energia Centralizada</h3>
+          <table>
+            <thead>
+              <tr><th>Dimensão</th><th>Distribuidora Atual</th><th>VoltchainHub P2P</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Preço ao comprador</td><td>R$ 0,90/kWh</td><td>R$ 0,05–0,15/kWh</td></tr>
+              <tr><td>Receita ao vendedor</td><td>R$ 0,00 (crédito)</td><td>R$ 0,05–0,15/kWh</td></tr>
+              <tr><td>Transparência</td><td>Opaca</td><td>100% on-chain</td></tr>
+              <tr><td>Latência de liquidação</td><td>30 dias (fatura)</td><td>~7 minutos</td></tr>
+              <tr><td>Acesso</td><td>Monopólio regional</td><td>Permissionless</td></tr>
+            </tbody>
+          </table>
+
+          <h3>vs. Outros Protocolos Blockchain de Energia</h3>
+          <table>
+            <thead>
+              <tr><th>Protocolo</th><th>País</th><th>Open-Source</th><th>Brasil-ready</th><th>P2P Real</th><th>Custo/tx</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>VoltchainHub</strong></td><td>Brasil</td><td>✅ Apache 2.0</td><td>✅ REN 1000</td><td>✅</td><td>&lt;$0,001</td></tr>
+              <tr><td>Power Ledger</td><td>Austrália</td><td>❌</td><td>❌</td><td>✅</td><td>~$0,01</td></tr>
+              <tr><td>WePower</td><td>Lituânia</td><td>❌</td><td>❌</td><td>Parcial</td><td>~$0,05</td></tr>
+              <tr><td>Energy Web</td><td>EUA/Global</td><td>Parcial</td><td>❌</td><td>❌</td><td>~$0,001</td></tr>
+              <tr><td>Nexo (CPFL)</td><td>Brasil</td><td>❌</td><td>✅</td><td>❌</td><td>N/A</td></tr>
+            </tbody>
+          </table>
+
+          <hr />
+
+          <!-- SEÇÃO 8 -->
+          <span class="section-anchor" id="s8"></span>
+          <h2>8. Governança</h2>
+
+          <h3>8.1 Open-Source (Apache 2.0)</h3>
+          <p>Todo código do VoltchainHub é e sempre será Apache 2.0 — firmware, contratos, adapters e SDKs. Nenhuma funcionalidade core será proprietária.</p>
+
+          <h3>8.2 Fase 1-2: Multisig Gnosis Safe 3/5</h3>
+          <p>Treasury e upgrades de contratos são controlados por um <strong>multisig Gnosis Safe 3-de-5</strong> com signatários públicos. Todas as transações do treasury são visíveis on-chain.</p>
+
+          <h3>8.3 Fase 3: DAO com Aragon OSx</h3>
+          <ul>
+            <li><strong>Token de governança:</strong> LuzToken acumulado de participação confere direito de voto</li>
+            <li><strong>Quorum:</strong> 10% para propostas regulares; 30% para upgrades críticos</li>
+            <li><strong>Timelock:</strong> 48h entre aprovação e execução de qualquer mudança de contrato</li>
+            <li><strong>Veto:</strong> Multisig fundador retém veto de emergência por 12 meses pós-DAO (sunset automático)</li>
+          </ul>
+
+          <h3>8.4 Como Contribuir</h3>
+          <ul>
+            <li><strong>Código:</strong> PRs no GitHub — issues marcadas como <code>good-first-issue</code></li>
+            <li><strong>Hardware:</strong> Testar com novos inversores/medidores e contribuir adapters OpenEMS</li>
+            <li><strong>Pesquisa:</strong> Simulações de mercado, otimização de algoritmos PowerMatcher</li>
+            <li><strong>Documentação:</strong> Guias de instalação, tradução, casos de uso regionais</li>
+            <li><strong>Auditoria:</strong> Revisão de contratos, análise de segurança, fuzzing</li>
+          </ul>
+
+          <hr />
+
+          <!-- SEÇÃO 9 -->
+          <span class="section-anchor" id="s9"></span>
+          <h2>9. Equipe e Contexto</h2>
+          <p>
+            VoltchainHub é um projeto pessoal iniciado por <strong>Vinicius</strong>, engenheiro e desenvolvedor com foco em soberania tecnológica, descentralização e impacto social. O protocolo nasce da convicção de que tecnologia deve servir às pessoas, não a monopólios.
+          </p>
+          <p>O protocolo não pertence a uma empresa. Pertence a uma visão: <em>tecnologia como instrumento de libertação econômica.</em></p>
+          <p><strong>Buscamos:</strong></p>
+          <ul>
+            <li>Engenheiros de firmware com experiência em ESP32 e protocolos de energia</li>
+            <li>Desenvolvedores Solidity com foco em segurança</li>
+            <li>Especialistas em OpenEMS/PowerMatcher</li>
+            <li>Advogados de energia familiarizados com regulação ANEEL</li>
+            <li>Prosumidores dispostos a ser piloto na Fase 2</li>
+          </ul>
+          <blockquote>Se você acredita que energia é um direito, não um privilégio de quem pode pagar R$ 0,90/kWh — <strong>você já é parte disso.</strong></blockquote>
+
+          <hr />
+
+          <!-- SEÇÃO 10 -->
+          <span class="section-anchor" id="s10"></span>
+          <h2>10. Conclusão</h2>
+          <p>
+            O Brasil está na encruzilhada energética. De um lado, uma infraestrutura centralizada do século XX, cara e ineficiente. Do outro, 5 milhões de prosumidores gerando energia limpa, travados em um sistema que não permite a troca direta entre vizinhos.
+          </p>
+          <p>
+            VoltchainHub é a infraestrutura que falta. Não é uma startup. Não é um produto. É um <strong>protocolo aberto</strong> — como o HTTP é para a web, como o Bitcoin é para o dinheiro, o VoltchainHub aspira ser para a energia distribuída brasileira.
+          </p>
+          <p>
+            A tecnologia existe. O marco regulatório existe. O mercado existe. O que faltava era alguém colocar as peças juntas, de forma aberta, para que qualquer pessoa possa usar, auditar e melhorar.
+          </p>
+          <blockquote><strong>A rede começa com o primeiro nó. Seja o primeiro.</strong></blockquote>
+          <ul>
+            <li>GitHub: <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener">github.com/viniciusvj/voltchainhub</a></li>
+            <li>Comunidade: Discord VoltchainHub <em>(em breve)</em></li>
+            <li>Para pilotos Fase 2: <em>(em breve)</em></li>
+          </ul>
+
+          <hr />
+
+          <!-- APÊNDICE A -->
+          <span class="section-anchor" id="apendice-a"></span>
+          <h2>Apêndice A — Contratos Inteligentes (Interfaces Solidity)</h2>
+<pre><code class="language-solidity">// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.20;
+
+// ============================================================
+// LuzToken — ERC-1155 Multitoken
+// ============================================================
+interface ILuzToken {
+    function mint(
+        address to,
+        uint256 tokenId,
+        uint256 amount,
+        bytes calldata data
+    ) external;
+
+    function burn(address from, uint256 tokenId, uint256 amount) external;
+
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+
+    function encodeTokenId(
+        address device,
+        uint32 slot,      // slot de 5 minutos desde epoch
+        uint8 sourceType  // 0=solar, 1=eolico, 2=bateria, 3=rede
+    ) external pure returns (uint256);
+
+    event TokenMinted(address indexed to, uint256 indexed tokenId, uint256 amount);
+    event TokenBurned(address indexed from, uint256 indexed tokenId, uint256 amount);
+}
+
+// ============================================================
+// DeviceRegistry — Registro e Attestation de Dispositivos
+// ============================================================
+interface IDeviceRegistry {
+    struct Device {
+        address owner;
+        bytes32 publicKeyX;
+        bytes32 publicKeyY;
+        uint64  registeredAt;
+        bool    active;
+        string  metadata;
+    }
+
+    function registerDevice(
+        bytes32 deviceId,
+        bytes32 pubKeyX,
+        bytes32 pubKeyY,
+        bytes calldata attestationSig,
+        string calldata metadata
+    ) external;
+
+    function verifyReading(
+        bytes32 deviceId,
+        bytes32 readingHash,
+        bytes calldata signature
+    ) external view returns (bool valid);
+
+    function deactivateDevice(bytes32 deviceId, string calldata reason) external;
+    function getDevice(bytes32 deviceId) external view returns (Device memory);
+
+    event DeviceRegistered(bytes32 indexed deviceId, address indexed owner);
+    event DeviceDeactivated(bytes32 indexed deviceId, string reason);
+}
+
+// ============================================================
+// EnergyOracle — Ponte entre medição física e blockchain
+// ============================================================
+interface IEnergyOracle {
+    struct Reading {
+        bytes32 deviceId;
+        uint256 wattHours;
+        uint64  timestamp;
+        uint32  slot;
+        bytes   signature;
+    }
+
+    function submitReading(Reading calldata reading) external;
+    function confirmReading(bytes32 readingId, bytes calldata oracleSig) external;
+    function contestReading(bytes32 readingId, bytes calldata evidence) external;
+
+    event ReadingSubmitted(bytes32 indexed readingId, bytes32 indexed deviceId, uint256 wh);
+    event ReadingConfirmed(bytes32 indexed readingId);
+    event ReadingContested(bytes32 indexed readingId, address contester);
+}
+
+// ============================================================
+// EnergyVault — Escrow para transações P2P
+// ============================================================
+interface IEnergyVault {
+    enum TradeStatus { Pending, Locked, Delivered, Settled, Expired, Disputed }
+
+    struct Trade {
+        address seller;
+        address buyer;
+        uint256 tokenId;
+        uint256 energyAmount;
+        uint256 pricePerKwh;
+        uint64  deadline;
+        TradeStatus status;
+    }
+
+    function lockTrade(
+        address seller,
+        uint256 tokenId,
+        uint256 energyAmount,
+        uint256 pricePerKwh,
+        uint64 deliveryDeadline
+    ) external payable returns (bytes32 tradeId);
+
+    function confirmDelivery(bytes32 tradeId) external;
+    function settleTrade(bytes32 tradeId) external;
+    function disputeTrade(bytes32 tradeId, string calldata reason) external;
+    function expireTrade(bytes32 tradeId) external;
+    function getTrade(bytes32 tradeId) external view returns (Trade memory);
+
+    event TradeLocked(bytes32 indexed tradeId, address seller, address buyer, uint256 amount);
+    event TradeSettled(bytes32 indexed tradeId, uint256 energyWh, uint256 valueMatic);
+    event TradeDisputed(bytes32 indexed tradeId, string reason);
+}</code></pre>
+
+          <hr />
+
+          <!-- APÊNDICE B -->
+          <span class="section-anchor" id="apendice-b"></span>
+          <h2>Apêndice B — Stack Tecnológica Completa</h2>
+          <table>
+            <thead>
+              <tr><th>Camada</th><th>Componente</th><th>Versão</th><th>Licença</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hardware</td><td>ESP32-S3</td><td>ESP-IDF 5.x</td><td>Apache 2.0</td></tr>
+              <tr><td>Hardware</td><td>HomePlug AV</td><td>—</td><td>Spec aberta</td></tr>
+              <tr><td>Edge</td><td>OpenEMS</td><td>2024.x</td><td>LGPL 2.1</td></tr>
+              <tr><td>Edge</td><td>PowerMatcher</td><td>1.2</td><td>Apache 2.0</td></tr>
+              <tr><td>Protocolo</td><td>S2 Protocol</td><td>1.0</td><td>Apache 2.0</td></tr>
+              <tr><td>Protocolo</td><td>SHIP</td><td>1.0</td><td>Spec aberta</td></tr>
+              <tr><td>Blockchain</td><td>Polygon PoS</td><td>—</td><td>MIT</td></tr>
+              <tr><td>Contratos</td><td>OpenZeppelin</td><td>5.x</td><td>MIT</td></tr>
+              <tr><td>Contratos</td><td>Hardhat</td><td>2.x</td><td>MIT</td></tr>
+              <tr><td>Segurança</td><td>Slither</td><td>latest</td><td>AGPL 3.0</td></tr>
+              <tr><td>Governança</td><td>Aragon OSx</td><td>1.3</td><td>GPL 3.0</td></tr>
+              <tr><td>Governança</td><td>Gnosis Safe</td><td>1.4</td><td>LGPL 3.0</td></tr>
+              <tr><td>Frontend</td><td>React + Viem</td><td>18.x / 2.x</td><td>MIT</td></tr>
+            </tbody>
+          </table>
+
+          <hr />
+
+          <!-- APÊNDICE C -->
+          <span class="section-anchor" id="apendice-c"></span>
+          <h2>Apêndice C — Referências e Projetos Base</h2>
+
+          <h3>Regulatório Brasil</h3>
+          <ul>
+            <li>ANEEL REN 1000/2021 — Marco legal de geração distribuída</li>
+            <li>ANEEL REN 1059/2023 — Atualização sobre sistemas de armazenamento</li>
+            <li>MME PDE 2031 — Plano Decenal de Expansão de Energia</li>
+          </ul>
+
+          <h3>Padrões Técnicos</h3>
+          <ul>
+            <li>IEC 62746-10-3 (S2 Protocol)</li>
+            <li>IEEE 1901 (HomePlug AV)</li>
+            <li>IEC 61968/61970 (CIM)</li>
+          </ul>
+
+          <h3>Projetos Open-Source Base</h3>
+          <ul>
+            <li><a href="https://github.com/OpenEMS/openems" target="_blank" rel="noopener">OpenEMS</a></li>
+            <li><a href="https://github.com/flexiblepower/powermatcher" target="_blank" rel="noopener">PowerMatcher</a></li>
+            <li><a href="https://github.com/flexiblepower/s2-ws-json" target="_blank" rel="noopener">S2 Protocol Reference</a></li>
+            <li><a href="https://github.com/NomicFoundation/hardhat" target="_blank" rel="noopener">Hardhat</a></li>
+            <li><a href="https://github.com/OpenZeppelin/openzeppelin-contracts" target="_blank" rel="noopener">OpenZeppelin Contracts</a></li>
+          </ul>
+
+          <hr />
+          <p style="text-align:center; color: var(--text-muted); font-size: 0.85rem; padding: 1rem 0;">
+            <em>VoltchainHub Whitepaper v0.1 — Março 2026</em><br />
+            <em>Licença Apache 2.0 — Livre para uso, modificação e distribuição com atribuição</em><br />
+            <strong>"A rede começa com o primeiro nó."</strong>
+          </p>
+
+        </article>
+      </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>⚡ VoltchainHub &nbsp;·&nbsp; v0.1-draft &nbsp;·&nbsp; Março 2026 &nbsp;·&nbsp; Apache 2.0</div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    // Syntax highlighting — ignora blocos já processados (data-highlighted="yes")
+    document.querySelectorAll('pre code:not([data-highlighted])').forEach(block => {
+      hljs.highlightElement(block);
+    });
+
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const el = document.getElementById('scroll-progress');
+      const p = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      el.style.width = p + '%';
+    });
+
+    // TOC active link tracking
+    const tocLinks = document.querySelectorAll('#toc a');
+    const anchors = document.querySelectorAll('.section-anchor');
+
+    function updateToc() {
+      let current = '';
+      anchors.forEach(a => {
+        const top = a.getBoundingClientRect().top;
+        if (top <= 80) current = a.id;
+      });
+      tocLinks.forEach(l => {
+        l.classList.remove('active');
+        if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+      });
+    }
+
+    window.addEventListener('scroll', updateToc, { passive: true });
+    updateToc();
+  </script>
+</body>
+</html>
