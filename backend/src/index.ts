@@ -4,6 +4,7 @@ import { SqliteDeviceRepository } from './infra/repositories/SqliteDeviceReposit
 import { SqliteReadingRepository } from './infra/repositories/SqliteReadingRepository.js';
 import { SqliteTradeRepository } from './infra/repositories/SqliteTradeRepository.js';
 import { SqliteMarketSessionRepository } from './infra/repositories/SqliteMarketSessionRepository.js';
+import { SqlitePaymentPreferenceRepository } from './infra/repositories/SqlitePaymentPreferenceRepository.js';
 import { EthersBlockchainGateway } from './infra/blockchain/EthersBlockchainGateway.js';
 import { OpenEmsClient } from './openems/OpenEmsClient.js';
 import { OpenEmsPoller } from './openems/OpenEmsPoller.js';
@@ -33,6 +34,7 @@ async function main() {
   const readingRepo = new SqliteReadingRepository(db);
   const tradeRepo = new SqliteTradeRepository(db);
   const sessionRepo = new SqliteMarketSessionRepository(db);
+  const preferenceRepo = new SqlitePaymentPreferenceRepository(db);
 
   // Blockchain gateway
   const blockchain = new EthersBlockchainGateway(env);
@@ -90,6 +92,7 @@ async function main() {
     readingRepo,
     tradeRepo,
     sessionRepo,
+    preferenceRepo,
     blockchain,
   });
 

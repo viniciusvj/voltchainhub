@@ -249,16 +249,19 @@ Isso permite queries eficientes por fonte, período e origem geográfica.
 
 5. ESCROW
    EnergyVault.lock(comprador=B, vendedor=A, amount=5, price=0.10)
-   Tokens de A bloqueados; MATIC de B bloqueados
+   Tokens de A bloqueados; tokens de pagamento de B bloqueados
+   (B paga no token que tiver — USDC, BRZ, MATIC, etc.)
 
 6. ENTREGA
    Energia flui fisicamente (rede distribuidora como carrier)
    Após 5 min, OpenEMS de B confirma recebimento
 
 7. LIQUIDAÇÃO
-   EnergyVault.release()
+   EnergyVault.release() → VoltMarketplace.settle()
    → 5 LuzToken transferidos A→B (e queimados pelo B)
-   → MATIC transferido B→A
+   → SettlementRouter converte pagamento de B para a moeda
+     preferida de A (swap via Uniswap v3 se necessário)
+   → A recebe no token que escolheu (USDC, BRZ, ETH, WBTC…)
    → Evento TransactionSettled emitido
 ```
 
@@ -280,8 +283,10 @@ O comprador sempre paga menos que a tarifa da distribuidora. O vendedor sempre r
 ### 4.4 Sustentabilidade do Protocolo (Fees, Treasury)
 
 **Fontes de receita do protocolo:**
-- 1% de fee sobre toda energia transacionada (retida como LuzToken no treasury)
+- **0,5% fee de marketplace** sobre o valor financeiro de cada transação (cobrada em stablecoin no settlement)
 - Opcional: fee de registro de dispositivo (cobertura de custo de audit on-chain)
+
+A base de 0,5% foi escolhida como ~10× menor que um cartão de crédito e ~3× menor que uma média de maquininha brasileira. Rent-seeking é explicitamente fora de escopo — o protocolo não captura valor além do necessário para sustentar desenvolvimento e auditoria.
 
 **Destino do treasury:**
 - 60% → Desenvolvimento e manutenção do protocolo
@@ -289,6 +294,70 @@ O comprador sempre paga menos que a tarifa da distribuidora. O vendedor sempre r
 - 15% → Fundo de emergência (bugs críticos, auditorias)
 
 A partir da **Fase 3**, o treasury é controlado pela DAO. Antes disso, por multisig 3/5.
+
+### 4.5 Payment Abstraction Layer
+
+**VoltchainHub não emite token de recompensa próprio.** Prosumidores recebem pagamento em moeda real de sua escolha, não em um token sintético cujo valor depende da saúde do próprio protocolo.
+
+**Por que essa decisão:**
+1. **Reduz risco regulatório** — VoltchainHub não cria um ativo financeiro que a CVM possa classificar como valor mobiliário. O LuzToken é recibo de commodity física (kWh); o pagamento é em criptoativo de terceiros.
+2. **Liberdade do prosumidor** — quem quer receber em BRL-stable (BRZ, BRLA, cBRL) recebe; quem quer em USD-stable (USDC, USDT, DAI) recebe; quem quer em BTC ou ETH recebe. O protocolo é neutro quanto a moeda.
+3. **Adoção simplificada** — para um prosumidor não-crypto, onboarding é "você recebe R$ na sua carteira" (via BRZ/BRLA + off-ramp PIX), sem precisar entender tokenomics de um token novo.
+4. **Composabilidade** — outros protocolos podem integrar VoltchainHub sem adotar um token interno incompatível com o próprio modelo econômico.
+
+**Fluxo de pagamento flexível:**
+
+```
+Comprador paga em X (ex.: BRZ)          Prosumidor prefere receber em Y (ex.: USDC)
+         │                                                │
+         ▼                                                │
+┌───────────────────────────────────────────────┐         │
+│  VoltMarketplace (contrato Solidity)          │         │
+│  1. Recebe X do comprador                     │         │
+│  2. Retém 0,5% fee em X → Treasury            │         │
+│  3. SettlementRouter decide rota:             │         │
+│     - Se X == Y: transferência direta         │         │
+│     - Se X ≠ Y: swap via Uniswap v3 Polygon   │         │
+│  4. Transfere Y ao prosumidor                 │         │
+│  5. Emite evento PaymentSettled               │         │
+└───────────────────────────────────────────────┘         │
+                                                          ▼
+                                                     Y na wallet
+```
+
+**Tempo típico de liquidação:** ~2 minutos (1 bloco Polygon + confirmação do swap).
+
+**Slippage protection:** comprador define `maxSlippageBps` (padrão 50 = 0,5%) na transação. Se o swap exigir slippage maior que isso, a transação aborta e os fundos voltam ao comprador — nunca há execução em condição desfavorável ao prosumidor.
+
+### 4.6 TokenRegistry — Lista de Moedas Suportadas
+
+A whitelist de tokens aceitos é controlada pelo `TokenRegistry` (contrato separado, governável). Critério de inclusão:
+
+- Liquidez mínima diária no Uniswap v3 Polygon: **USD 50.000**
+- Contrato auditado publicamente (Certik, OpenZeppelin, Trail of Bits ou equivalente)
+- Não estar em lista de sanções OFAC
+- Não ser token rebase/deflacionário (incompatível com escrow)
+
+**Lista inicial (Fase 1, testnet Amoy):**
+
+| Categoria | Tokens |
+|---|---|
+| BRL-stable | BRZ, BRLA, cBRL (quando disponível) |
+| USD-stable | USDC, USDT, DAI |
+| Nativos Polygon | MATIC (nativo), WETH, WBTC |
+| Outros | LINK, AAVE (via liquidez Uniswap) |
+
+Adicionar/remover token é uma proposta de governança — até Fase 3, multisig 3/5; após Fase 3, voto da DAO.
+
+### 4.7 Off-Ramp para Reais (BRL)
+
+Prosumidor que escolhe receber em **BRZ/BRLA/cBRL** pode converter para PIX real via parceiros de off-ramp já existentes no ecossistema Polygon:
+
+- **Transfero** — BRZ ↔ PIX, sem KYC até R$ 3.000/mês, KYC simples acima
+- **Ripio** — BRLA ↔ PIX, KYC obrigatório
+- **Mercado Bitcoin** — múltiplas stables ↔ PIX, KYC obrigatório
+
+VoltchainHub **não opera off-ramp próprio** — integra os existentes. Isso isola completamente o protocolo de responsabilidade bancária/cambial.
 
 ---
 
