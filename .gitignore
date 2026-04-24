@@ -83,3 +83,6 @@ yocto-bsp-scarthgap/
 
 # Launch/marketing kit fica local
 LAUNCH_KIT.md
+
+# Claude Code config / skills — fica local, não vai pro repo público
+.claude/
