@@ -81,6 +81,11 @@
         para criar um mercado P2P de energia solar — com custo de transação inferior a <strong>$0,001</strong>
         e conformidade com a ANEEL REN 1000/2021.
       </p>
+      <p style="margin-top:1rem; opacity:0.85;">
+        <strong>Sem token especulativo próprio.</strong> Prosumidor recebe em qualquer ERC-20 listado
+        — BRZ/BRLA (R$), USDC/USDT (US$), ETH, WBTC ou outros. Swap atômico via Uniswap v3
+        no settlement. Fee do protocolo: <strong>0,5%</strong> fixo.
+      </p>
       <div class="btn-group">
         <a href="whitepaper.html" class="btn btn-primary">📄 Ler Whitepaper</a>
         <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener" class="btn btn-secondary">
@@ -105,8 +110,16 @@
         <div class="stat-label">Preço P2P esperado/kWh</div>
       </div>
       <div class="stat-card">
-        <span class="stat-value">~7min</span>
+        <span class="stat-value">~2min</span>
         <div class="stat-label">Latência de liquidação</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">0,5%</span>
+        <div class="stat-label">Fee único do protocolo</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">0</span>
+        <div class="stat-label">Tokens especulativos emitidos</div>
       </div>
     </div>
 
@@ -127,7 +140,7 @@
         <div class="feature-card">
           <div class="feature-icon">🔗</div>
           <h3>Polygon PoS</h3>
-          <p>Finalidade em ~2 segundos, custo &lt;$0,001 por operação. LuzToken (ERC-1155) tokeniza kWh com rastreabilidade de fonte e timestamp.</p>
+          <p>Finalidade em ~2 segundos, custo &lt;$0,001 por operação. LuzToken (ERC-1155) é <em>recibo</em> de 1 kWh verificado, não ativo especulativo. Rastreabilidade de fonte e timestamp.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">📡</div>
@@ -140,9 +153,14 @@
           <p>PowerMatcher clearing a cada 5 minutos. Preço de equilíbrio R$0,05–0,15/kWh — você paga até 10x menos que a distribuidora.</p>
         </div>
         <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <h3>Pagamento Flexível</h3>
+          <p>Prosumidor escolhe em que ERC-20 quer receber: BRZ/BRLA (R$), USDC/USDT (US$), ETH, WBTC, ou qualquer token com liquidez no Uniswap v3. <code>VoltMarketplace</code> faz o swap atomicamente. Off-ramp PIX via Transfero/Ripio.</p>
+        </div>
+        <div class="feature-card">
           <div class="feature-icon">🏛️</div>
           <h3>DAO Governance</h3>
-          <p>Fase 1-2: multisig Gnosis Safe 3/5. Fase 3: Aragon OSx com LuzToken de governança. Treasury transparente 100% on-chain.</p>
+          <p>Fase 1-2: multisig Gnosis Safe 3/5. Fase 3: Aragon OSx com token de governança dedicado. Treasury transparente 100% on-chain.</p>
         </div>
       </div>
     </section>
