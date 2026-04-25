@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussion (perguntas, ideias, design exploratório)
+    url: https://github.com/viniciusvj/voltchainhub/discussions
+    about: Para conversas abertas que ainda não têm escopo de issue. Comece aqui se não tem certeza.
+  - name: 🔒 Vulnerabilidade de segurança
+    url: https://github.com/viniciusvj/voltchainhub/blob/main/SECURITY.md
+    about: NÃO abra issue público. Use o canal privado descrito no SECURITY.md.
