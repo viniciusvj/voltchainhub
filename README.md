@@ -2,6 +2,7 @@
 
 **Protocolo aberto de energia descentralizada P2P para o Brasil**
 
+[![CI](https://github.com/viniciusvj/voltchainhub/actions/workflows/ci.yml/badge.svg)](https://github.com/viniciusvj/voltchainhub/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Whitepaper](https://img.shields.io/badge/whitepaper-v0.1-orange)](./VoltchainHub-Whitepaper-v0.1.md)
 [![Status](https://img.shields.io/badge/status-phase%201%20MVP-yellow)](#roadmap)
