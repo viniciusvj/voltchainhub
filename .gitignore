@@ -20,6 +20,8 @@ __pycache__/
 artifacts/
 cache/
 typechain-types/
+coverage/
+coverage.json
 
 # Sistema
 .DS_Store
