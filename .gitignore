@@ -91,3 +91,12 @@ LAUNCH_KIT.md
 
 # Guia interno de deploy do mantenedor — instruções de setup local
 DEPLOY_SETUP.md
+
+# Next.js build artifacts
+frontend/.next/
+frontend/out/
+next-env.d.ts
+frontend/next-env.d.ts
+
+# Hardhat Ignition local deployment state
+contracts/ignition/deployments/
