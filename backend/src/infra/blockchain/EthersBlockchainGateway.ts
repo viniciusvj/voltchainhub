@@ -10,6 +10,11 @@ import EnergyVaultAbi from './abis/EnergyVault.json' with { type: 'json' };
 
 const log = createLogger('blockchain');
 
+// Energy source enum on EnergyOracle/LuzToken (0 = solar).
+const SOURCE_SOLAR = 0;
+// Default LuzToken receipt id used until per-trade token ids are wired through the port.
+const LUZ_DEFAULT_TOKEN_ID = 1;
+
 export class EthersBlockchainGateway implements BlockchainGateway {
   private provider: ethers.JsonRpcProvider;
   private signer: ethers.Wallet;
@@ -27,13 +32,18 @@ export class EthersBlockchainGateway implements BlockchainGateway {
 
   async submitReading(reading: Reading): Promise<{ txHash: string }> {
     try {
+      // Real signature: submitReading(bytes32 deviceId, uint256 wattHours,
+      //   uint64 timestamp, uint32 slot, uint8 sourceType, bytes signature).
+      // Slot maps to the reading nonce; sourceType defaults to SOURCE_SOLAR (0);
+      // the P-256 signature (r,s) is packed into a single 64-byte blob.
+      const signature = ethers.concat([reading.signature.r, reading.signature.s]);
       const tx = await this.oracle.submitReading(
         reading.deviceId,
         ethers.parseUnits(reading.wattsH.toString(), 18),
         reading.timestamp,
         reading.nonce,
-        reading.signature.r,
-        reading.signature.s,
+        SOURCE_SOLAR,
+        signature,
       );
       const receipt = await tx.wait();
       log.info({ txHash: receipt.hash, deviceId: reading.deviceId }, 'Reading submitted on-chain');
@@ -58,10 +68,19 @@ export class EthersBlockchainGateway implements BlockchainGateway {
 
   async lockEscrow(buyer: string, seller: string, amountKWh: number, pricePerKWh: number): Promise<{ txHash: string }> {
     try {
-      const tx = await this.vault.lock(
-        buyer, seller,
+      // Real signature: lockTrade(address seller, uint256 tokenId, uint256 energyAmount,
+      //   uint256 pricePerKwh, uint64 deliveryDeadline) payable. The buyer is msg.sender
+      // (this signer). KNOWN GAP: the port does not carry the traded tokenId nor a
+      // deadline, so we default tokenId to LUZ_DEFAULT_TOKEN_ID and a 24h window; wiring
+      // the real per-trade tokenId and buyer-funded value is tracked as a follow-up.
+      void buyer;
+      const deadline = Math.floor(Date.now() / 1000) + 24 * 3600;
+      const tx = await this.vault.lockTrade(
+        seller,
+        LUZ_DEFAULT_TOKEN_ID,
         ethers.parseUnits(amountKWh.toString(), 18),
         ethers.parseUnits(pricePerKWh.toString(), 18),
+        deadline,
       );
       const receipt = await tx.wait();
       log.info({ txHash: receipt.hash, buyer, seller, amountKWh }, 'Escrow locked');
@@ -74,7 +93,8 @@ export class EthersBlockchainGateway implements BlockchainGateway {
 
   async releaseEscrow(tradeId: string): Promise<{ txHash: string }> {
     try {
-      const tx = await this.vault.release(tradeId);
+      // Real function is settleTrade(bytes32); the vault had no `release`.
+      const tx = await this.vault.settleTrade(tradeId);
       const receipt = await tx.wait();
       log.info({ txHash: receipt.hash, tradeId }, 'Escrow released');
       return { txHash: receipt.hash };

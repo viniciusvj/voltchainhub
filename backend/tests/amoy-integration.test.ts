@@ -14,10 +14,9 @@ import { ethers } from 'ethers';
  *   - LuzToken.totalSupply(1) >= 1000
  *   - VoltMarketplace.feeBps() == 50 (0.5%)
  *
- * NOTE: uses minimal correct ABIs on purpose. The backend's shipped ABIs in
- * src/infra/blockchain/abis are out of sync with the deployed contracts
- * (LuzToken lacks totalSupply; DeviceRegistry.getDevice signature differs).
- * Regenerating those from the compiled artifacts is tracked as a follow-up.
+ * NOTE: uses minimal inline ABIs to keep the test self-contained. The backend's
+ * shipped ABIs in src/infra/blockchain/abis were regenerated from the compiled
+ * artifacts so they now match the deployed contracts.
  */
 const RUN = process.env.AMOY_INTEGRATION === '1';
 const RPC = process.env.AMOY_RPC_URL || 'https://rpc-amoy.polygon.technology';
