@@ -31,7 +31,7 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ Backend publicado em `voltchainhub.org/api` (container no consolidado)
 - ✅ /api/preferences/stats consumido pelo card de governança (dados reais)
 - ✅ NetworkStats consumindo `/api/metrics` (deviceCount, LuzToken supply corrigido para raw int)
-- ⬜ StatsGrid ainda com mocks (trocar por dados reais quando houver fonte)
+- ✅ StatsGrid reformulado com fatos reais (rede, fee 0,5%, contratos verificados, dispositivos on-chain ao vivo); removidos os KPIs de energia falsos
 - ⬜ Publicar preferences reais conforme prosumidores usam o app
 
 ## Contratos & on-chain
