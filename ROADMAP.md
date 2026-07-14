@@ -22,7 +22,7 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ CTA contextual: seção "Experimente na testnet" na landing com deep-links (`/app/devices`, `/app/market`)
 - ✅ Paleta unificada: landing adota os tokens do app (fundo #0A0A0F, âmbar #FFB800, azul #0066FF); CSS versionado (?v)
 - ⬜ Estado de conexão de carteira visível/consistente ao navegar entre landing e app
-- ⬜ Rodapé unificado (links whitepaper, GitHub, Discussions, status) nas duas telas
+- ✅ Rodapé unificado: app tem footer (VoltchainHub/Apache 2.0/testnet + Início/Whitepaper/GitHub/Discussions); landing ganhou link Discussions
 - ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp
 - ⬜ Considerar renderizar a landing dentro do próprio Next (rota `/`) para header/rodapé realmente compartilhados
 

@@ -4,6 +4,7 @@ import './globals.css';
 import { Providers } from '@/components/providers';
 import { Sidebar } from '@/components/sidebar';
 import { TopBar } from '@/components/topbar';
+import { Footer } from '@/components/footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -30,12 +31,13 @@ export default function RootLayout({
             {/* Sidebar Navigation */}
             <Sidebar />
 
-            {/* Main column: shared top bar + content */}
-            <div className="flex-1 min-w-0 flex flex-col">
+            {/* Main column: shared top bar + content + footer */}
+            <div className="flex-1 min-w-0 flex flex-col min-h-screen">
               <TopBar />
               <main className="flex-1 min-w-0 p-6 md:p-8 pt-16 md:pt-6">
                 {children}
               </main>
+              <Footer />
             </div>
           </div>
         </Providers>
