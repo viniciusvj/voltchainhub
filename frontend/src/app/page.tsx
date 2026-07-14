@@ -4,6 +4,7 @@ import { EnergyChart } from '@/components/dashboard/energy-chart'
 import { RecentTransactions } from '@/components/dashboard/recent-transactions'
 import { NetworkStats } from '@/components/dashboard/network-stats'
 import { MarketPrice } from '@/components/dashboard/market-price'
+import { GovernanceCard } from '@/components/dashboard/governance-card'
 
 export default function DashboardPage() {
   return (
@@ -38,8 +39,9 @@ export default function DashboardPage() {
         <div className="lg:col-span-2">
           <RecentTransactions />
         </div>
-        <div>
+        <div className="flex flex-col gap-4">
           <NetworkStats />
+          <GovernanceCard />
         </div>
       </div>
     </div>
