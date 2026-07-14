@@ -1,3 +1,5 @@
+🇧🇷 Português | [🇬🇧 English](./VoltchainHub-Whitepaper-v0.1.en.md)
+
 # VoltchainHub | Whitepaper v0.1
 ## Protocolo Aberto de Energia Descentralizada para o Brasil
 
