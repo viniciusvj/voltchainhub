@@ -1,6 +1,6 @@
-# Firmware — ESP32-S3
+# Firmware, ESP32-S3
 
-> **Estado:** 🔴 Não iniciado. Esta é a área mais aberta do projeto para contribuidores com experiência embedded.
+> **Estado:** 🟡 Bring-up skeleton em [`esp32s3/`](./esp32s3/): projeto ESP-IDF que compila e roda o pipeline `sampling -> energy -> signer -> net` com as camadas de hardware/crypto/rede stubadas (marcadas `STUB`). Área aberta para contribuidores embedded evoluírem cada camada.
 
 ## O que mora aqui (ainda não existe)
 
