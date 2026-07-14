@@ -81,7 +81,7 @@ Core stack deployed to the Amoy testnet (chainId 80002) via Hardhat Ignition:
 | EnergyVault | [`0x5f91d715adFd8130894d406431ccDE0defA2771F`](https://amoy.polygonscan.com/address/0x5f91d715adFd8130894d406431ccDE0defA2771F) |
 | VoltMarketplace | [`0x44eA9fD6489E8bAda380607e03841154f079DFB9`](https://amoy.polygonscan.com/address/0x44eA9fD6489E8bAda380607e03841154f079DFB9) |
 
-> Testnet: tokens have no real value. PolygonScan source verification pending (requires an API key).
+> Testnet: tokens have no real value. All 6 contracts have verified source code on PolygonScan Amoy (click the addresses).
 
 ## 🚀 Quickstart (Phase 1 MVP)
 
