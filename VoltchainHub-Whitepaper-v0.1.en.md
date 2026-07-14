@@ -99,11 +99,11 @@ Each layer is independent and replaceable. A prosumer can join the protocol with
 
 **ESP32-S3: The Metering Node**
 
-The ESP32-S3 is the heart of the VoltchainHub device. With a dual-core Xtensa LX7 running at 240 MHz, 8MB PSRAM and support for ARM TrustZone through its security extensions, it is the most capable microcontroller in the Espressif family within its cost segment (< $5 USD).
+The ESP32-S3 is the heart of the VoltchainHub device. With a dual-core Xtensa LX7 running at 240 MHz, 8MB PSRAM, Secure Boot v2 and Flash Encryption, it is the most capable microcontroller in the Espressif family within its cost segment (< $5 USD). The signing private key lives in a dedicated secure element (ATECC608B), not in the core (the Xtensa LX7 has no ARM TrustZone; see `docs/design/firmware-esp32s3.md`).
 
 Roles in the protocol:
 - Meter reading via **Modbus RTU/TCP** (compatible with 90%+ of Brazilian inverters)
-- Cryptographic signing of readings with **ECDSA P-256** using a private key stored in protected memory (eFuse + TrustZone)
+- Cryptographic signing of readings with **ECDSA P-256**, executed inside a secure element (ATECC608B) the private key never leaves; device id in eFuse
 - Telemetry publishing via **MQTT over TLS** to the local edge node
 - Offline operation capability with a 72h buffer (SPIFFS)
 
@@ -367,14 +367,14 @@ VoltchainHub **does not operate its own off-ramp**: it integrates existing ones.
 
 ## 5. Security and Trust
 
-### 5.1 Device Attestation (TrustZone + ECDSA)
+### 5.1 Device Attestation (Secure Element + ECDSA)
 
 The biggest attack vector in a tokenized energy system is **metering fraud**: a device reporting more energy than it generated. VoltchainHub addresses this in multiple layers:
 
 **Layer 1 (Hardware Security):**
-- ECDSA P-256 private key generated during provisioning on the ESP32-S3
-- Key stored in eFuse (one-time programmable, not readable by software)
-- TrustZone isolates signature execution from the main firmware
+- ECDSA P-256 private key generated inside the secure element (ATECC608B) at provisioning, never exportable
+- Signing executed inside the secure element itself; application firmware never sees the key
+- ESP32-S3 with Secure Boot v2 + Flash Encryption + eFuse (one-time-programmable device id). A future migration to ESP32-C6 + ESP-TEE (hardware ECDSA peripheral) is under evaluation, see `docs/design/firmware-esp32s3.md`
 
 **Layer 2 (On-Chain Attestation):**
 - During registration, the device signs a challenge from the `DeviceRegistry` contract
@@ -422,7 +422,9 @@ Prosumer A generates a surplus
   → Neighbors use LuzToken to offset their own bills
 ```
 
-This model operates entirely within the REN 1000 compensation system. It requires no new regulation. It does not bypass the distribution utility: it uses it as transmission infrastructure.
+This model builds on the compensation system governed by **Lei 14.300/2022** and **ANEEL REN 1.059/2023** (which folded distributed generation into REN 1000/2021); it does not bypass the distribution utility, it uses it as transmission infrastructure.
+
+**Honest regulatory caveat:** the defensible path today is a P2P market **inside a shared-generation arrangement** (cooperative, consortium or condominium under Lei 14.300), where the token settles the financial split among members of the same arrangement and credit allocation follows the percentages registered with the utility. An **open** market, where any prosumer sells to any third party, comes materially close to energy trading (a licensed activity) and should go through an ANEEL regulatory sandbox before operating. The Minas Gerais pilot will be structured as a cooperative for this reason. Full analysis in `docs/regulatory/parecer-ANEEL-REN-1000.md` (draft pending legal review).
 
 **For direct transactions in isolated microgrids** (condominiums with their own systems, off-grid communities): the protocol can operate in autonomous mode, but this requires specific ANEEL authorization as self-production. VoltchainHub maintains supporting legal documentation for this use case.
 

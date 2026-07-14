@@ -97,11 +97,11 @@ Cada camada é independente e substituível. Um prosumidor pode participar do pr
 
 **ESP32-S3: O Nó de Medição**
 
-O ESP32-S3 é o coração do dispositivo VoltchainHub. Com núcleo Xtensa LX7 dual-core a 240 MHz, 8MB PSRAM e suporte a ARM TrustZone via extensões de segurança, é o microcontrolador mais capaz da família Espressif no segmento de custo (< $5 USD).
+O ESP32-S3 é o coração do dispositivo VoltchainHub. Com núcleo Xtensa LX7 dual-core a 240 MHz, 8MB PSRAM, Secure Boot v2 e Flash Encryption, é o microcontrolador mais capaz da família Espressif no segmento de custo (< $5 USD). A chave privada de assinatura fica isolada num elemento seguro dedicado (secure element ATECC608B), não no núcleo (o Xtensa LX7 não possui ARM TrustZone; ver `docs/design/firmware-esp32s3.md`).
 
 Funções no protocolo:
 - Leitura de medidores via **Modbus RTU/TCP** (compatível com 90%+ dos inversores brasileiros)
-- Assinatura criptográfica de leituras com **ECDSA P-256** usando chave privada armazenada em memória protegida (eFuse + TrustZone)
+- Assinatura criptográfica de leituras com **ECDSA P-256**, executada dentro de um secure element (ATECC608B) de onde a chave privada nunca sai; device id em eFuse
 - Publicação de telemetria via **MQTT over TLS** para o edge node local
 - Capacidade de operação offline com buffer de 72h (SPIFFS)
 
@@ -365,14 +365,14 @@ VoltchainHub **não opera off-ramp próprio** — integra os existentes. Isso is
 
 ## 5. Segurança e Confiança
 
-### 5.1 Device Attestation (TrustZone + ECDSA)
+### 5.1 Device Attestation (Secure Element + ECDSA)
 
 O maior vetor de ataque em um sistema de energia tokenizada é a **fraude de medição**: um dispositivo que reporta mais energia do que gerou. O VoltchainHub endereça isso em múltiplas camadas:
 
-**Camada 1 – Hardware Security:**
-- Chave privada ECDSA P-256 gerada durante provisionamento no ESP32-S3
-- Chave armazenada em eFuse (one-time programmable, não legível por software)
-- TrustZone separa execução de assinatura do firmware principal
+**Camada 1, Hardware Security:**
+- Chave privada ECDSA P-256 gerada dentro do secure element (ATECC608B) no provisionamento, nunca exportável
+- Assinatura executada no próprio secure element; o firmware de aplicação nunca vê a chave
+- ESP32-S3 com Secure Boot v2 + Flash Encryption + eFuse (device id one-time programmable). Migração futura ao ESP32-C6 + ESP-TEE (periférico ECDSA em HW) está em avaliação, ver `docs/design/firmware-esp32s3.md`
 
 **Camada 2 – Attestation On-Chain:**
 - Durante registro, o dispositivo assina um challenge do contrato `DeviceRegistry`
@@ -420,7 +420,9 @@ Prosumidor A gera excedente
   → Vizinhos usam LuzToken para abater suas próprias faturas
 ```
 
-Esse modelo opera inteiramente dentro do sistema de compensação da REN 1000. Não requer nova regulamentação. Não contorna a distribuidora — usa ela como infraestrutura de transmissão.
+Esse modelo se apoia no sistema de compensação regido pela **Lei 14.300/2022** e pela **REN ANEEL 1.059/2023** (que incorporou a geração distribuída à REN 1000/2021); não contorna a distribuidora, usa ela como infraestrutura de transmissão.
+
+**Ressalva regulatória honesta:** o caminho defensável hoje é o mercado P2P **dentro de um arranjo de geração compartilhada** (cooperativa, consórcio ou condomínio da Lei 14.300), onde o token liquida o acerto financeiro entre membros do mesmo arranjo e a alocação de créditos segue os percentuais cadastrados na distribuidora. Um mercado **aberto** ao público, em que qualquer prosumidor vende a qualquer terceiro, se aproxima materialmente de comercialização de energia (atividade regulada) e deve passar por sandbox regulatório da ANEEL antes de operar. O piloto de Minas Gerais será estruturado como cooperativa por esse motivo. A análise completa está em `docs/regulatory/parecer-ANEEL-REN-1000.md` (rascunho pendente de revisão jurídica).
 
 **Para transações diretas em microrredes isoladas** (condomínios com sistema próprio, comunidades off-grid): o protocolo pode operar em modo autônomo, mas requer autorização específica da ANEEL como autoprodução. O VoltchainHub mantém documentação jurídica de suporte para esse caso de uso.
 
