@@ -154,7 +154,8 @@ export class EthersBlockchainGateway implements BlockchainGateway {
     }
     return {
       deviceCount: deviceCount.toString(),
-      luzTotalSupply: ethers.formatUnits(luzTotalSupply, 18),
+      // LuzToken is ERC-1155: amounts are raw integers (1 = 1 kWh receipt), not 18-decimal.
+      luzTotalSupply: luzTotalSupply.toString(),
     };
   }
 }

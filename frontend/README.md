@@ -25,7 +25,9 @@ rm -rf out && MSYS_NO_PATHCONV=1 npm run build     # out/ com basePath /app
 KEY=E:/Users/Vinicius/Desktop/awscustos/acesso-ssh/arrendamento.pem
 ssh -i "$KEY" ec2-user@98.94.144.237 "rm -rf /opt/consolidado/frontend-voltchainhub/app && mkdir -p /opt/consolidado/frontend-voltchainhub/app"
 scp -i "$KEY" -r out/* ec2-user@98.94.144.237:/opt/consolidado/frontend-voltchainhub/app/
-python C:/Users/Vinicius/.claude/skills/cloudflare-api/cf.py purge voltchainhub.org --url https://voltchainhub.org/app/
+# purge EVERYTHING (não só /app/): o rm+scp cria uma janela em que o Cloudflare
+# cacheia 404 dos chunks _next novos -> ChunkLoadError/tela branca. Purge total limpa isso.
+python C:/Users/Vinicius/.claude/skills/cloudflare-api/cf.py purge voltchainhub.org --all
 # espelhar no repo (docs/app é a cópia versionada):
 rm -rf ../docs/app && mkdir -p ../docs/app && cp -r out/* ../docs/app/ && git add ../docs/app && git commit && git push
 ```
