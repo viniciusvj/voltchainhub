@@ -69,25 +69,43 @@ export class EthersBlockchainGateway implements BlockchainGateway {
     }
   }
 
-  async lockEscrow(buyer: string, seller: string, amountKWh: number, pricePerKWh: number): Promise<{ txHash: string }> {
+  async lockEscrow(
+    buyer: string,
+    seller: string,
+    amountKWh: number,
+    pricePerKWh: number,
+    opts?: { tokenId?: number; deadlineSec?: number },
+  ): Promise<{ txHash: string; tradeId?: string }> {
     try {
-      // Real signature: lockTrade(address seller, uint256 tokenId, uint256 energyAmount,
-      //   uint256 pricePerKwh, uint64 deliveryDeadline) payable. The buyer is msg.sender
-      // (this signer). KNOWN GAP: the port does not carry the traded tokenId nor a
-      // deadline, so we default tokenId to LUZ_DEFAULT_TOKEN_ID and a 24h window; wiring
-      // the real per-trade tokenId and buyer-funded value is tracked as a follow-up.
-      void buyer;
-      const deadline = Math.floor(Date.now() / 1000) + 24 * 3600;
+      // lockTrade(address seller, uint256 tokenId, uint256 energyAmount(Wh),
+      //   uint256 pricePerKwh(wei), uint64 deliveryDeadline) payable. The vault pulls the
+      // seller's LuzTokens (seller must setApprovalForAll) and holds the buyer's MATIC;
+      // requiredMatic = energyWh * pricePerKwhWei / 1000 (excess is refunded on-chain).
+      // The buyer is msg.sender (this signer). NOTE: the backend signer acts as buyer,
+      // so a real buyer-funded flow needs the buyer's own wallet (custodial otherwise).
+      const tokenId = opts?.tokenId ?? LUZ_DEFAULT_TOKEN_ID;
+      const deadline = opts?.deadlineSec ?? Math.floor(Date.now() / 1000) + 24 * 3600;
+      const energyWh = BigInt(Math.round(amountKWh * 1000));
+      const pricePerKwhWei = ethers.parseEther(pricePerKWh.toString());
+      const requiredMatic = (energyWh * pricePerKwhWei) / 1000n;
+
       const tx = await this.vault.lockTrade(
         seller,
-        LUZ_DEFAULT_TOKEN_ID,
-        ethers.parseUnits(amountKWh.toString(), 18),
-        ethers.parseUnits(pricePerKWh.toString(), 18),
+        tokenId,
+        energyWh,
+        pricePerKwhWei,
         deadline,
+        { value: requiredMatic },
       );
       const receipt = await tx.wait();
-      log.info({ txHash: receipt.hash, buyer, seller, amountKWh }, 'Escrow locked');
-      return { txHash: receipt.hash };
+
+      const ev = receipt.logs
+        .map((l: ethers.Log) => { try { return this.vault.interface.parseLog(l); } catch { return null; } })
+        .find((p: ethers.LogDescription | null) => p?.name === 'TradeLocked');
+      const tradeId = ev?.args?.tradeId as string | undefined;
+
+      log.info({ txHash: receipt.hash, buyer, seller, amountKWh, tradeId }, 'Escrow locked');
+      return { txHash: receipt.hash, tradeId };
     } catch (err) {
       log.error({ err, buyer, seller }, 'Failed to lock escrow');
       throw err;
