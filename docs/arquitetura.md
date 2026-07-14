@@ -1,4 +1,4 @@
-# Arquitetura Técnica — VoltchainHub
+# Arquitetura Técnica: VoltchainHub
 
 Este documento é o complemento executivo do [Whitepaper v0.1](../VoltchainHub-Whitepaper-v0.1.md) para quem quer entender **a estrutura do repositório, como os componentes se comunicam e onde mexer para contribuir**.
 
@@ -29,7 +29,7 @@ Este documento é o complemento executivo do [Whitepaper v0.1](../VoltchainHub-W
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-Cada camada pode ser substituída. Não há lock-in por design — o protocolo define interfaces, não implementações.
+Cada camada pode ser substituída. Não há lock-in por design: o protocolo define interfaces, não implementações.
 
 ---
 
@@ -86,7 +86,7 @@ voltchainhub/
 
 ---
 
-## 4. Fluxo de Dados — Transação Completa
+## 4. Fluxo de Dados: Transação Completa
 
 ```
 [1] ESP32-S3 mede 10 kWh às 13h00
@@ -147,7 +147,7 @@ Decisão arquitetural: **VoltchainHub não emite token de recompensa próprio.**
 O domain layer (`backend/src/domain/`) não importa nada de `infra/`. Toda I/O (blockchain, DB, MQTT, HTTP) passa por ports. Testes unitários mockam ports, não services inteiros.
 
 ### Governança progressiva
-- Fase 1–2: multisig Gnosis Safe 3/5 para admin roles
+- Fase 1-2: multisig Gnosis Safe 3/5 para admin roles
 - Fase 3+: DAO via Aragon OSx com token de governança dedicado (não o LuzToken)
 
 ---
@@ -166,9 +166,9 @@ Veja [`CONTRIBUTING.md`](../CONTRIBUTING.md) para o fluxo operacional.
 
 ## 7. Referências
 
-- Whitepaper v0.1 — `../VoltchainHub-Whitepaper-v0.1.md`
-- OpenEMS docs — https://openems.io
-- S2 Protocol — https://s2standard.org
-- PowerMatcher research papers — https://github.com/flexiblepower/powermatcher
-- Uniswap v3 — https://docs.uniswap.org/contracts/v3/overview
-- ANEEL REN 1000/2021 — https://www.aneel.gov.br/resolucoes-normativas
+- Whitepaper v0.1: `../VoltchainHub-Whitepaper-v0.1.md`
+- OpenEMS docs: https://openems.io
+- S2 Protocol: https://s2standard.org
+- PowerMatcher research papers: https://github.com/flexiblepower/powermatcher
+- Uniswap v3: https://docs.uniswap.org/contracts/v3/overview
+- ANEEL REN 1000/2021: https://www.aneel.gov.br/resolucoes-normativas

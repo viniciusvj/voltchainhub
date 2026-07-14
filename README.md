@@ -11,15 +11,15 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 [![Discussions](https://img.shields.io/badge/discussions-open-8A2BE2)](https://github.com/viniciusvj/voltchainhub/discussions)
 
-> *"Energia como bem comum, não commodity de monopólio."* — inspirado em Nikola Tesla
+> *"Energia como bem comum, não commodity de monopólio."* (inspirado em Nikola Tesla)
 
 ---
 
 ## 🇬🇧 TL;DR (English)
 
-Brazil will have **20 million solar prosumers by 2030**, but there is no open-source peer-to-peer energy protocol adapted to the national regulatory framework (ANEEL REN 1000). Average grid tariff: **R$ 0.90/kWh (~USD 0.18)**. Realistic P2P price: **R$ 0.05–0.15/kWh**. VoltchainHub combines ESP32-S3 edge metering (with TrustZone + ECDSA), European energy-management standards (OpenEMS, S2 Protocol, PowerMatcher) and Polygon PoS (LuzToken ERC-1155, 1 token = 1 kWh) to make that market actually buildable.
+Brazil will have **20 million solar prosumers by 2030**, but there is no open-source peer-to-peer energy protocol adapted to the national regulatory framework (ANEEL REN 1000). Average grid tariff: **R$ 0.90/kWh (~USD 0.18)**. Realistic P2P price: **R$ 0.05-0.15/kWh**. VoltchainHub combines ESP32-S3 edge metering (with TrustZone + ECDSA), European energy-management standards (OpenEMS, S2 Protocol, PowerMatcher) and Polygon PoS (LuzToken ERC-1155, 1 token = 1 kWh) to make that market actually buildable.
 
-**No new speculative token.** Prosumers receive payment in whatever whitelisted ERC-20 they prefer — BRZ/BRLA (BRL-stable), USDC/USDT/DAI (USD-stable), MATIC/WETH/WBTC or any listed token. The `VoltMarketplace` contract swaps buyer's token → seller's preferred token via Uniswap v3 atomically. Protocol fee: **0.5%** (flat, paid by buyer). Off-ramp to PIX via existing providers (Transfero, Ripio, Mercado Bitcoin).
+**No new speculative token.** Prosumers receive payment in whatever whitelisted ERC-20 they prefer: BRZ/BRLA (BRL-stable), USDC/USDT/DAI (USD-stable), MATIC/WETH/WBTC or any listed token. The `VoltMarketplace` contract swaps buyer's token → seller's preferred token via Uniswap v3 atomically. Protocol fee: **0.5%** (flat, paid by buyer). Off-ramp to PIX via existing providers (Transfero, Ripio, Mercado Bitcoin).
 
 Apache 2.0, open firmware, open contracts, open protocol. Read the [whitepaper](./VoltchainHub-Whitepaper-v0.1.md).
 
@@ -29,21 +29,21 @@ Apache 2.0, open firmware, open contracts, open protocol. Read the [whitepaper](
 
 VoltchainHub é um protocolo open-source que une quatro camadas geralmente tratadas em silos:
 
-- 🔌 **IoT de borda** — ESP32-S3 com TrustZone + ECDSA para medição segura e assinada
-- ⚙️ **Gestão energética** — OpenEMS + PowerMatcher (padrões europeus adaptados ao marco ANEEL)
-- 🔗 **Blockchain** — Polygon PoS, LuzToken ERC-1155 (1 token = 1 kWh, custo de transação < US$ 0,001)
-- 🌐 **Protocolo aberto** — S2 Protocol (IEC 62746-10-3) como camada de abstração universal
+- 🔌 **IoT de borda**: ESP32-S3 com TrustZone + ECDSA para medição segura e assinada
+- ⚙️ **Gestão energética**: OpenEMS + PowerMatcher (padrões europeus adaptados ao marco ANEEL)
+- 🔗 **Blockchain**: Polygon PoS, LuzToken ERC-1155 (1 token = 1 kWh, custo de transação < US$ 0,001)
+- 🌐 **Protocolo aberto**: S2 Protocol (IEC 62746-10-3) como camada de abstração universal
 
 ### 💰 Pagamento flexível (Payment Abstraction Layer)
 
 **VoltchainHub não emite token de recompensa próprio.** O prosumidor escolhe em que moeda quer receber:
 
-- **BRL-stable:** BRZ, BRLA, cBRL — com off-ramp para PIX via Transfero/Ripio/Mercado Bitcoin
+- **BRL-stable:** BRZ, BRLA, cBRL, com off-ramp para PIX via Transfero/Ripio/Mercado Bitcoin
 - **USD-stable:** USDC, USDT, DAI
 - **Nativos/blue-chip:** MATIC, WETH, WBTC
 - **Outros:** qualquer ERC-20 na whitelist do `TokenRegistry` com liquidez ≥ USD 50k/dia no Uniswap v3 Polygon
 
-O contrato `VoltMarketplace` faz o swap buyer-side → seller-side atomicamente. Fee do protocolo: **0,5% fixo** (≈10× menor que cartão de crédito). Sem token especulativo, sem tokenomics complexa, sem halving — só infraestrutura de pagamento limpa.
+O contrato `VoltMarketplace` faz o swap buyer-side → seller-side atomicamente. Fee do protocolo: **0,5% fixo** (≈10× menor que cartão de crédito). Sem token especulativo, sem tokenomics complexa, sem halving: só infraestrutura de pagamento limpa.
 
 ## Por que existe
 
@@ -51,7 +51,7 @@ O Brasil terá **20 milhões de prosumidores solares até 2030** (projeção ANE
 
 | Situação atual | Com VoltchainHub |
 |---|---|
-| Tarifa residencial média: **R$ 0,90/kWh** | Potencial P2P vizinhança: **R$ 0,05–0,15/kWh** |
+| Tarifa residencial média: **R$ 0,90/kWh** | Potencial P2P vizinhança: **R$ 0,05-0,15/kWh** |
 | Créditos que expiram sem mercado | Recibo tokenizado (LuzToken) + pagamento em moeda de sua escolha |
 | Dados do prosumidor na distribuidora | Dados assinados pelo próprio dispositivo |
 | Zero interoperabilidade | S2 Protocol + OpenEMS |
@@ -61,7 +61,7 @@ O Brasil terá **20 milhões de prosumidores solares até 2030** (projeção ANE
 
 ## 📄 Documentação
 
-- 📜 [**Whitepaper v0.1**](./VoltchainHub-Whitepaper-v0.1.md) — arquitetura, tokenomics, roadmap, modelo regulatório
+- 📜 [**Whitepaper v0.1**](./VoltchainHub-Whitepaper-v0.1.md): arquitetura, tokenomics, roadmap, modelo regulatório
 - 🏗️ [Arquitetura técnica](./docs/) _(em expansão)_
 - 🤝 [Como contribuir](./CONTRIBUTING.md)
 - 🔐 [Política de segurança](./SECURITY.md)
@@ -132,27 +132,27 @@ npm run dev  # http://localhost:3000
 
 ## 🤝 Contribuindo
 
-Projeto em fase inicial — é o **melhor** momento para entrar. Precisamos de:
+Projeto em fase inicial: é o **melhor** momento para entrar. Precisamos de:
 
 - **Firmware** ESP32-S3 (driver CT sensor, PLC)
 - **OpenEMS drivers** para inversores BR (WEG, Fronius, Growatt, Deye)
 - **Smart contracts** Solidity (LuzToken, marketplace, oracle)
 - **S2 adapters** para tarifa branca e REN 1000
 - **Frontend** Next.js (dashboard prosumidor, onboarding)
-- **Research/Policy** — análise regulatória ANEEL
-- **Pilotos** — prosumidores em Minas Gerais (hardware coberto)
+- **Research/Policy**: análise regulatória ANEEL
+- **Pilotos**: prosumidores em Minas Gerais (hardware coberto)
 
 Veja [CONTRIBUTING.md](./CONTRIBUTING.md) para o guia completo.
 
 ## 💬 Comunidade
 
-- 💭 [GitHub Discussions](https://github.com/viniciusvj/voltchainhub/discussions) — design, perguntas, propostas
-- 🐛 [Issues](https://github.com/viniciusvj/voltchainhub/issues) — bugs e features com escopo claro
-- 🔒 [Security](./SECURITY.md) — vulnerabilidades (canal privado)
+- 💭 [GitHub Discussions](https://github.com/viniciusvj/voltchainhub/discussions): design, perguntas, propostas
+- 🐛 [Issues](https://github.com/viniciusvj/voltchainhub/issues): bugs e features com escopo claro
+- 🔒 [Security](./SECURITY.md): vulnerabilidades (canal privado)
 
 ## 📜 Licença
 
-[Apache 2.0](./LICENSE) — livre para usar, modificar e distribuir, inclusive comercialmente.
+[Apache 2.0](./LICENSE): livre para usar, modificar e distribuir, inclusive comercialmente.
 
 ---
 

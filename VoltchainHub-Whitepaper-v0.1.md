@@ -28,9 +28,9 @@ O modelo funciona como um funil: energia entra no topo (grandes geradoras), perc
 
 A ANEEL REN 1000/2021 criou o marco legal da geração distribuída no Brasil. Em 2025, o país já ultrapassava **5 milhões de unidades** de micro e minigeração distribuída, majoritariamente solar fotovoltaica. A projeção é alcançar 20 milhões de prosumidores até 2030.
 
-O prosumidor brasileiro investe R$ 15.000–50.000 em um sistema solar, gera excedente de energia durante o dia e recebe em troca **créditos de energia** na distribuidora local, créditos que expiram em 60 meses e são compensados em tarifas cheias de distribuição. Não há mercado real. Não há precificação dinâmica. Não há peer-to-peer.
+O prosumidor brasileiro investe R$ 15.000-50.000 em um sistema solar, gera excedente de energia durante o dia e recebe em troca **créditos de energia** na distribuidora local, créditos que expiram em 60 meses e são compensados em tarifas cheias de distribuição. Não há mercado real. Não há precificação dinâmica. Não há peer-to-peer.
 
-O resultado: prosumidores que poderiam vender energia a **R$ 0,05–0,15/kWh** para vizinhos são obrigados a "ceder" essa energia para a distribuidora a custo zero, que a revende com toda a sua estrutura de custos.
+O resultado: prosumidores que poderiam vender energia a **R$ 0,05-0,15/kWh** para vizinhos são obrigados a "ceder" essa energia para a distribuidora a custo zero, que a revende com toda a sua estrutura de custos.
 
 ### 1.3 Gap Tecnológico: Standards Europeus Inexplorados no Brasil
 
@@ -105,13 +105,13 @@ Funções no protocolo:
 - Publicação de telemetria via **MQTT over TLS** para o edge node local
 - Capacidade de operação offline com buffer de 72h (SPIFFS)
 
-**PLC HomePlug AV — Transmissão pela Rede Elétrica**
+**PLC HomePlug AV: Transmissão pela Rede Elétrica**
 
 O HomePlug AV utiliza a própria fiação elétrica como meio de transmissão. Eficiência de até **88%** na transmissão de dados/comandos pelo cabo. Permite comunicação entre medidores sem infraestrutura adicional de rede, especialmente relevante para condomínios e microrredes industriais.
 
 No contexto VoltchainHub, o PLC serve como backbone de comunicação local entre nós da microrrede, complementando (não substituindo) Wi-Fi/Ethernet onde disponível.
 
-**WPT — Transferência de Energia por Indução Ressonante**
+**WPT: Transferência de Energia por Indução Ressonante**
 
 Para ambientes de curta distância (< 5m), o protocolo suporta transferência de energia por acoplamento ressonante magnético, com eficiência de **72%**. Aplicação primária: carregamento de dispositivos IoT da microrrede sem fio físico, reduzindo pontos de falha e manutenção.
 
@@ -204,7 +204,7 @@ SHIP provê a camada de transporte segura (TLS 1.3) para comunicação local ent
 
 ---
 
-## 4. LuzToken — Modelo Econômico
+## 4. LuzToken: Modelo Econômico
 
 ### 4.1 Tokenomics (ERC-1155)
 
@@ -276,8 +276,8 @@ O preço P2P é determinado pelo mercado local, não por tabela. Referências de
 | Referência | R$/kWh |
 |---|---|
 | Tarifa distribuidora (piso do comprador) | ~0,90 |
-| Preço P2P esperado (equilíbrio) | 0,05–0,15 |
-| Custo marginal solar residencial | ~0,02–0,05 |
+| Preço P2P esperado (equilíbrio) | 0,05-0,15 |
+| Custo marginal solar residencial | ~0,02-0,05 |
 | Fee do protocolo | 1% do valor transacionado |
 
 O comprador sempre paga menos que a tarifa da distribuidora. O vendedor sempre recebe mais que o custo marginal. O protocolo captura apenas 1% para sustentabilidade.
@@ -288,7 +288,7 @@ O comprador sempre paga menos que a tarifa da distribuidora. O vendedor sempre r
 - **0,5% fee de marketplace** sobre o valor financeiro de cada transação (cobrada em stablecoin no settlement)
 - Opcional: fee de registro de dispositivo (cobertura de custo de audit on-chain)
 
-A base de 0,5% foi escolhida como ~10× menor que um cartão de crédito e ~3× menor que uma média de maquininha brasileira. Rent-seeking é explicitamente fora de escopo — o protocolo não captura valor além do necessário para sustentar desenvolvimento e auditoria.
+A base de 0,5% foi escolhida como ~10× menor que um cartão de crédito e ~3× menor que uma média de maquininha brasileira. Rent-seeking é explicitamente fora de escopo: o protocolo não captura valor além do necessário para sustentar desenvolvimento e auditoria.
 
 **Destino do treasury:**
 - 60% → Desenvolvimento e manutenção do protocolo
@@ -302,10 +302,10 @@ A partir da **Fase 3**, o treasury é controlado pela DAO. Antes disso, por mult
 **VoltchainHub não emite token de recompensa próprio.** Prosumidores recebem pagamento em moeda real de sua escolha, não em um token sintético cujo valor depende da saúde do próprio protocolo.
 
 **Por que essa decisão:**
-1. **Reduz risco regulatório** — VoltchainHub não cria um ativo financeiro que a CVM possa classificar como valor mobiliário. O LuzToken é recibo de commodity física (kWh); o pagamento é em criptoativo de terceiros.
-2. **Liberdade do prosumidor** — quem quer receber em BRL-stable (BRZ, BRLA, cBRL) recebe; quem quer em USD-stable (USDC, USDT, DAI) recebe; quem quer em BTC ou ETH recebe. O protocolo é neutro quanto a moeda.
-3. **Adoção simplificada** — para um prosumidor não-crypto, onboarding é "você recebe R$ na sua carteira" (via BRZ/BRLA + off-ramp PIX), sem precisar entender tokenomics de um token novo.
-4. **Composabilidade** — outros protocolos podem integrar VoltchainHub sem adotar um token interno incompatível com o próprio modelo econômico.
+1. **Reduz risco regulatório**: VoltchainHub não cria um ativo financeiro que a CVM possa classificar como valor mobiliário. O LuzToken é recibo de commodity física (kWh); o pagamento é em criptoativo de terceiros.
+2. **Liberdade do prosumidor**: quem quer receber em BRL-stable (BRZ, BRLA, cBRL) recebe; quem quer em USD-stable (USDC, USDT, DAI) recebe; quem quer em BTC ou ETH recebe. O protocolo é neutro quanto a moeda.
+3. **Adoção simplificada**: para um prosumidor não-crypto, onboarding é "você recebe R$ na sua carteira" (via BRZ/BRLA + off-ramp PIX), sem precisar entender tokenomics de um token novo.
+4. **Composabilidade**: outros protocolos podem integrar VoltchainHub sem adotar um token interno incompatível com o próprio modelo econômico.
 
 **Fluxo de pagamento flexível:**
 
@@ -329,9 +329,9 @@ Comprador paga em X (ex.: BRZ)          Prosumidor prefere receber em Y (ex.: US
 
 **Tempo típico de liquidação:** ~2 minutos (1 bloco Polygon + confirmação do swap).
 
-**Slippage protection:** comprador define `maxSlippageBps` (padrão 50 = 0,5%) na transação. Se o swap exigir slippage maior que isso, a transação aborta e os fundos voltam ao comprador — nunca há execução em condição desfavorável ao prosumidor.
+**Slippage protection:** comprador define `maxSlippageBps` (padrão 50 = 0,5%) na transação. Se o swap exigir slippage maior que isso, a transação aborta e os fundos voltam ao comprador: nunca há execução em condição desfavorável ao prosumidor.
 
-### 4.6 TokenRegistry — Lista de Moedas Suportadas
+### 4.6 TokenRegistry: Lista de Moedas Suportadas
 
 A whitelist de tokens aceitos é controlada pelo `TokenRegistry` (contrato separado, governável). Critério de inclusão:
 
@@ -349,17 +349,17 @@ A whitelist de tokens aceitos é controlada pelo `TokenRegistry` (contrato separ
 | Nativos Polygon | MATIC (nativo), WETH, WBTC |
 | Outros | LINK, AAVE (via liquidez Uniswap) |
 
-Adicionar/remover token é uma proposta de governança — até Fase 3, multisig 3/5; após Fase 3, voto da DAO.
+Adicionar/remover token é uma proposta de governança: até Fase 3, multisig 3/5; após Fase 3, voto da DAO.
 
 ### 4.7 Off-Ramp para Reais (BRL)
 
 Prosumidor que escolhe receber em **BRZ/BRLA/cBRL** pode converter para PIX real via parceiros de off-ramp já existentes no ecossistema Polygon:
 
-- **Transfero** — BRZ ↔ PIX, sem KYC até R$ 3.000/mês, KYC simples acima
-- **Ripio** — BRLA ↔ PIX, KYC obrigatório
-- **Mercado Bitcoin** — múltiplas stables ↔ PIX, KYC obrigatório
+- **Transfero**: BRZ ↔ PIX, sem KYC até R$ 3.000/mês, KYC simples acima
+- **Ripio**: BRLA ↔ PIX, KYC obrigatório
+- **Mercado Bitcoin**: múltiplas stables ↔ PIX, KYC obrigatório
 
-VoltchainHub **não opera off-ramp próprio** — integra os existentes. Isso isola completamente o protocolo de responsabilidade bancária/cambial.
+VoltchainHub **não opera off-ramp próprio**: integra os existentes. Isso isola completamente o protocolo de responsabilidade bancária/cambial.
 
 ---
 
@@ -374,12 +374,12 @@ O maior vetor de ataque em um sistema de energia tokenizada é a **fraude de med
 - Assinatura executada no próprio secure element; o firmware de aplicação nunca vê a chave
 - ESP32-S3 com Secure Boot v2 + Flash Encryption + eFuse (device id one-time programmable). Migração futura ao ESP32-C6 + ESP-TEE (periférico ECDSA em HW) está em avaliação, ver `docs/design/firmware-esp32s3.md`
 
-**Camada 2 – Attestation On-Chain:**
+**Camada 2: Attestation On-Chain:**
 - Durante registro, o dispositivo assina um challenge do contrato `DeviceRegistry`
 - A chave pública é registrada on-chain vinculada ao endereço do proprietário
 - Cada leitura subsequente inclui assinatura + nonce sequencial (previne replay attacks)
 
-**Camada 3 – Validação Estatística:**
+**Camada 3: Validação Estatística:**
 - `EnergyOracle` mantém histórico de leituras por dispositivo
 - Anomalias (pico súbito, padrão impossível) geram flag e revisão manual
 - Threshold configurável por tipo de instalação (residencial vs. industrial)
@@ -407,7 +407,7 @@ Todos os resultados de auditoria são publicados no repositório público.
 
 ### 5.4 Regulatório: Como Opera Dentro da ANEEL REN 1000
 
-VoltchainHub **não substitui** a distribuidora — ela ainda é obrigada por lei. O protocolo opera na camada de **liquidação financeira** e **otimização de uso** dos créditos de compensação.
+VoltchainHub **não substitui** a distribuidora, que ainda é obrigada por lei. O protocolo opera na camada de **liquidação financeira** e **otimização de uso** dos créditos de compensação.
 
 **Modelo de compatibilidade:**
 
@@ -430,7 +430,7 @@ Esse modelo se apoia no sistema de compensação regido pela **Lei 14.300/2022**
 
 ## 6. Roadmap
 
-### Fase 1 — MVP Técnico (30 dias)
+### Fase 1: MVP Técnico (30 dias)
 - [ ] Firmware ESP32-S3: leitura Modbus + assinatura ECDSA + MQTT
 - [ ] Contratos Solidity: LuzToken, DeviceRegistry, EnergyOracle (testnet Polygon Mumbai)
 - [ ] OpenEMS adapter: publicação de leituras para oracle
@@ -438,7 +438,7 @@ Esse modelo se apoia no sistema de compensação regido pela **Lei 14.300/2022**
 - [ ] Dashboard básico: saldo LuzToken, histórico de transações
 - **Critério de sucesso:** Transação end-to-end simulada com hardware real
 
-### Fase 2 — Piloto 10 Prosumidores MG (90 dias)
+### Fase 2: Piloto 10 Prosumidores MG (90 dias)
 - [ ] Deploy em 10 residências na Região Metropolitana de BH
 - [ ] Integração com 3 modelos de inversores populares no Brasil (Fronius, Growatt, Deye)
 - [ ] Contratos em Polygon mainnet com valor real
@@ -446,7 +446,7 @@ Esse modelo se apoia no sistema de compensação regido pela **Lei 14.300/2022**
 - [ ] Relatório técnico público de resultados
 - **Critério de sucesso:** ≥ 500 kWh transacionados P2P com latência < 10 min
 
-### Fase 3 — Protocolo Público + DAO (180 dias)
+### Fase 3: Protocolo Público + DAO (180 dias)
 - [ ] Auditoria de segurança por firma externa
 - [ ] Deploy de governança Aragon OSx
 - [ ] SDK público (TypeScript + Python) para integradores
@@ -455,7 +455,7 @@ Esse modelo se apoia no sistema de compensação regido pela **Lei 14.300/2022**
 - [ ] Integração com SHIP protocol para discovery automático
 - **Critério de sucesso:** ≥ 3 integradores independentes usando o protocolo
 
-### Fase 4 — 1000 Nós Ativos (1 ano)
+### Fase 4: 1000 Nós Ativos (1 ano)
 - [ ] 1000+ dispositivos registrados on-chain
 - [ ] Expansão para 5 estados brasileiros
 - [ ] Parceria com pelo menos 1 distribuidora piloto
@@ -471,8 +471,8 @@ Esse modelo se apoia no sistema de compensação regido pela **Lei 14.300/2022**
 
 | Dimensão | Distribuidora Atual | VoltchainHub P2P |
 |---|---|---|
-| Preço ao comprador | R$ 0,90/kWh | R$ 0,05–0,15/kWh |
-| Receita ao vendedor | R$ 0,00 (crédito) | R$ 0,05–0,15/kWh |
+| Preço ao comprador | R$ 0,90/kWh | R$ 0,05-0,15/kWh |
+| Receita ao vendedor | R$ 0,00 (crédito) | R$ 0,05-0,15/kWh |
 | Transparência | Opaca | 100% on-chain |
 | Latência de liquidação | 30 dias (fatura) | ~7 minutos |
 | Acesso | Monopólio regional | Permissionless |
@@ -491,11 +491,11 @@ O VoltchainHub é o único protocolo totalmente open-source, construído desde o
 
 ### Por Que Brasil/LatAm Primeiro
 
-1. **Market timing:** 5M+ prosumidores ativos, 20M previstos — janela de 5 anos para se tornar standard
+1. **Market timing:** 5M+ prosumidores ativos, 20M previstos: janela de 5 anos para se tornar standard
 2. **Sem concorrência local:** zero protocolos open-source nacionais para este nicho
 3. **Marco regulatório favorável:** ANEEL REN 1000 é mais avançada que muitos países europeus em geração distribuída
-4. **Irradiação solar:** Brasil tem irradiação 30–40% superior à Europa — custo marginal solar mais baixo
-5. **Potencial LatAm:** Chile, Colômbia, México têm contextos similares — modelo exportável com ajustes mínimos
+4. **Irradiação solar:** Brasil tem irradiação 30-40% superior à Europa: custo marginal solar mais baixo
+5. **Potencial LatAm:** Chile, Colômbia, México têm contextos similares: modelo exportável com ajustes mínimos
 
 ---
 
@@ -509,7 +509,7 @@ Todo código do VoltchainHub é e sempre será Apache 2.0:
 - Adapters OpenEMS/PowerMatcher
 - SDKs e ferramentas
 
-Nenhuma funcionalidade core será proprietária. O modelo de negócio do ecossistema é construído sobre serviços, suporte e integração — não sobre lock-in de protocolo.
+Nenhuma funcionalidade core será proprietária. O modelo de negócio do ecossistema é construído sobre serviços, suporte e integração, não sobre lock-in de protocolo.
 
 ### 8.2 Fase 1: Multisig Gnosis Safe 3/5
 
@@ -533,7 +533,7 @@ Na Fase 3, a governança migra para uma DAO usando **Aragon OSx** (modular, audi
 
 O protocolo cresce com a comunidade. Formas de contribuir:
 
-- **Código:** PRs no GitHub — issues marcadas como `good-first-issue` para novos contribuidores
+- **Código:** PRs no GitHub: issues marcadas como `good-first-issue` para novos contribuidores
 - **Hardware:** Testar com novos inversores/medidores e contribuir adapters OpenEMS
 - **Pesquisa:** Simulações de mercado, otimização de algoritmos PowerMatcher
 - **Documentação:** Guias de instalação, tradução, casos de uso regionais
@@ -556,7 +556,7 @@ O protocolo não pertence a uma empresa. Pertence a uma visão: tecnologia como 
 - Advogados de energia familiarizados com regulação ANEEL
 - Prosumidores dispostos a ser piloto na Fase 2
 
-Se você acredita que energia é um direito, não um privilégio de quem pode pagar R$ 0,90/kWh — **você já é parte disso.**
+Se você acredita que energia é um direito, não um privilégio de quem pode pagar R$ 0,90/kWh, **você já é parte disso.**
 
 ---
 
@@ -564,7 +564,7 @@ Se você acredita que energia é um direito, não um privilégio de quem pode pa
 
 O Brasil está na encruzilhada energética. De um lado, uma infraestrutura centralizada do século XX, cara e ineficiente. Do outro, 5 milhões de prosumidores gerando energia limpa, travados em um sistema que não permite a troca direta entre vizinhos.
 
-VoltchainHub é a infraestrutura que falta. Não é uma startup. Não é um produto. É um **protocolo aberto** — como o HTTP é para a web, como o Bitcoin é para o dinheiro, o VoltchainHub aspira ser para a energia distribuída brasileira.
+VoltchainHub é a infraestrutura que falta. Não é uma startup. Não é um produto. É um **protocolo aberto**: como o HTTP é para a web, como o Bitcoin é para o dinheiro, o VoltchainHub aspira ser para a energia distribuída brasileira.
 
 A tecnologia existe. O marco regulatório existe. O mercado existe. O que faltava era alguém colocar as peças juntas, de forma aberta, para que qualquer pessoa possa usar, auditar e melhorar.
 
@@ -578,7 +578,7 @@ Essa é a missão do VoltchainHub.
 
 ---
 
-## Apêndice A — Contratos Inteligentes (Interfaces Solidity)
+## Apêndice A: Contratos Inteligentes (Interfaces Solidity)
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -736,17 +736,17 @@ interface IEnergyVault {
 
 ---
 
-## Apêndice B — Stack Tecnológica Completa
+## Apêndice B: Stack Tecnológica Completa
 
 | Camada | Componente | Versão | Licença | Link |
 |---|---|---|---|---|
 | Hardware | ESP32-S3 | ESP-IDF 5.x | Apache 2.0 | espressif.com |
-| Hardware | HomePlug AV | — | Spec aberta | homeplug.org |
+| Hardware | HomePlug AV | N/A | Spec aberta | homeplug.org |
 | Edge | OpenEMS | 2024.x | LGPL 2.1 | openems.io |
 | Edge | PowerMatcher | 1.2 | Apache 2.0 | github.com/flexiblepower |
 | Protocolo | S2 Protocol | 1.0 | Apache 2.0 | s2standard.org |
 | Protocolo | SHIP | 1.0 | Spec aberta | eebus.org |
-| Blockchain | Polygon PoS | — | MIT | polygon.technology |
+| Blockchain | Polygon PoS | N/A | MIT | polygon.technology |
 | Contratos | OpenZeppelin | 5.x | MIT | openzeppelin.com |
 | Contratos | Hardhat | 2.x | MIT | hardhat.org |
 | Segurança | Slither | latest | AGPL 3.0 | github.com/crytic |
@@ -762,39 +762,39 @@ interface IEnergyVault {
 
 ---
 
-## Apêndice C — Referências e Projetos Base
+## Apêndice C: Referências e Projetos Base
 
 ### Regulatório Brasil
-- ANEEL REN 1000/2021 — Marco legal de geração distribuída
-- ANEEL REN 1059/2023 — Atualização sobre sistemas de armazenamento
-- MME PDE 2031 — Plano Decenal de Expansão de Energia (projeções solar)
+- ANEEL REN 1000/2021: Marco legal de geração distribuída
+- ANEEL REN 1059/2023: Atualização sobre sistemas de armazenamento
+- MME PDE 2031: Plano Decenal de Expansão de Energia (projeções solar)
 
 ### Padrões Técnicos
-- IEC 62746-10-3 (S2 Protocol) — Customer Energy Manager interface
-- IEEE 1901 (HomePlug AV) — Broadband over Power Line
-- IEC 61968/61970 (CIM) — Common Information Model para energia
+- IEC 62746-10-3 (S2 Protocol): Customer Energy Manager interface
+- IEEE 1901 (HomePlug AV): Broadband over Power Line
+- IEC 61968/61970 (CIM): Common Information Model para energia
 
 ### Projetos Open-Source Base
-- **OpenEMS** — github.com/OpenEMS/openems
-- **PowerMatcher** — github.com/flexiblepower/powermatcher
-- **S2 Protocol Reference** — github.com/flexiblepower/s2-ws-json
-- **Hardhat** — github.com/NomicFoundation/hardhat
-- **OpenZeppelin Contracts** — github.com/OpenZeppelin/openzeppelin-contracts
+- **OpenEMS**: github.com/OpenEMS/openems
+- **PowerMatcher**: github.com/flexiblepower/powermatcher
+- **S2 Protocol Reference**: github.com/flexiblepower/s2-ws-json
+- **Hardhat**: github.com/NomicFoundation/hardhat
+- **OpenZeppelin Contracts**: github.com/OpenZeppelin/openzeppelin-contracts
 
 ### Projetos de Referência no Setor
-- **Energy Web Chain** — Blockchain dedicada para setor elétrico (EWF)
-- **Power Ledger** — Protocolo P2P australiano (proprietário)
-- **Brooklyn Microgrid** — Case LO3 Energy, Nova York
-- **Pylon Network** — Protocolo europeu, Espanha
+- **Energy Web Chain**: Blockchain dedicada para setor elétrico (EWF)
+- **Power Ledger**: Protocolo P2P australiano (proprietário)
+- **Brooklyn Microgrid**: Case LO3 Energy, Nova York
+- **Pylon Network**: Protocolo europeu, Espanha
 
 ### Papers e Estudos
-- IRENA (2023) — "Peer-to-Peer Electricity Trading: Innovation Landscape Brief"
-- ENEA Consulting (2022) — "Blockchain for Energy: Beyond the Hype"
-- ANEEL (2024) — Relatório Anual de Geração Distribuída
-- Tushar et al. (2020) — "Peer-to-Peer Energy Trading in Smart Grid Networks"
+- IRENA (2023): "Peer-to-Peer Electricity Trading: Innovation Landscape Brief"
+- ENEA Consulting (2022): "Blockchain for Energy: Beyond the Hype"
+- ANEEL (2024): Relatório Anual de Geração Distribuída
+- Tushar et al. (2020): "Peer-to-Peer Energy Trading in Smart Grid Networks"
 
 ---
 
-*VoltchainHub Whitepaper v0.1 — Março 2026*  
-*Licença Apache 2.0 — Livre para uso, modificação e distribuição com atribuição*  
+*VoltchainHub Whitepaper v0.1: Março 2026*  
+*Licença Apache 2.0: Livre para uso, modificação e distribuição com atribuição*  
 *"A rede começa com o primeiro nó."*
