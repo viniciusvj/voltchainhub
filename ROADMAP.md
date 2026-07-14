@@ -20,7 +20,7 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ Link app → home (logo e "Voltar ao site" no sidebar do app)
 - ✅ Top bar compartilhada no app (badge "Testnet Amoy" + nav Início/Whitepaper/GitHub, paridade com a landing)
 - ✅ CTA contextual: seção "Experimente na testnet" na landing com deep-links (`/app/devices`, `/app/market`)
-- ⬜ Header/identidade visual totalmente unificados (paleta: landing é âmbar `#F5A623`, app é azul `#0066FF`; convergir)
+- ✅ Paleta unificada: landing adota os tokens do app (fundo #0A0A0F, âmbar #FFB800, azul #0066FF); CSS versionado (?v)
 - ⬜ Estado de conexão de carteira visível/consistente ao navegar entre landing e app
 - ⬜ Rodapé unificado (links whitepaper, GitHub, Discussions, status) nas duas telas
 - ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp

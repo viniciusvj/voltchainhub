@@ -1,14 +1,17 @@
 /* VoltchainHub — Global Styles */
 :root {
-  --bg: #0d1117;
-  --bg2: #161b22;
-  --bg3: #21262d;
-  --border: #30363d;
+  /* Shared brand tokens with the dApp (frontend/tailwind.config.ts):
+     volt-dark backgrounds, electric blue + solar amber. */
+  --bg: #0A0A0F;
+  --bg2: #12121A;
+  --bg3: #1A1A25;
+  --border: #222230;
   --text: #e6edf3;
   --text-muted: #8b949e;
-  --primary: #F5A623;
-  --primary-dark: #d4881a;
-  --primary-glow: rgba(245, 166, 35, 0.15);
+  --electric: #0066FF;
+  --primary: #FFB800;
+  --primary-dark: #E0A400;
+  --primary-glow: rgba(255, 184, 0, 0.15);
   --green: #3fb950;
   --sidebar-w: 260px;
   --header-h: 60px;
@@ -26,8 +29,8 @@ body {
   font-size: 16px;
 }
 
-a { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; color: var(--primary-dark); }
+a { color: var(--electric); text-decoration: none; }
+a:hover { text-decoration: underline; color: #3388ff; }
 
 /* ── SCROLL PROGRESS ── */
 #scroll-progress {
@@ -35,7 +38,7 @@ a:hover { text-decoration: underline; color: var(--primary-dark); }
   top: 0; left: 0;
   height: 3px;
   width: 0%;
-  background: linear-gradient(90deg, var(--primary), #ffcc5c);
+  background: linear-gradient(90deg, var(--electric), var(--primary));
   z-index: 9999;
   transition: width 0.1s linear;
 }
