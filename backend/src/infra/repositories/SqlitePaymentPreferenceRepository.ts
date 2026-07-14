@@ -1,6 +1,8 @@
 import type Database from 'better-sqlite3';
 import type { PaymentPreference, TokenCategory } from '../../domain/entities/PaymentPreference.js';
-import type { PaymentPreferenceRepository } from '../../domain/ports/PaymentPreferenceRepository.js';
+import type { PaymentPreferenceRepository, PreferenceStats } from '../../domain/ports/PaymentPreferenceRepository.js';
+
+const TOP_TOKENS_LIMIT = 10;
 
 export class SqlitePaymentPreferenceRepository implements PaymentPreferenceRepository {
   constructor(private db: Database.Database) {
@@ -49,6 +51,42 @@ export class SqlitePaymentPreferenceRepository implements PaymentPreferenceRepos
       .prepare('SELECT * FROM payment_preferences ORDER BY updated_at DESC')
       .all() as DbRow[];
     return rows.map(toPref);
+  }
+
+  getStats(): PreferenceStats {
+    const totals = this.db
+      .prepare('SELECT COUNT(*) AS total, COALESCE(AVG(max_slippage_bps), 0) AS avg_slippage FROM payment_preferences')
+      .get() as { total: number; avg_slippage: number };
+
+    const byCategory: Record<TokenCategory, number> = {
+      BRL_STABLE: 0,
+      USD_STABLE: 0,
+      NATIVE_WRAPPED: 0,
+      OTHER: 0,
+    };
+    const categoryRows = this.db
+      .prepare('SELECT category, COUNT(*) AS count FROM payment_preferences GROUP BY category')
+      .all() as Array<{ category: string; count: number }>;
+    for (const row of categoryRows) {
+      if (row.category in byCategory) byCategory[row.category as TokenCategory] = row.count;
+    }
+
+    const topTokens = this.db
+      .prepare(`
+        SELECT receive_token_symbol AS symbol, COUNT(*) AS count
+        FROM payment_preferences
+        GROUP BY receive_token_symbol
+        ORDER BY count DESC, symbol ASC
+        LIMIT ?
+      `)
+      .all(TOP_TOKENS_LIMIT) as Array<{ symbol: string; count: number }>;
+
+    return {
+      totalPreferencesSet: totals.total,
+      byCategory,
+      topTokens,
+      averageMaxSlippageBps: Math.round(totals.avg_slippage),
+    };
   }
 }
 

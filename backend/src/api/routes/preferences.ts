@@ -18,6 +18,8 @@ export function registerPreferenceRoutes(
   app: FastifyInstance,
   preferenceRepo: PaymentPreferenceRepository,
 ): void {
+  app.get('/preferences/stats', async () => preferenceRepo.getStats());
+
   app.get<{ Params: { ownerAddress: string } }>(
     '/preferences/:ownerAddress',
     async (request, reply) => {
