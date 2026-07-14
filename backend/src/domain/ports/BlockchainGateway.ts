@@ -6,4 +6,5 @@ export interface BlockchainGateway {
   lockEscrow(buyer: string, seller: string, amountKWh: number, pricePerKWh: number): Promise<{ txHash: string }>;
   releaseEscrow(tradeId: string): Promise<{ txHash: string }>;
   getBalance(address: string): Promise<{ luz: string; matic: string }>;
+  getChainStats(): Promise<{ deviceCount: string; luzTotalSupply: string }>;
 }

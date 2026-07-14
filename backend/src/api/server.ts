@@ -12,6 +12,7 @@ import { registerMarketRoutes } from './routes/market.js';
 import { registerTradeRoutes } from './routes/trades.js';
 import { registerHealthRoutes } from './routes/health.js';
 import { registerPreferenceRoutes } from './routes/preferences.js';
+import { registerMetricsRoutes } from './routes/metrics.js';
 
 export interface ApiDeps {
   deviceRepo: DeviceRepository;
@@ -37,6 +38,7 @@ export async function buildServer(deps: ApiDeps) {
   registerMarketRoutes(app, deps.sessionRepo);
   registerTradeRoutes(app, deps.tradeRepo, deps.blockchain);
   registerPreferenceRoutes(app, deps.preferenceRepo);
+  registerMetricsRoutes(app, deps.deviceRepo, deps.preferenceRepo, deps.blockchain);
 
   return app;
 }

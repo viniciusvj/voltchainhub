@@ -7,6 +7,7 @@ import { createLogger } from '../../logger.js';
 import EnergyOracleAbi from './abis/EnergyOracle.json' with { type: 'json' };
 import LuzTokenAbi from './abis/LuzToken.json' with { type: 'json' };
 import EnergyVaultAbi from './abis/EnergyVault.json' with { type: 'json' };
+import DeviceRegistryAbi from './abis/DeviceRegistry.json' with { type: 'json' };
 
 const log = createLogger('blockchain');
 
@@ -21,6 +22,7 @@ export class EthersBlockchainGateway implements BlockchainGateway {
   private oracle: ethers.Contract;
   private luzToken: ethers.Contract;
   private vault: ethers.Contract;
+  private deviceRegistry: ethers.Contract;
 
   constructor(env: Env) {
     this.provider = new ethers.JsonRpcProvider(env.RPC_URL, env.CHAIN_ID);
@@ -28,6 +30,7 @@ export class EthersBlockchainGateway implements BlockchainGateway {
     this.oracle = new ethers.Contract(env.ENERGY_ORACLE_ADDRESS || ethers.ZeroAddress, EnergyOracleAbi, this.signer);
     this.luzToken = new ethers.Contract(env.LUZ_TOKEN_ADDRESS || ethers.ZeroAddress, LuzTokenAbi, this.signer);
     this.vault = new ethers.Contract(env.ENERGY_VAULT_ADDRESS || ethers.ZeroAddress, EnergyVaultAbi, this.signer);
+    this.deviceRegistry = new ethers.Contract(env.DEVICE_REGISTRY_ADDRESS || ethers.ZeroAddress, DeviceRegistryAbi, this.signer);
   }
 
   async submitReading(reading: Reading): Promise<{ txHash: string }> {
@@ -115,6 +118,25 @@ export class EthersBlockchainGateway implements BlockchainGateway {
     return {
       luz: ethers.formatUnits(luzBalance, 18),
       matic: ethers.formatEther(maticBalance),
+    };
+  }
+
+  async getChainStats(): Promise<{ deviceCount: string; luzTotalSupply: string }> {
+    let deviceCount = 0n;
+    let luzTotalSupply = 0n;
+    try {
+      deviceCount = await this.deviceRegistry.deviceCount();
+    } catch (err) {
+      log.warn({ err }, 'getChainStats: deviceCount read failed');
+    }
+    try {
+      luzTotalSupply = await this.luzToken.totalSupplyAll();
+    } catch (err) {
+      log.warn({ err }, 'getChainStats: luzTotalSupply read failed');
+    }
+    return {
+      deviceCount: deviceCount.toString(),
+      luzTotalSupply: ethers.formatUnits(luzTotalSupply, 18),
     };
   }
 }
