@@ -1,0 +1,14 @@
+# VoltchainHub
+
+> Protocolo open-source de energia descentralizada que une IoT de borda (ESP32-S3), OpenEMS e blockchain Polygon PoS para criar um mercado peer-to-peer (P2P) de energia solar no Brasil. Mantido pela V2W Business Solutions.
+
+## O que e
+- Medicao de energia na borda com ESP32-S3 + OpenEMS.
+- Liquidacao de creditos de energia on-chain (Polygon PoS).
+- Mercado P2P de energia solar entre produtores e consumidores.
+- Codigo aberto: https://github.com/viniciusvj/voltchainhub
+
+## Recursos
+- Site: https://voltchainhub.org
+- Whitepaper: https://voltchainhub.org/whitepaper.html
+- Mantenedor: V2W Business Solutions (https://www.v2w.com.br)

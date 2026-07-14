@@ -24,6 +24,7 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ⬜ Estado de conexão de carteira visível/consistente ao navegar entre landing e app
 - ✅ Rodapé unificado: app tem footer (VoltchainHub/Apache 2.0/testnet + Início/Whitepaper/GitHub/Discussions); landing ganhou link Discussions
 - ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp
+- ✅ Repo docs/ sincronizado com a produção (index/whitepaper/style + llms/robots/sitemap); fonte única, edições agora podem ser repo-first
 - ⬜ Considerar renderizar a landing dentro do próprio Next (rota `/`) para header/rodapé realmente compartilhados
 
 ## Backend & dados

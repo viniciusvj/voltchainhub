@@ -11,7 +11,22 @@
   <link rel="alternate" hreflang="fr" href="https://voltchainhub.org/?lang=fr" />
   <link rel="alternate" hreflang="x-default" href="https://voltchainhub.org/" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="canonical" href="https://voltchainhub.org/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VoltchainHub" />
+  <meta property="og:title" content="VoltchainHub: Protocolo Aberto de Energia Descentralizada" />
+  <meta property="og:description" content="Protocolo open-source que une IoT de borda (ESP32-S3), OpenEMS e blockchain Polygon PoS para um mercado P2P de energia solar no Brasil." />
+  <meta property="og:url" content="https://voltchainhub.org/" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="VoltchainHub: Protocolo Aberto de Energia Descentralizada" />
+  <meta name="twitter:description" content="Protocolo open-source de energia descentralizada: IoT de borda, OpenEMS e Polygon PoS para mercado P2P de energia solar." />
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://voltchainhub.org/#website","url":"https://voltchainhub.org/","name":"VoltchainHub","inLanguage":"pt-BR","publisher":{"@id":"https://www.v2w.com.br/#org"}},{"@type":"SoftwareApplication","@id":"https://voltchainhub.org/#app","name":"VoltchainHub","applicationCategory":"DeveloperApplication","operatingSystem":"Web, Linux, ESP32","url":"https://voltchainhub.org/app/","codeRepository":"https://github.com/viniciusvj/voltchainhub","description":"Protocolo open-source que une IoT de borda (ESP32-S3), OpenEMS e blockchain Polygon PoS para um mercado P2P de energia solar no Brasil.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@id":"https://www.v2w.com.br/#org"}},{"@type":"Organization","@id":"https://www.v2w.com.br/#org","name":"V2W Business Solutions","url":"https://www.v2w.com.br/"}]}</script>
+  <link rel="stylesheet" href="style.css?v=20260714a" />
   <style>
     .lang-switch-wrap { display:inline-flex; align-items:center; margin-left:14px; color:inherit; }
   </style>
@@ -154,7 +169,7 @@
         <div class="feature-card">
           <div class="feature-icon">📡</div>
           <h3 data-i18n="voltchain.features.f4.title">ESP32-S3 Edge</h3>
-          <p data-i18n="voltchain.features.f4.body">Medição Modbus RTU/TCP + assinatura ECDSA P-256 + MQTT over TLS. Chave privada em eFuse + TrustZone, fraude de medição impossível.</p>
+          <p data-i18n="voltchain.features.f4.body">Medição Modbus RTU/TCP + assinatura ECDSA P-256 + MQTT over TLS. Chave privada num secure element dedicado (ATECC608B), fraude de medição impossível.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
@@ -174,6 +189,17 @@
       </div>
     </section>
 
+    <!-- APP CTA -->
+    <section class="features" style="text-align:center">
+      <h2>Experimente na testnet</h2>
+      <p style="color:var(--text-muted);max-width:640px;margin:0 auto 1.5rem">O dApp está no ar na Polygon Amoy: conecte a carteira, registre um dispositivo e veja os LuzTokens on-chain.</p>
+      <div class="btn-group" style="justify-content:center">
+        <a href="app/" class="btn btn-primary">⚡ Abrir Dashboard</a>
+        <a href="app/devices/" class="btn btn-secondary">📡 Registrar dispositivo</a>
+        <a href="app/market/" class="btn btn-secondary">📈 Ver mercado</a>
+      </div>
+    </section>
+
     <!-- FOOTER -->
     <footer>
       <div data-i18n="voltchain.footer.tagline">
@@ -181,7 +207,9 @@
       </div>
       <div class="footer-links">
         <a href="whitepaper.html" data-i18n="voltchain.nav.whitepaper">Whitepaper</a>
+        <a href="app/">App</a>
         <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/viniciusvj/voltchainhub/discussions" target="_blank" rel="noopener">Discussions</a>
         <a href="#" data-i18n="voltchain.nav.discord">Discord</a>
       </div>
     </footer>
