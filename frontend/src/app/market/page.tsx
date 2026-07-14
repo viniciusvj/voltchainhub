@@ -2,6 +2,7 @@ import { TrendingUp } from 'lucide-react';
 import { PriceChart }    from '@/components/market/price-chart';
 import { OrderBook }     from '@/components/market/order-book';
 import { TradeForm }     from '@/components/market/trade-form';
+import { SellerOnboard } from '@/components/market/seller-onboard';
 import { ClearingInfo }  from '@/components/market/clearing-info';
 import { MarketHistory } from '@/components/market/market-history';
 
@@ -35,9 +36,10 @@ export default function MarketPage() {
         <div className="lg:col-span-3">
           <OrderBook />
         </div>
-        {/* Trade form */}
-        <div className="lg:col-span-2">
+        {/* Trade form + seller onboarding */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
           <TradeForm />
+          <SellerOnboard />
         </div>
       </div>
 
