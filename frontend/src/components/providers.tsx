@@ -5,6 +5,7 @@ import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { config } from '@/lib/wagmi';
+import { I18nProvider } from '@/lib/i18n';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -27,7 +28,7 @@ export function Providers({ children }: ProvidersProps) {
             overlayBlur: 'small',
           })}
         >
-          {children}
+          <I18nProvider>{children}</I18nProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

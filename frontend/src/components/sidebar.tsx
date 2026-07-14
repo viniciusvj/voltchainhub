@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useI18n } from '@/lib/i18n';
 import {
   LayoutDashboard,
   TrendingUp,
@@ -17,15 +18,16 @@ import {
 } from 'lucide-react';
 
 const navLinks = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/market', label: 'Marketplace', icon: TrendingUp },
-  { href: '/devices', label: 'Dispositivos', icon: Cpu },
-  { href: '/trades', label: 'Trades', icon: ArrowLeftRight },
-  { href: '/profile', label: 'Perfil', icon: User },
-];
+  { href: '/', key: 'nav.dashboard', icon: LayoutDashboard },
+  { href: '/market', key: 'nav.market', icon: TrendingUp },
+  { href: '/devices', key: 'nav.devices', icon: Cpu },
+  { href: '/trades', key: 'nav.trades', icon: ArrowLeftRight },
+  { href: '/profile', key: 'nav.profile', icon: User },
+] as const;
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const SidebarContent = () => (
@@ -43,7 +45,7 @@ export function Sidebar() {
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navLinks.map(({ href, label, icon: Icon }) => {
+        {navLinks.map(({ href, key, icon: Icon }) => {
           const isActive = pathname === href;
           return (
             <Link
@@ -61,7 +63,7 @@ export function Sidebar() {
                   isActive ? 'text-[#0066FF]' : 'text-gray-500'
                 }`}
               />
-              {label}
+              {t(key)}
             </Link>
           );
         })}
@@ -73,7 +75,7 @@ export function Sidebar() {
         className="flex items-center gap-3 mx-3 mb-1 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-100 hover:bg-volt-dark-700 transition-colors"
       >
         <ArrowLeft className="w-5 h-5 flex-shrink-0 text-gray-500" />
-        Voltar ao site
+        {t('nav.backToSite')}
       </a>
 
       {/* ConnectButton */}
