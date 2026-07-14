@@ -1,16 +1,16 @@
 'use client'
 
 import { Zap, TrendingUp, Wallet } from 'lucide-react'
-import { useAccount } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
+import { formatUnits } from 'viem'
 import { cn } from '@/lib/utils'
+import { luzTokenAbi } from '@/contracts/abis/LuzToken'
+import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses'
 
-// Mock data - replace with actual contract reads when ready
-const MOCK_BALANCE = {
-  kWh: 142.5,
-  brlEquivalent: 14.25,
-  changePercent: 4.2,
-  changePositive: true,
-}
+// LuzToken receipt id used by the MVP flows (1 = 1 kWh receipt).
+const LUZ_TOKEN_ID = BigInt(1)
+// Indicative BRL price per kWh for the estimate line (display only).
+const BRL_PER_KWH = 0.1
 
 function Sparkline() {
   // Simple SVG sparkline (mock upward trend)
@@ -53,7 +53,20 @@ function Sparkline() {
 }
 
 export function BalanceCard() {
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
+
+  const luzAddress = CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID].luzToken
+  const { data: rawBalance } = useReadContract({
+    address: luzAddress,
+    abi: luzTokenAbi,
+    functionName: 'balanceOf',
+    args: address ? [address, LUZ_TOKEN_ID] : undefined,
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: Boolean(address) },
+  })
+
+  const kWh = rawBalance !== undefined ? Number(formatUnits(rawBalance as bigint, 18)) : 0
+  const brlEquivalent = kWh * BRL_PER_KWH
 
   if (!isConnected) {
     return (
@@ -87,31 +100,23 @@ export function BalanceCard() {
       <div className="flex items-end justify-between">
         <div>
           <p className="text-3xl font-bold text-white tracking-tight">
-            {MOCK_BALANCE.kWh.toLocaleString('pt-BR', { minimumFractionDigits: 1 })}
+            {kWh.toLocaleString('pt-BR', { minimumFractionDigits: 1 })}
             <span className="text-lg font-medium text-gray-400 ml-1">kWh</span>
           </p>
           <p className="text-sm text-gray-500 mt-0.5">
-            ≈ R$ {MOCK_BALANCE.brlEquivalent.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            ≈ R$ {brlEquivalent.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </p>
         </div>
         <Sparkline />
       </div>
 
-      {/* Change indicator */}
+      {/* Live source indicator */}
       <div className="flex items-center gap-1.5">
-        <div
-          className={cn(
-            'flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full',
-            MOCK_BALANCE.changePositive
-              ? 'bg-green-500/10 text-green-400'
-              : 'bg-red-500/10 text-red-400'
-          )}
-        >
+        <div className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-electric/10 text-electric">
           <TrendingUp className="w-3 h-3" />
-          {MOCK_BALANCE.changePositive ? '+' : ''}
-          {MOCK_BALANCE.changePercent.toLocaleString('pt-BR', { minimumFractionDigits: 1 })}%
+          on-chain
         </div>
-        <span className="text-xs text-gray-500">últimas 24h</span>
+        <span className="text-xs text-gray-500">LuzToken #1 na Amoy</span>
       </div>
     </div>
   )

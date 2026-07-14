@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, ClockRewind } from 'lucide-react';
+import { Lock, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ActiveEscrows } from '@/components/trades/active-escrows';
 import { TradeHistory } from '@/components/trades/trade-history';
@@ -10,7 +10,7 @@ type Tab = 'escrows' | 'history';
 
 const TABS: { id: Tab; label: string; icon: React.FC<{ className?: string }> }[] = [
   { id: 'escrows', label: 'Escrows Ativos', icon: Lock },
-  { id: 'history', label: 'Histórico', icon: ClockRewind },
+  { id: 'history', label: 'Histórico', icon: History },
 ];
 
 export function TabsClient() {

@@ -10,9 +10,11 @@ import {
   Wallet,
   Link as LinkIcon,
 } from 'lucide-react';
-import { useAccount } from 'wagmi';
+import { useAccount, useWriteContract } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { cn } from '@/lib/utils';
+import { deviceRegistryAbi } from '@/contracts/abis/DeviceRegistry';
+import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -416,6 +418,10 @@ export function RegisterDevice() {
   const [errors,     setErrors]     = useState<FieldError>({});
   const [submitting, setSubmitting] = useState(false);
   const [done,       setDone]       = useState(false);
+  const [txHash,     setTxHash]     = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const { writeContractAsync } = useWriteContract();
 
   function handleChange(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -457,10 +463,36 @@ export function RegisterDevice() {
 
   async function handleSubmit() {
     setSubmitting(true);
-    // Simulate on-chain call
-    await new Promise((r) => setTimeout(r, 2000));
-    setSubmitting(false);
-    setDone(true);
+    setSubmitError(null);
+    try {
+      const metadata = JSON.stringify({
+        name: form.name,
+        model: form.model,
+        capacityWh: Number(form.capacity),
+        location: form.location,
+      });
+      // attestationSig must be non-empty; the real P-256 attestation is verified
+      // off-chain, so a placeholder byte is used until the firmware signs.
+      const hash = await writeContractAsync({
+        address: CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID].deviceRegistry,
+        abi: deviceRegistryAbi,
+        functionName: 'registerDevice',
+        args: [
+          form.deviceId as `0x${string}`,
+          form.pubKeyX as `0x${string}`,
+          form.pubKeyY as `0x${string}`,
+          '0x00',
+          metadata,
+        ],
+        chainId: DEFAULT_CHAIN_ID,
+      });
+      setTxHash(hash);
+      setDone(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Falha ao enviar a transação');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function handleReset() {
@@ -468,6 +500,8 @@ export function RegisterDevice() {
     setForm(EMPTY_FORM);
     setErrors({});
     setDone(false);
+    setTxHash(null);
+    setSubmitError(null);
   }
 
   return (
@@ -506,6 +540,16 @@ export function RegisterDevice() {
               <span className="font-medium text-gray-300">{form.name}</span> foi adicionado
               à rede com sucesso.
             </p>
+            {txHash && (
+              <a
+                href={`https://amoy.polygonscan.com/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-[#0066FF] hover:underline mt-2 inline-block break-all"
+              >
+                Ver transação no PolygonScan
+              </a>
+            )}
           </div>
           <button
             onClick={handleReset}
@@ -525,6 +569,12 @@ export function RegisterDevice() {
             {step === 1 && <Step2 data={form} />}
             {step === 2 && <Step3 data={form} submitting={submitting} />}
           </div>
+
+          {submitError && (
+            <div className="mt-4 text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 break-words">
+              {submitError}
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="flex items-center justify-between mt-6 pt-5 border-t border-volt-dark-600">
