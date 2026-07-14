@@ -23,7 +23,7 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ⬜ Header/identidade visual totalmente unificados (paleta: landing é âmbar `#F5A623`, app é azul `#0066FF`; convergir)
 - ⬜ Estado de conexão de carteira visível/consistente ao navegar entre landing e app
 - ⬜ Rodapé unificado (links whitepaper, GitHub, Discussions, status) nas duas telas
-- ⬜ nginx: NÃO injetar os scripts v2w (analytics/i18n/contact-widget/cookie-bar) nas páginas `/app` (o sub_filter do vhost compartilhado injeta hoje; a cookie bar chega a interceptar o botão de conectar)
+- ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp
 - ⬜ Considerar renderizar a landing dentro do próprio Next (rota `/`) para header/rodapé realmente compartilhados
 
 ## Backend & dados
