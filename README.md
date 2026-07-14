@@ -78,6 +78,21 @@ O Brasil terá **20 milhões de prosumidores solares até 2030** (projeção ANE
 | Backend | Node.js, Mosquitto (MQTT), PostgreSQL |
 | Frontend | Next.js 14, Wagmi v2, TypeScript |
 
+## 📡 Contratos em testnet (Polygon Amoy)
+
+Deploy do core stack na testnet Amoy (chainId 80002), via Hardhat Ignition:
+
+| Contrato | Endereço |
+|----------|----------|
+| DeviceRegistry | [`0x02c4770b07b313C12E0288250505E9b04c742A29`](https://amoy.polygonscan.com/address/0x02c4770b07b313C12E0288250505E9b04c742A29) |
+| LuzToken (ERC-1155) | [`0x380b71ed16bA683d7adb471585740daF0507331A`](https://amoy.polygonscan.com/address/0x380b71ed16bA683d7adb471585740daF0507331A) |
+| TokenRegistry | [`0xf319976e714c460B9bf9a95228954bB6FEeE5874`](https://amoy.polygonscan.com/address/0xf319976e714c460B9bf9a95228954bB6FEeE5874) |
+| EnergyOracle | [`0x26a74154849753572CDaf85d5271Ffc055F8B9A8`](https://amoy.polygonscan.com/address/0x26a74154849753572CDaf85d5271Ffc055F8B9A8) |
+| EnergyVault | [`0x5f91d715adFd8130894d406431ccDE0defA2771F`](https://amoy.polygonscan.com/address/0x5f91d715adFd8130894d406431ccDE0defA2771F) |
+| VoltMarketplace | [`0x44eA9fD6489E8bAda380607e03841154f079DFB9`](https://amoy.polygonscan.com/address/0x44eA9fD6489E8bAda380607e03841154f079DFB9) |
+
+> Testnet: os tokens não têm valor real. Verificação de código no PolygonScan pendente (requer API key).
+
 ## 🚀 Quickstart (Phase 1 MVP)
 
 > **Nota:** o código do MVP (contracts/backend/frontend) está em desenvolvimento ativo. O whitepaper é o material de referência canônico enquanto o código é estabilizado.

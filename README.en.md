@@ -68,6 +68,21 @@ Brazil will have **20 million solar prosumers by 2030** (ANEEL projection). Toda
 | Backend | Node.js, Mosquitto (MQTT), PostgreSQL |
 | Frontend | Next.js 14, Wagmi v2, TypeScript |
 
+## 📡 Testnet contracts (Polygon Amoy)
+
+Core stack deployed to the Amoy testnet (chainId 80002) via Hardhat Ignition:
+
+| Contract | Address |
+|----------|---------|
+| DeviceRegistry | [`0x02c4770b07b313C12E0288250505E9b04c742A29`](https://amoy.polygonscan.com/address/0x02c4770b07b313C12E0288250505E9b04c742A29) |
+| LuzToken (ERC-1155) | [`0x380b71ed16bA683d7adb471585740daF0507331A`](https://amoy.polygonscan.com/address/0x380b71ed16bA683d7adb471585740daF0507331A) |
+| TokenRegistry | [`0xf319976e714c460B9bf9a95228954bB6FEeE5874`](https://amoy.polygonscan.com/address/0xf319976e714c460B9bf9a95228954bB6FEeE5874) |
+| EnergyOracle | [`0x26a74154849753572CDaf85d5271Ffc055F8B9A8`](https://amoy.polygonscan.com/address/0x26a74154849753572CDaf85d5271Ffc055F8B9A8) |
+| EnergyVault | [`0x5f91d715adFd8130894d406431ccDE0defA2771F`](https://amoy.polygonscan.com/address/0x5f91d715adFd8130894d406431ccDE0defA2771F) |
+| VoltMarketplace | [`0x44eA9fD6489E8bAda380607e03841154f079DFB9`](https://amoy.polygonscan.com/address/0x44eA9fD6489E8bAda380607e03841154f079DFB9) |
+
+> Testnet: tokens have no real value. PolygonScan source verification pending (requires an API key).
+
 ## 🚀 Quickstart (Phase 1 MVP)
 
 > **Note:** the MVP code (contracts/backend/frontend) is under active development. The whitepaper is the canonical reference while the code stabilizes.
