@@ -13,6 +13,7 @@ import {
   Zap,
   Menu,
   X,
+  ArrowLeft,
 } from 'lucide-react';
 
 const navLinks = [
@@ -29,13 +30,16 @@ export function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-volt-dark-800 border-r border-volt-dark-600 w-64">
-      {/* Logo / Title */}
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-volt-dark-600">
+      {/* Logo / Title (links back to the marketing site home) */}
+      <a
+        href="/"
+        className="flex items-center gap-2 px-6 py-5 border-b border-volt-dark-600 hover:bg-volt-dark-700 transition-colors"
+      >
         <Zap className="w-7 h-7 text-[#0066FF] fill-[#0066FF]" />
         <span className="text-lg font-bold text-white tracking-tight">
           VoltchainHub
         </span>
-      </div>
+      </a>
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -62,6 +66,15 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Back to the marketing site (plain anchor so it escapes the app basePath) */}
+      <a
+        href="/"
+        className="flex items-center gap-3 mx-3 mb-1 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-100 hover:bg-volt-dark-700 transition-colors"
+      >
+        <ArrowLeft className="w-5 h-5 flex-shrink-0 text-gray-500" />
+        Voltar ao site
+      </a>
 
       {/* ConnectButton */}
       <div className="px-4 py-4 border-t border-volt-dark-600">
