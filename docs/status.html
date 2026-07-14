@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoltchainHub: Status do Protocolo</title>
+  <meta name="description" content="Painel de status publico do VoltchainHub: saude da API, estado on-chain na testnet Amoy e contratos verificados." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0A0A0F" />
+  <link rel="canonical" href="https://voltchainhub.org/status.html" />
+  <link rel="stylesheet" href="style.css?v=20260714a" />
+  <style>
+    .status-wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+    .status-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:8px; }
+    .status-head h1 { font-size: 1.9rem; margin:0; }
+    .status-sub { color:#8b8b9a; margin: 0 0 28px; font-size:.95rem; }
+    .overall { display:inline-flex; align-items:center; gap:10px; padding:8px 16px; border-radius:999px; font-weight:600; font-size:.95rem; border:1px solid transparent; }
+    .overall.up { background:rgba(0,102,255,.12); border-color:rgba(0,102,255,.35); color:#4d94ff; }
+    .overall.down { background:rgba(255,71,71,.12); border-color:rgba(255,71,71,.35); color:#ff6b6b; }
+    .overall.wait { background:rgba(255,184,0,.10); border-color:rgba(255,184,0,.30); color:#FFB800; }
+    .dot { width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
+    .dot.up { background:#0066FF; box-shadow:0 0 10px #0066FF; }
+    .dot.down { background:#ff4747; box-shadow:0 0 10px #ff4747; }
+    .dot.wait { background:#FFB800; box-shadow:0 0 10px #FFB800; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:28px; }
+    .card { background:#12121a; border:1px solid #23232f; border-radius:14px; padding:18px 20px; }
+    .card h3 { margin:0 0 4px; font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:#8b8b9a; font-weight:600; }
+    .card .val { font-size:1.7rem; font-weight:700; color:#f5f5fa; }
+    .card .foot { font-size:.8rem; color:#6f6f80; margin-top:4px; }
+    .section-title { font-size:1.05rem; font-weight:600; margin:32px 0 14px; color:#f5f5fa; }
+    .svc { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:#12121a; border:1px solid #23232f; border-radius:12px; margin-bottom:10px; }
+    .svc .left { display:flex; align-items:center; gap:12px; }
+    .svc .name { font-weight:600; color:#f5f5fa; }
+    .svc .meta { font-size:.82rem; color:#8b8b9a; }
+    .svc .state { font-size:.85rem; font-weight:600; }
+    .svc .state.up { color:#4d94ff; }
+    .svc .state.down { color:#ff6b6b; }
+    .svc .state.wait { color:#FFB800; }
+    .contracts { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px; }
+    .contract { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#12121a; border:1px solid #23232f; border-radius:12px; }
+    .contract a { color:#4d94ff; text-decoration:none; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem; }
+    .contract a:hover { text-decoration:underline; }
+    .contract .cname { font-weight:600; color:#f5f5fa; font-size:.9rem; }
+    .verified { font-size:.72rem; color:#4d94ff; border:1px solid rgba(0,102,255,.3); border-radius:6px; padding:2px 6px; }
+    .refresh { font-size:.82rem; color:#6f6f80; margin-top:24px; text-align:center; }
+    .backlink { display:inline-flex; align-items:center; gap:6px; color:#8b8b9a; text-decoration:none; font-size:.9rem; }
+    .backlink:hover { color:#f5f5fa; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <span class="bolt">⚡</span>
+      <span>Volt<span>chain</span>Hub</span>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="whitepaper.html">Whitepaper</a>
+      <a href="app/">App</a>
+      <a href="status.html" class="active">Status</a>
+      <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="status-wrap">
+    <div class="status-head">
+      <h1>Status do Protocolo</h1>
+      <span id="overall" class="overall wait"><span class="dot wait"></span> Verificando</span>
+    </div>
+    <p class="status-sub">Leitura ao vivo da API publica e do estado on-chain na testnet Polygon Amoy (chainId 80002). Sem cache: cada carregamento consulta os servicos diretamente. Atualiza a cada 30s.</p>
+
+    <div class="section-title">Estado on-chain (Amoy)</div>
+    <div class="grid">
+      <div class="card"><h3>Dispositivos registrados</h3><div class="val" id="m-devices">...</div><div class="foot">DeviceRegistry</div></div>
+      <div class="card"><h3>LUZ em circulacao</h3><div class="val" id="m-luz">...</div><div class="foot">LuzToken (ERC-1155, unidades brutas)</div></div>
+      <div class="card"><h3>Trades registrados</h3><div class="val" id="m-trades">...</div><div class="foot">EnergyVault</div></div>
+      <div class="card"><h3>Preferencias de token</h3><div class="val" id="m-prefs">...</div><div class="foot">Backend (off-chain)</div></div>
+    </div>
+
+    <div class="section-title">Servicos</div>
+    <div id="services">
+      <div class="svc">
+        <div class="left"><span class="dot wait" id="d-api"></span><div><div class="name">API publica</div><div class="meta" id="api-meta">voltchainhub.org/api</div></div></div>
+        <div class="state wait" id="s-api">verificando</div>
+      </div>
+      <div class="svc">
+        <div class="left"><span class="dot wait" id="d-chain"></span><div><div class="name">Leitura on-chain</div><div class="meta" id="chain-meta">RPC Amoy via backend</div></div></div>
+        <div class="state wait" id="s-chain">verificando</div>
+      </div>
+    </div>
+
+    <div class="section-title">Contratos verificados</div>
+    <div class="contracts" id="contracts"></div>
+
+    <p class="refresh" id="refresh">Ultima leitura: --</p>
+    <p style="text-align:center; margin-top:20px;"><a href="index.html" class="backlink">Voltar ao site</a></p>
+  </main>
+
+  <script>
+    var API = 'https://voltchainhub.org/api';
+    var SCAN = 'https://amoy.polygonscan.com/address/';
+    var CONTRACTS = [
+      { name: 'DeviceRegistry',  addr: '0x02c4770b07b313C12E0288250505E9b04c742A29' },
+      { name: 'LuzToken',        addr: '0x380b71ed16bA683d7adb471585740daF0507331A' },
+      { name: 'TokenRegistry',   addr: '0xf319976e714c460B9bf9a95228954bB6FEeE5874' },
+      { name: 'EnergyOracle',    addr: '0x26a74154849753572CDaf85d5271Ffc055F8B9A8' },
+      { name: 'EnergyVault',     addr: '0x5f91d715adFd8130894d406431ccDE0defA2771F' },
+      { name: 'VoltMarketplace', addr: '0x44eA9fD6489E8bAda380607e03841154f079DFB9' }
+    ];
+
+    function short(a){ return a.slice(0,6) + '...' + a.slice(-4); }
+
+    function renderContracts(){
+      var el = document.getElementById('contracts');
+      el.innerHTML = CONTRACTS.map(function(c){
+        return '<div class="contract"><div><div class="cname">' + c.name + '</div>' +
+          '<a href="' + SCAN + c.addr + '#code" target="_blank" rel="noopener">' + short(c.addr) + '</a></div>' +
+          '<span class="verified">verificado</span></div>';
+      }).join('');
+    }
+
+    function setSvc(idDot, idState, state, label){
+      var d = document.getElementById(idDot), s = document.getElementById(idState);
+      d.className = 'dot ' + state;
+      s.className = 'state ' + state;
+      s.textContent = label;
+    }
+
+    function setOverall(state, label){
+      var o = document.getElementById('overall');
+      o.className = 'overall ' + state;
+      o.innerHTML = '<span class="dot ' + state + '"></span> ' + label;
+    }
+
+    function fmtUptime(sec){
+      sec = Math.floor(sec);
+      var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60);
+      if (h > 0) return h + 'h ' + m + 'm';
+      return m + 'm';
+    }
+
+    function load(){
+      fetch(API + '/metrics', { cache: 'no-store' })
+        .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); return r.json(); })
+        .then(function(j){
+          var chain = j.chain || {};
+          var local = j.local || {};
+          document.getElementById('m-devices').textContent = chain.deviceCount != null ? chain.deviceCount : '-';
+          document.getElementById('m-luz').textContent = chain.luzTotalSupply != null ? chain.luzTotalSupply : '-';
+          document.getElementById('m-trades').textContent = chain.tradeCount != null ? chain.tradeCount : '-';
+          document.getElementById('m-prefs').textContent = local.preferencesSet != null ? local.preferencesSet : '-';
+
+          setSvc('d-api','s-api','up','operacional');
+          document.getElementById('api-meta').textContent = 'uptime ' + fmtUptime(j.uptime || 0);
+
+          var chainOk = chain.deviceCount != null;
+          setSvc('d-chain','s-chain', chainOk ? 'up':'down', chainOk ? 'operacional':'sem leitura');
+
+          setOverall(chainOk ? 'up':'wait', chainOk ? 'Todos os sistemas operacionais' : 'Degradado');
+          document.getElementById('refresh').textContent = 'Ultima leitura: ' + new Date().toLocaleTimeString('pt-BR');
+        })
+        .catch(function(){
+          setSvc('d-api','s-api','down','indisponivel');
+          setSvc('d-chain','s-chain','down','indisponivel');
+          setOverall('down','API indisponivel');
+          document.getElementById('refresh').textContent = 'Falha na leitura: ' + new Date().toLocaleTimeString('pt-BR');
+        });
+    }
+
+    renderContracts();
+    load();
+    setInterval(load, 30000);
+  </script>
+</body>
+</html>

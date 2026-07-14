@@ -23,6 +23,8 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ Paleta unificada: landing adota os tokens do app (fundo #0A0A0F, âmbar #FFB800, azul #0066FF); CSS versionado (?v)
 - ⬜ Estado de conexão de carteira visível/consistente ao navegar entre landing e app
 - ✅ Rodapé unificado: app tem footer (VoltchainHub/Apache 2.0/testnet + Início/Whitepaper/GitHub/Discussions); landing ganhou link Discussions
+- ✅ i18n PT/EN/ES no chrome do app (topbar, sidebar, footer + badge testnet) com switcher; persiste em localStorage. Corpo das páginas segue em PT
+- ✅ Página pública de status (`/status.html`): saúde da API + estado on-chain ao vivo (no-store, refresh 30s) + 6 contratos verificados; link Status na nav e footer da landing
 - ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp
 - ✅ Repo docs/ sincronizado com a produção (index/whitepaper/style + llms/robots/sitemap); fonte única, edições agora podem ser repo-first
 - ⬜ Considerar renderizar a landing dentro do próprio Next (rota `/`) para header/rodapé realmente compartilhados
@@ -38,7 +40,9 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 ## Contratos & on-chain
 
 - ✅ Deploy + verify Amoy; smoke tests device/mint, marketplace (fee 0,5%), escrow (settle)
-- ✅ Escrow buyer-funded no frontend: trade-form faz lockTrade real (buy, value do buyer) e setApprovalForAll (sell), sem simulação; taxa corrigida pra 0,5%. Falta o fluxo confirmDelivery/settle na UI
+- ✅ Escrow buyer-funded no frontend: trade-form faz lockTrade real (buy, value do buyer) e setApprovalForAll (sell), sem simulação; taxa corrigida pra 0,5%
+- ✅ Fluxo completo do trade na UI: tela "Meus trades" lê eventos TradeLocked on-chain, filtra por buyer/seller e oferece confirmDelivery (comprador) e settleTrade conforme o status
+- ✅ Onboarding do vendedor no marketplace (card SellerOnboard: balanceOf LUZ + setApprovalForAll do vault)
 - ⬜ Deploy mainnet (exige autorização dupla do Vinicius)
 
 ## Firmware & hardware
@@ -59,4 +63,6 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ CI (contracts + backend) + amoy-health semanal
 - ✅ Script de deploy do backend (`scripts/deploy-backend.sh`)
 - ✅ Domain allowlist do WalletConnect (voltchainhub.org allowlistado no Reown)
-- ⬜ Deploy do app: purge total do Cloudflare após cada deploy (senão 404 cacheado nos chunks _next)
+- ✅ Deploy do app: purge total do Cloudflare após cada deploy (senão 404 cacheado nos chunks _next)
+- ✅ Observabilidade pública: página `/status.html` lê `/api/health` + `/api/metrics` (chain-read) e sinaliza operacional/degradado/indisponível
+- ⬜ Alertas ativos: watchdog externo que consulta `/api/metrics` e avisa no WhatsApp se API cair ou a leitura on-chain zerar
