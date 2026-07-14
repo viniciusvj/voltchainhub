@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import { Sidebar } from '@/components/sidebar';
+import { TopBar } from '@/components/topbar';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -29,10 +30,13 @@ export default function RootLayout({
             {/* Sidebar Navigation */}
             <Sidebar />
 
-            {/* Main Content Area */}
-            <main className="flex-1 min-w-0 p-6 md:p-8 pt-16 md:pt-8">
-              {children}
-            </main>
+            {/* Main column: shared top bar + content */}
+            <div className="flex-1 min-w-0 flex flex-col">
+              <TopBar />
+              <main className="flex-1 min-w-0 p-6 md:p-8 pt-16 md:pt-6">
+                {children}
+              </main>
+            </div>
           </div>
         </Providers>
       </body>
