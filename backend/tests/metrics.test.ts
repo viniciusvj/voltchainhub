@@ -22,7 +22,7 @@ const fakeChain: BlockchainGateway = {
   lockEscrow: async () => ({ txHash: '0x' }),
   releaseEscrow: async () => ({ txHash: '0x' }),
   getBalance: async () => ({ luz: '0', matic: '0' }),
-  getChainStats: async () => ({ deviceCount: '7', luzTotalSupply: '1000.0' }),
+  getChainStats: async () => ({ deviceCount: '7', luzTotalSupply: '1000.0', tradeCount: '2' }),
 };
 
 describe('GET /metrics', () => {
@@ -59,7 +59,7 @@ describe('GET /metrics', () => {
     expect(body.status).toBe('ok');
     expect(body.local.preferencesSet).toBe(1);
     expect(body.local.preferencesByCategory.BRL_STABLE).toBe(1);
-    expect(body.chain).toEqual({ deviceCount: '7', luzTotalSupply: '1000.0' });
+    expect(body.chain).toEqual({ deviceCount: '7', luzTotalSupply: '1000.0', tradeCount: '2' });
   });
 
   it('still returns local metrics when the chain read throws', async () => {

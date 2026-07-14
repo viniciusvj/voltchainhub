@@ -1,13 +1,13 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { Cpu, Zap, Wallet, Loader2, AlertCircle } from 'lucide-react'
+import { Cpu, Zap, Wallet, ArrowLeftRight, Loader2, AlertCircle } from 'lucide-react'
 import { apiUrl, API_CONFIGURED } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
 interface Metrics {
   local: { devices: number; preferencesSet: number }
-  chain: { deviceCount: string; luzTotalSupply: string } | { error: string }
+  chain: { deviceCount: string; luzTotalSupply: string; tradeCount: string } | { error: string }
 }
 
 interface Row {
@@ -84,12 +84,15 @@ export function NetworkStats() {
   }
 
   const chainOk = !('error' in data.chain)
-  const deviceCount = chainOk ? (data.chain as { deviceCount: string }).deviceCount : '—'
-  const luzSupply = chainOk ? (data.chain as { luzTotalSupply: string }).luzTotalSupply : '—'
+  const chain = data.chain as { deviceCount: string; luzTotalSupply: string; tradeCount: string }
+  const deviceCount = chainOk ? chain.deviceCount : '—'
+  const luzSupply = chainOk ? chain.luzTotalSupply : '—'
+  const tradeCount = chainOk ? chain.tradeCount : '—'
 
   const rows: Row[] = [
     { label: 'Dispositivos registrados', value: deviceCount, icon: Cpu, iconColor: 'text-electric' },
     { label: 'LuzTokens emitidos (kWh)', value: luzSupply, icon: Zap, iconColor: 'text-solar' },
+    { label: 'Trades no vault', value: tradeCount, icon: ArrowLeftRight, iconColor: 'text-purple-400' },
     { label: 'Preferências de pagamento', value: String(data.local.preferencesSet), icon: Wallet, iconColor: 'text-green-400' },
   ]
 

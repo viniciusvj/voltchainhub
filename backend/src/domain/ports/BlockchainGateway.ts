@@ -12,5 +12,5 @@ export interface BlockchainGateway {
   ): Promise<{ txHash: string; tradeId?: string }>;
   releaseEscrow(tradeId: string): Promise<{ txHash: string }>;
   getBalance(address: string): Promise<{ luz: string; matic: string }>;
-  getChainStats(): Promise<{ deviceCount: string; luzTotalSupply: string }>;
+  getChainStats(): Promise<{ deviceCount: string; luzTotalSupply: string; tradeCount: string }>;
 }

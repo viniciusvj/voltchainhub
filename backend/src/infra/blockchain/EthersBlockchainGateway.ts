@@ -143,9 +143,10 @@ export class EthersBlockchainGateway implements BlockchainGateway {
     };
   }
 
-  async getChainStats(): Promise<{ deviceCount: string; luzTotalSupply: string }> {
+  async getChainStats(): Promise<{ deviceCount: string; luzTotalSupply: string; tradeCount: string }> {
     let deviceCount = 0n;
     let luzTotalSupply = 0n;
+    let tradeCount = 0n;
     try {
       deviceCount = await this.deviceRegistry.deviceCount();
     } catch (err) {
@@ -156,10 +157,16 @@ export class EthersBlockchainGateway implements BlockchainGateway {
     } catch (err) {
       log.warn({ err }, 'getChainStats: luzTotalSupply read failed');
     }
+    try {
+      tradeCount = await this.vault.tradeCount();
+    } catch (err) {
+      log.warn({ err }, 'getChainStats: tradeCount read failed');
+    }
     return {
       deviceCount: deviceCount.toString(),
       // LuzToken is ERC-1155: amounts are raw integers (1 = 1 kWh receipt), not 18-decimal.
       luzTotalSupply: luzTotalSupply.toString(),
+      tradeCount: tradeCount.toString(),
     };
   }
 }
