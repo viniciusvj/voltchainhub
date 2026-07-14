@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { Lock, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ActiveEscrows } from '@/components/trades/active-escrows';
+import { MyTrades } from '@/components/trades/my-trades';
 import { TradeHistory } from '@/components/trades/trade-history';
 
 type Tab = 'escrows' | 'history';
 
 const TABS: { id: Tab; label: string; icon: React.FC<{ className?: string }> }[] = [
-  { id: 'escrows', label: 'Escrows Ativos', icon: Lock },
+  { id: 'escrows', label: 'Meus trades', icon: Lock },
   { id: 'history', label: 'Histórico', icon: History },
 ];
 
@@ -39,7 +39,7 @@ export function TabsClient() {
 
       {/* Tab content */}
       <div className="p-5">
-        {active === 'escrows' && <ActiveEscrows />}
+        {active === 'escrows' && <MyTrades />}
         {active === 'history' && <TradeHistory />}
       </div>
     </div>

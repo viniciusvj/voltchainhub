@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
 import { TradeStats } from '@/components/trades/trade-stats';
-import { ActiveEscrows } from '@/components/trades/active-escrows';
-import { TradeHistory } from '@/components/trades/trade-history';
 import { NewTradeWizard } from '@/components/trades/new-trade-wizard';
 import { TabsClient } from './tabs-client';
 
