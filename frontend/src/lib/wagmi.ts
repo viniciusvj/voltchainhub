@@ -25,9 +25,9 @@ export const polygonAmoy = defineChain({
 
 export const config = getDefaultConfig({
   appName: 'VoltchainHub',
-  // Injected wallets (MetaMask/Phantom) work without a projectId; only the
-  // WalletConnect modal needs one. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable it.
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'YOUR_WALLETCONNECT_PROJECT_ID',
+  // WalletConnect projectId is a public client identifier (ships in the browser
+  // bundle). Reown Cloud project "VoltchainHub dApp". Override via env for other envs.
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '8de26eaacf87d30a2bf7380cd29c595e',
   chains: [polygonAmoy],
   ssr: true,
 });
