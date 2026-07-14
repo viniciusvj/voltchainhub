@@ -81,8 +81,12 @@ export class EthersBlockchainGateway implements BlockchainGateway {
       //   uint256 pricePerKwh(wei), uint64 deliveryDeadline) payable. The vault pulls the
       // seller's LuzTokens (seller must setApprovalForAll) and holds the buyer's MATIC;
       // requiredMatic = energyWh * pricePerKwhWei / 1000 (excess is refunded on-chain).
-      // The buyer is msg.sender (this signer). NOTE: the backend signer acts as buyer,
-      // so a real buyer-funded flow needs the buyer's own wallet (custodial otherwise).
+      //
+      // TESTNET-CUSTODIAL PATH: the buyer is msg.sender = this backend signer, so the
+      // BACKEND funds the trade with its own POL. This is a demo/testnet convenience,
+      // NOT the production model. In production the escrow is BUYER-FUNDED from the
+      // buyer's own wallet on the frontend (wagmi lockTrade with value). See
+      // docs/design/escrow-flow.md. Do not route real user funds through here.
       const tokenId = opts?.tokenId ?? LUZ_DEFAULT_TOKEN_ID;
       const deadline = opts?.deadlineSec ?? Math.floor(Date.now() / 1000) + 24 * 3600;
       const energyWh = BigInt(Math.round(amountKWh * 1000));
