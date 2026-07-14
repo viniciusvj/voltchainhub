@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-// Served as part of the GitHub Pages site at
-// https://viniciusvj.github.io/voltchainhub/app/ (static export into ../docs/app).
-// Set NEXT_PUBLIC_BASE_PATH='' for local dev at the root.
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '/voltchainhub/app';
+// Production is voltchainhub.org (served from the consolidado at the domain
+// root); the app lives at voltchainhub.org/app/, so basePath is /app.
+// Static export goes into ../docs/app. Set NEXT_PUBLIC_BASE_PATH='' for local
+// dev at the root, or '/voltchainhub/app' for the raw github.io mirror.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '/app';
 
 const nextConfig = {
   reactStrictMode: true,

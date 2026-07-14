@@ -10,22 +10,29 @@ Dashboard Web para o protocolo de energia descentralizada P2P.
 - **RainbowKit** — Wallet connection
 - **Polygon Amoy** testnet (chainId 80002)
 
-## Deploy (GitHub Pages, mesma página do site)
+## Deploy
 
-O app é publicado como static export dentro de `../docs/app`, então vive no mesmo
-GitHub Pages do site/whitepaper: https://viniciusvj.github.io/voltchainhub/app/
+Produção: **https://voltchainhub.org/app/** (servido pelo consolidado, docroot
+`/opt/consolidado/frontend-voltchainhub`, mount `:/var/www/voltchainhub`). O app é
+static export (`output:'export'` + `basePath /app`).
 
-`next.config.js` usa `output:'export'` + `basePath /voltchainhub/app`. Para atualizar
-(Node 22 via fnm, a partir de `frontend/`):
+Atualizar (Node 22 via fnm, a partir de `frontend/`; `MSYS_NO_PATHCONV=1` evita o
+Git Bash mangler o `/app`):
 
 ```bash
-rm -rf out && npm run build          # gera out/ com basePath /voltchainhub/app
-rm -rf ../docs/app && mkdir -p ../docs/app && cp -r out/* ../docs/app/
-git add ../docs/app && git commit -m "..." && git push   # Pages redeploya sozinho
+rm -rf out && MSYS_NO_PATHCONV=1 npm run build     # out/ com basePath /app
+# deploy consolidado (não apaga index.html/llms/robots/sitemap de prod):
+KEY=E:/Users/Vinicius/Desktop/awscustos/acesso-ssh/arrendamento.pem
+ssh -i "$KEY" ec2-user@98.94.144.237 "rm -rf /opt/consolidado/frontend-voltchainhub/app && mkdir -p /opt/consolidado/frontend-voltchainhub/app"
+scp -i "$KEY" -r out/* ec2-user@98.94.144.237:/opt/consolidado/frontend-voltchainhub/app/
+python C:/Users/Vinicius/.claude/skills/cloudflare-api/cf.py purge voltchainhub.org --url https://voltchainhub.org/app/
+# espelhar no repo (docs/app é a cópia versionada):
+rm -rf ../docs/app && mkdir -p ../docs/app && cp -r out/* ../docs/app/ && git add ../docs/app && git commit && git push
 ```
 
-`docs/.nojekyll` já existe (necessário para o Pages servir a pasta `_next`).
-Dev local no root: `NEXT_PUBLIC_BASE_PATH='' npm run dev`.
+O link "App" no nav/hero da home de prod já existe (editado in-place; NÃO clobbear
+o index.html de prod, que tem SEO/schema.org próprio). Dev local: `NEXT_PUBLIC_BASE_PATH='' npm run dev`.
+O github.io/voltchainhub é só mirror; pra ele use `NEXT_PUBLIC_BASE_PATH=/voltchainhub/app`.
 
 ## Páginas
 
