@@ -65,4 +65,4 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ Domain allowlist do WalletConnect (voltchainhub.org allowlistado no Reown)
 - ✅ Deploy do app: purge total do Cloudflare após cada deploy (senão 404 cacheado nos chunks _next)
 - ✅ Observabilidade pública: página `/status.html` lê `/api/health` + `/api/metrics` (chain-read) e sinaliza operacional/degradado/indisponível
-- ⬜ Alertas ativos: watchdog externo que consulta `/api/metrics` e avisa no WhatsApp se API cair ou a leitura on-chain zerar
+- ✅ Alertas ativos: `scripts/status-watchdog.mjs` consulta `/api/metrics`, deriva UP/DEGRADED/DOWN e avisa no WhatsApp so em transicao de estado. Task Scheduler `VoltchainHub-Status-Watchdog` a cada 15 min
