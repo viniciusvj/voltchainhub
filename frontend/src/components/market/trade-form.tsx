@@ -1,10 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useWriteContract } from 'wagmi';
+import { parseEther } from 'viem';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Minus, Plus, Info } from 'lucide-react';
+import { Minus, Plus, Info, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { energyVaultAbi } from '@/contracts/abis/EnergyVault';
+import { luzTokenAbi } from '@/contracts/abis/LuzToken';
+import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses';
+
+const LUZ_TOKEN_ID = BigInt(1);
+const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -20,10 +27,65 @@ export function TradeForm() {
   const [orderType, setOrderType] = useState<OrderType>('limit');
   const [price,     setPrice]     = useState<number>(0.1050);
   const [amount,    setAmount]    = useState<number>(10);
+  const [seller,    setSeller]    = useState<string>('');
+  const [txHash,    setTxHash]    = useState<string | null>(null);
+  const [txError,   setTxError]   = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const { writeContractAsync } = useWriteContract();
+  const vault = CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID].energyVault;
+  const luz = CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID].luzToken;
 
   const total    = price * amount;
-  const fee      = total * 0.01;
+  const fee      = total * 0.005;
   const netTotal = side === 'buy' ? total + fee : total - fee;
+
+  // Buy: buyer-funded lockTrade (native value locked in the vault, seller tokens escrowed).
+  // The price is treated as the native-token price per kWh on the testnet.
+  async function handleBuy() {
+    setTxError(null);
+    if (!ADDRESS_RE.test(seller)) { setTxError('Informe o endereço do vendedor (0x...).'); return; }
+    setSubmitting(true);
+    try {
+      const energyWh = BigInt(Math.round(amount * 1000));
+      const pricePerKwhWei = parseEther(price.toString());
+      const value = (energyWh * pricePerKwhWei) / BigInt(1000);
+      const deadline = BigInt(Math.floor(Date.now() / 1000) + 24 * 3600);
+      const hash = await writeContractAsync({
+        address: vault,
+        abi: energyVaultAbi,
+        functionName: 'lockTrade',
+        args: [seller as `0x${string}`, LUZ_TOKEN_ID, energyWh, pricePerKwhWei, deadline],
+        value,
+        chainId: DEFAULT_CHAIN_ID,
+      });
+      setTxHash(hash);
+    } catch (err) {
+      setTxError(err instanceof Error ? err.message.split('\n')[0] : 'Falha na transação');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // Sell: seller approves the vault as ERC-1155 operator so its LuzTokens can be escrowed.
+  async function handleSell() {
+    setTxError(null);
+    setSubmitting(true);
+    try {
+      const hash = await writeContractAsync({
+        address: luz,
+        abi: luzTokenAbi,
+        functionName: 'setApprovalForAll',
+        args: [vault, true],
+        chainId: DEFAULT_CHAIN_ID,
+      });
+      setTxHash(hash);
+    } catch (err) {
+      setTxError(err instanceof Error ? err.message.split('\n')[0] : 'Falha na transação');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   function adjustPrice(delta: number) {
     setPrice((p) => Math.round(Math.max(0.0001, p + delta) * 10000) / 10000);
@@ -165,6 +227,28 @@ export function TradeForm() {
               </div>
             </div>
 
+            {/* Seller address (buyer-funded escrow needs a counterparty) */}
+            {isBuy && (
+              <div>
+                <label className="text-xs text-gray-400 mb-1.5 block">
+                  Vendedor <span className="text-gray-600">(endereço 0x)</span>
+                </label>
+                <input
+                  type="text"
+                  value={seller}
+                  onChange={(e) => setSeller(e.target.value.trim())}
+                  placeholder="0x..."
+                  className={cn(
+                    'w-full bg-volt-dark-700 border rounded-lg px-3 py-2.5 font-mono text-xs text-gray-100 outline-none',
+                    accentBorder,
+                  )}
+                />
+                <p className="text-[10px] text-gray-600 mt-1">
+                  O vendedor precisa ter aprovado o vault e ter LuzTokens; senão a transação reverte.
+                </p>
+              </div>
+            )}
+
             {/* Summary */}
             <div className="bg-volt-dark-700 rounded-lg p-3 space-y-1.5 text-xs">
               <div className="flex justify-between text-gray-400">
@@ -173,7 +257,7 @@ export function TradeForm() {
               </div>
               <div className="flex justify-between text-gray-400">
                 <span className="flex items-center gap-1">
-                  Taxa protocolo (1%)
+                  Taxa protocolo (0,5%)
                   <Info className="w-3 h-3 text-gray-600" />
                 </span>
                 <span className="font-mono text-gray-300">R$ {fee.toFixed(4)}</span>
@@ -186,19 +270,39 @@ export function TradeForm() {
               </div>
             </div>
 
-            {/* Submit */}
+            {/* Submit (real on-chain action) */}
             <button
+              onClick={isBuy ? handleBuy : handleSell}
+              disabled={submitting}
               className={cn(
-                'w-full py-3 rounded-lg text-sm font-bold transition-colors',
+                'w-full py-3 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2',
                 accentBg,
                 isBuy ? 'text-white' : 'text-volt-dark-900',
+                'disabled:opacity-50 disabled:cursor-not-allowed',
               )}
             >
-              {isBuy ? 'Comprar Energia' : 'Vender Energia'}
+              {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isBuy ? 'Travar escrow (comprar)' : 'Aprovar vault (vender)'}
             </button>
 
+            {txError && (
+              <div className="text-[11px] text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 break-words">
+                {txError}
+              </div>
+            )}
+            {txHash && (
+              <a
+                href={`https://amoy.polygonscan.com/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center text-[11px] text-[#0066FF] hover:underline break-all"
+              >
+                Transação enviada, ver no PolygonScan
+              </a>
+            )}
+
             <p className="text-center text-[11px] text-gray-600">
-              Taxa do protocolo: 1% • Liquidação via contrato inteligente
+              Taxa do protocolo: 0,5% • Liquidação via EnergyVault (testnet Amoy)
             </p>
           </>
         )}

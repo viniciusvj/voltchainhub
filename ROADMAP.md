@@ -37,7 +37,7 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 ## Contratos & on-chain
 
 - ✅ Deploy + verify Amoy; smoke tests device/mint, marketplace (fee 0,5%), escrow (settle)
-- 🔵 Escrow: modelo explicitado (docs/design/escrow-flow.md); backend lockEscrow marcado como testnet-custodial; produção = buyer-funded no frontend (falta ligar trade-form)
+- ✅ Escrow buyer-funded no frontend: trade-form faz lockTrade real (buy, value do buyer) e setApprovalForAll (sell), sem simulação; taxa corrigida pra 0,5%. Falta o fluxo confirmDelivery/settle na UI
 - ⬜ Deploy mainnet (exige autorização dupla do Vinicius)
 
 ## Firmware & hardware
