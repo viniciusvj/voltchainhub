@@ -45,9 +45,9 @@ npm run deploy:local
 ### Polygon Mumbai Testnet
 
 1. Copy `.env.example` to `.env` and fill in:
-   - `DEPLOYER_PRIVATE_KEY` — deployer wallet private key
-   - `MUMBAI_RPC_URL` — Polygon Mumbai RPC URL
-   - `POLYGONSCAN_API_KEY` — for contract verification (optional)
+   - `DEPLOYER_PRIVATE_KEY`: deployer wallet private key
+   - `MUMBAI_RPC_URL`: Polygon Mumbai RPC URL
+   - `POLYGONSCAN_API_KEY`: for contract verification (optional)
 
 2. Fund the deployer wallet with testnet MATIC
 

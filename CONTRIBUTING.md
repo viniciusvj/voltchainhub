@@ -1,6 +1,6 @@
 # Contribuindo com o VoltchainHub
 
-Obrigado pelo interesse! VoltchainHub é um projeto aberto e toda contribuição — código, documentação, pesquisa, feedback regulatório — é bem-vinda.
+Obrigado pelo interesse! VoltchainHub é um projeto aberto e toda contribuição: código, documentação, pesquisa, feedback regulatório: é bem-vinda.
 
 ## Onde contribuir
 
@@ -27,13 +27,13 @@ Obrigado pelo interesse! VoltchainHub é um projeto aberto e toda contribuição
 - Descreva o porquê, não só o quê. Problema → solução → trade-offs.
 - Testes obrigatórios para: smart contracts (Hardhat test), OpenEMS bundles (JUnit), firmware crítico (unity).
 - CI deve passar. Se quebrar, arrume antes de pedir review.
-- Commits descritivos, em inglês ou português — escolha um e mantenha.
+- Commits descritivos, em inglês ou português: escolha um e mantenha.
 
 ## Estilo
 
 - **Código:** segue o padrão da linguagem (Prettier JS/TS, `gofmt`, `cargo fmt`, `clang-format`).
 - **Contratos:** Solidity 0.8.x, NatSpec obrigatório em funções públicas.
-- **Commits:** [Conventional Commits](https://www.conventionalcommits.org) — `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`.
+- **Commits:** [Conventional Commits](https://www.conventionalcommits.org): `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`.
 
 ## Código de conduta
 

@@ -1,6 +1,6 @@
 # VoltChainHub Backend
 
-Decentralized P2P energy trading protocol backend — bridges physical energy measurements from IoT devices to on-chain state on Polygon PoS.
+Decentralized P2P energy trading protocol backend: bridges physical energy measurements from IoT devices to on-chain state on Polygon PoS.
 
 ## Architecture
 
@@ -56,7 +56,7 @@ The backend follows **hexagonal architecture** (ports & adapters) with four dist
 | **LuzToken** (ERC-1155) | 1 token = 1 kWh verified energy. Fee split: 98% seller, 1% treasury, 1% liquidity |
 | **DeviceRegistry** | ESP32-S3 device registration with P-256 public key attestation |
 | **EnergyOracle** | Bridge readings on-chain; multi-oracle quorum for >100 kWh; 30-min contestation window |
-| **EnergyVault** | P2P trade escrow — buyer locks MATIC, seller's LuzTokens held until delivery confirmation |
+| **EnergyVault** | P2P trade escrow: buyer locks MATIC, seller's LuzTokens held until delivery confirmation |
 
 ## Project Structure
 
@@ -136,12 +136,12 @@ docker compose up -d
 
 See `.env.example` for all configuration options. Key settings:
 
-- **MQTT_URL** — Broker for device readings (default: `mqtt://localhost:1883`)
-- **RPC_URL** — Polygon RPC endpoint
-- **ORACLE_PRIVATE_KEY** — Wallet key for oracle transactions
-- **MARKET_CYCLE_SECONDS** — Clearing interval (default: 300 = 5 min)
-- **ANOMALY_ZSCORE_THRESHOLD** — Z-score cutoff for anomaly detection (default: 3.0)
-- **ORACLE_BATCH_INTERVAL_SECONDS** — Buffered reading submission interval (default: 60)
+- **MQTT_URL**: Broker for device readings (default: `mqtt://localhost:1883`)
+- **RPC_URL**: Polygon RPC endpoint
+- **ORACLE_PRIVATE_KEY**: Wallet key for oracle transactions
+- **MARKET_CYCLE_SECONDS**: Clearing interval (default: 300 = 5 min)
+- **ANOMALY_ZSCORE_THRESHOLD**: Z-score cutoff for anomaly detection (default: 3.0)
+- **ORACLE_BATCH_INTERVAL_SECONDS**: Buffered reading submission interval (default: 60)
 
 ## Tech Stack
 

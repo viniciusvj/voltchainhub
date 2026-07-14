@@ -7,7 +7,7 @@ VoltchainHub lida com energia e dinheiro tokenizado. Vulnerabilidades podem sign
 **Não abra Issue público para vulnerabilidades.** Use um destes canais:
 
 - **GitHub Security Advisory:** https://github.com/viniciusvj/voltchainhub/security/advisories/new
-- **E-mail direto:** v.jreis@hotmail.com (assunto: `[SECURITY] Voltchainhub — <resumo>`)
+- **E-mail direto:** v.jreis@hotmail.com (assunto: `[SECURITY] Voltchainhub: <resumo>`)
 
 ## Escopo
 
@@ -25,7 +25,7 @@ Fora de escopo (por enquanto):
 - Ataques físicos ao dispositivo IoT (assumimos adversário com acesso local)
 - Engenharia social contra operadores
 - Spam ou DoS volumétrico
-- Problemas em infraestrutura de terceiros (Polygon, Alchemy, etc.) — reporte direto a eles
+- Problemas em infraestrutura de terceiros (Polygon, Alchemy, etc.): reporte direto a eles
 
 ## Processo
 

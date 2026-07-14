@@ -5,9 +5,9 @@ Dashboard Web para o protocolo de energia descentralizada P2P.
 ## Stack
 
 - **Next.js 14** (App Router) + TypeScript
-- **TailwindCSS** — Dark mode default
-- **Wagmi v2 + Viem** — Web3 integration
-- **RainbowKit** — Wallet connection
+- **TailwindCSS**: Dark mode default
+- **Wagmi v2 + Viem**: Web3 integration
+- **RainbowKit**: Wallet connection
 - **Polygon Amoy** testnet (chainId 80002)
 
 ## Deploy
@@ -38,11 +38,11 @@ O github.io/voltchainhub é só mirror; pra ele use `NEXT_PUBLIC_BASE_PATH=/volt
 
 | Rota | Descrição |
 |------|-----------|
-| `/` | Dashboard — saldo LuzToken, preço de mercado, gráficos de energia |
-| `/market` | Marketplace — order book, compra/venda, gráfico de preços |
-| `/devices` | Dispositivos — listar/registrar ESP32-S3, saúde, leituras |
-| `/trades` | Trades — escrows ativos, histórico, wizard de nova trade |
-| `/profile` | Perfil — wallet, portfólio, stats do prosumidor |
+| `/` | Dashboard: saldo LuzToken, preço de mercado, gráficos de energia |
+| `/market` | Marketplace: order book, compra/venda, gráfico de preços |
+| `/devices` | Dispositivos: listar/registrar ESP32-S3, saúde, leituras |
+| `/trades` | Trades: escrows ativos, histórico, wizard de nova trade |
+| `/profile` | Perfil: wallet, portfólio, stats do prosumidor |
 
 ## Setup
 
@@ -63,4 +63,4 @@ Acesse `http://localhost:3000`
 
 ## Contratos
 
-ABIs placeholder em `src/contracts/abis/` — substituir pelos ABIs reais após deploy dos contracts.
+ABIs placeholder em `src/contracts/abis/`: substituir pelos ABIs reais após deploy dos contracts.
