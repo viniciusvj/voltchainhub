@@ -3,24 +3,26 @@
 import { useState } from 'react';
 import { Lock, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { MyTrades } from '@/components/trades/my-trades';
 import { TradeHistory } from '@/components/trades/trade-history';
 
 type Tab = 'escrows' | 'history';
 
-const TABS: { id: Tab; label: string; icon: React.FC<{ className?: string }> }[] = [
-  { id: 'escrows', label: 'Meus trades', icon: Lock },
-  { id: 'history', label: 'Histórico', icon: History },
+const TABS: { id: Tab; labelKey: 'tabs.myTrades' | 'tabs.history'; icon: React.FC<{ className?: string }> }[] = [
+  { id: 'escrows', labelKey: 'tabs.myTrades', icon: Lock },
+  { id: 'history', labelKey: 'tabs.history', icon: History },
 ];
 
 export function TabsClient() {
+  const { t } = useI18n();
   const [active, setActive] = useState<Tab>('escrows');
 
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl flex flex-col">
       {/* Tab bar */}
       <div className="flex border-b border-volt-dark-600 px-4 pt-3 gap-1">
-        {TABS.map(({ id, label, icon: Icon }) => (
+        {TABS.map(({ id, labelKey, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setActive(id)}
@@ -32,7 +34,7 @@ export function TabsClient() {
             )}
           >
             <Icon className="w-4 h-4" />
-            {label}
+            {t(labelKey)}
           </button>
         ))}
       </div>

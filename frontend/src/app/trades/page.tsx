@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { TradeStats } from '@/components/trades/trade-stats';
 import { NewTradeWizard } from '@/components/trades/new-trade-wizard';
 import { TabsClient } from './tabs-client';
+import { PageHeader } from '@/components/page-header';
 
 export const metadata: Metadata = {
   title: 'Trades P2P | VoltchainHub',
@@ -13,14 +14,7 @@ export default function TradesPage() {
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto w-full">
       {/* ── Page header ──────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Trades P2P
-        </h1>
-        <p className="text-sm text-gray-400">
-          Gerencie suas transações de energia peer-to-peer
-        </p>
-      </div>
+      <PageHeader titleKey="page.trades.title" subKey="page.trades.sub" />
 
       {/* ── Stats row ────────────────────────────────────────────────── */}
       <TradeStats />

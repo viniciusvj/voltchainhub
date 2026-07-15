@@ -5,6 +5,7 @@ import { TradeForm }     from '@/components/market/trade-form';
 import { SellerOnboard } from '@/components/market/seller-onboard';
 import { ClearingInfo }  from '@/components/market/clearing-info';
 import { MarketHistory } from '@/components/market/market-history';
+import { PageHeader }    from '@/components/page-header';
 
 export const metadata = {
   title: 'Marketplace | VoltchainHub',
@@ -19,12 +20,7 @@ export default function MarketPage() {
         <div className="p-2 rounded-lg bg-[#0066FF]/10 border border-[#0066FF]/20">
           <TrendingUp className="w-5 h-5 text-[#0066FF]" />
         </div>
-        <div>
-          <h1 className="text-xl font-bold text-white">Marketplace de Energia</h1>
-          <p className="text-sm text-gray-400">
-            Compre e venda energia P2P no mercado descentralizado
-          </p>
-        </div>
+        <PageHeader titleKey="page.market.title" subKey="page.market.sub" />
       </div>
 
       {/* Row 1: Price chart — full width */}

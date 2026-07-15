@@ -5,17 +5,13 @@ import { RecentTransactions } from '@/components/dashboard/recent-transactions'
 import { NetworkStats } from '@/components/dashboard/network-stats'
 import { MarketPrice } from '@/components/dashboard/market-price'
 import { GovernanceCard } from '@/components/dashboard/governance-card'
+import { PageHeader } from '@/components/page-header'
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6 max-w-screen-2xl">
       {/* Page heading */}
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Dashboard</h1>
-        <p className="text-sm text-gray-400 mt-1">
-          Visão geral da sua energia descentralizada
-        </p>
-      </div>
+      <PageHeader titleKey="page.dashboard.title" subKey="page.dashboard.sub" />
 
       {/* Top row: Balance + Market price + Stats grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">

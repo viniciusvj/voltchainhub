@@ -2,6 +2,7 @@ import { DeviceStats }    from '@/components/devices/device-stats';
 import { DeviceList }     from '@/components/devices/device-list';
 import { DeviceReadings } from '@/components/devices/device-readings';
 import { RegisterDevice } from '@/components/devices/register-device';
+import { PageHeader }     from '@/components/page-header';
 
 export const metadata = {
   title: 'Dispositivos | VoltchainHub',
@@ -13,12 +14,7 @@ export default function DevicesPage() {
     <div className="space-y-6 max-w-screen-2xl">
 
       {/* Page heading */}
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Dispositivos</h1>
-        <p className="text-sm text-gray-400 mt-1">
-          Gerencie seus nós ESP32-S3 e monitore leituras em tempo real
-        </p>
-      </div>
+      <PageHeader titleKey="page.devices.title" subKey="page.devices.sub" />
 
       {/* Summary stats bar */}
       <DeviceStats />
