@@ -21,9 +21,10 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ Top bar compartilhada no app (badge "Testnet Amoy" + nav Início/Whitepaper/GitHub, paridade com a landing)
 - ✅ CTA contextual: seção "Experimente na testnet" na landing com deep-links (`/app/devices`, `/app/market`)
 - ✅ Paleta unificada: landing adota os tokens do app (fundo #0A0A0F, âmbar #FFB800, azul #0066FF); CSS versionado (?v)
-- ⬜ Estado de conexão de carteira visível/consistente ao navegar entre landing e app
+- ✅ Estado de conexão de carteira consistente landing↔app: `WalletSync` grava flag `vch-wallet` no localStorage; CTAs da landing viram "Continuar no app" + chip com endereço quando conectada
 - ✅ Rodapé unificado: app tem footer (VoltchainHub/Apache 2.0/testnet + Início/Whitepaper/GitHub/Discussions); landing ganhou link Discussions
-- ✅ i18n PT/EN/ES no chrome do app (topbar, sidebar, footer + badge testnet) com switcher; persiste em localStorage. Corpo das páginas segue em PT
+- ✅ i18n PT/EN/ES no chrome do app (topbar, sidebar, footer + badge testnet) com switcher; persiste em localStorage
+- ✅ i18n dos cabeçalhos das páginas (título+subtítulo das 5 telas via `PageHeader` client, mantendo o `export metadata` dos Server Components) + abas de trades; DICT com `satisfies` pra checagem estática de chave. Textos internos dos cards seguem em PT como próxima extensão
 - ✅ Página pública de status (`/status.html`): saúde da API + estado on-chain ao vivo (no-store, refresh 30s) + 6 contratos verificados; link Status na nav e footer da landing
 - ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp
 - ✅ Repo docs/ sincronizado com a produção (index/whitepaper/style + llms/robots/sitemap); fonte única, edições agora podem ser repo-first
