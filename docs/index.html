@@ -111,7 +111,7 @@
         <strong>Sem token especulativo próprio.</strong> Prosumidor recebe em qualquer ERC-20 listado: BRZ/BRLA (R$), USDC/USDT (US$), ETH, WBTC ou outros. Swap atômico via Uniswap v3 no settlement. Fee do protocolo: <strong>0,5%</strong> fixo.
       </p>
       <div class="btn-group">
-        <a href="app/" class="btn btn-primary">⚡ Abrir App (testnet)</a>
+        <a href="app/" class="btn btn-primary" id="cta-open-app" data-app-cta>⚡ Abrir App (testnet)</a>
         <a href="whitepaper.html" class="btn btn-secondary" data-i18n="voltchain.hero.cta1">📄 Ler Whitepaper</a>
         <a href="https://github.com/viniciusvj/voltchainhub" target="_blank" rel="noopener" class="btn btn-secondary">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -195,7 +195,7 @@
       <h2>Experimente na testnet</h2>
       <p style="color:var(--text-muted);max-width:640px;margin:0 auto 1.5rem">O dApp está no ar na Polygon Amoy: conecte a carteira, registre um dispositivo e veja os LuzTokens on-chain.</p>
       <div class="btn-group" style="justify-content:center">
-        <a href="app/" class="btn btn-primary">⚡ Abrir Dashboard</a>
+        <a href="app/" class="btn btn-primary" data-app-cta>⚡ Abrir Dashboard</a>
         <a href="app/devices/" class="btn btn-secondary">📡 Registrar dispositivo</a>
         <a href="app/market/" class="btn btn-secondary">📈 Ver mercado</a>
       </div>
@@ -224,6 +224,22 @@
       const p = (window.scrollY / (document.body.scrollHeight, window.innerHeight)) * 100;
       el.style.width = p + '%';
     });
+
+    // Estado de carteira compartilhado com o app (/app grava 'vch-wallet' no
+    // localStorage da mesma origem ao conectar). Se conectada, os CTAs de app
+    // refletem "Continuar no app" + chip com o endereco abreviado.
+    (function reflectWallet() {
+      var addr;
+      try { addr = localStorage.getItem('vch-wallet'); } catch (e) { addr = null; }
+      if (!addr || !/^0x[a-fA-F0-9]{40}$/.test(addr)) return;
+      var short = addr.slice(0, 6) + '…' + addr.slice(-4);
+      document.querySelectorAll('[data-app-cta]').forEach(function (a) {
+        a.innerHTML = '⚡ Continuar no app <span style="margin-left:8px;padding:2px 8px;border-radius:999px;'
+          + 'background:rgba(255,255,255,.18);font-size:.8em;font-family:ui-monospace,Menlo,monospace;">'
+          + short + '</span>';
+        a.title = 'Carteira conectada: ' + addr;
+      });
+    })();
   </script>
   <!-- v2w-i18n.js e v2w-analytics.js sao injetados via nginx sub_filter -->
 </body>

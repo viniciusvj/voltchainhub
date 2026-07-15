@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { config } from '@/lib/wagmi';
 import { I18nProvider } from '@/lib/i18n';
+import { WalletSync } from '@/components/wallet-sync';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -18,6 +19,7 @@ export function Providers({ children }: ProvidersProps) {
 
   return (
     <WagmiProvider config={config}>
+      <WalletSync />
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme({
