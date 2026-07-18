@@ -12,6 +12,7 @@ import {
   TooltipProps,
 } from 'recharts'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
 type TabPeriod = '24h' | '7d' | '30d'
 
@@ -50,6 +51,7 @@ function generateMockData() {
 const MOCK_DATA_24H = generateMockData()
 
 function CustomTooltip({ active, payload, label }: TooltipProps<number, string>) {
+  const { t } = useI18n()
   if (!active || !payload || !payload.length) return null
 
   return (
@@ -62,7 +64,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
             style={{ backgroundColor: entry.color }}
           />
           <span className="text-gray-300">
-            {entry.dataKey === 'geracao' ? 'Geração' : 'Consumo'}:
+            {entry.dataKey === 'geracao' ? t('db.chart.generation') : t('db.chart.consumption')}:
           </span>
           <span className="text-white font-semibold">
             {Number(entry.value).toLocaleString('pt-BR', {
@@ -80,6 +82,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
 const TABS: TabPeriod[] = ['24h', '7d', '30d']
 
 export function EnergyChart() {
+  const { t } = useI18n()
   const [activeTab, setActiveTab] = useState<TabPeriod>('24h')
 
   // Future: swap data source based on activeTab
@@ -90,8 +93,8 @@ export function EnergyChart() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-base font-semibold text-white">Geração vs. Consumo</h2>
-          <p className="text-xs text-gray-500 mt-0.5">Energia em kWh por hora</p>
+          <h2 className="text-base font-semibold text-white">{t('db.chart.title')}</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{t('db.chart.subtitle')}</p>
         </div>
 
         {/* Tabs */}
@@ -117,11 +120,11 @@ export function EnergyChart() {
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-sm bg-electric/70" />
-          <span className="text-xs text-gray-400">Geração</span>
+          <span className="text-xs text-gray-400">{t('db.chart.generation')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-sm bg-solar/70" />
-          <span className="text-xs text-gray-400">Consumo</span>
+          <span className="text-xs text-gray-400">{t('db.chart.consumption')}</span>
         </div>
       </div>
 

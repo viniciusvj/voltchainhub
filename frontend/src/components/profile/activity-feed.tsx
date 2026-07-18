@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ExternalLink, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -88,6 +89,7 @@ const COLOR_MAP: Record<EventColor, { dot: string; ring: string }> = {
 // ── Event row ─────────────────────────────────────────────────────────────────
 
 function EventRow({ event, isLast }: { event: ActivityEvent; isLast: boolean }) {
+  const { t } = useI18n();
   const { dot, ring } = COLOR_MAP[event.color];
 
   return (
@@ -123,8 +125,8 @@ function EventRow({ event, isLast }: { event: ActivityEvent; isLast: boolean }) 
               target="_blank"
               rel="noopener noreferrer"
               className="flex-shrink-0 text-gray-500 hover:text-electric transition-colors mt-0.5"
-              aria-label="Ver transação"
-              title="Ver no Explorer"
+              aria-label={t('pf.activity.viewTx')}
+              title={t('pf.wallet.viewExplorer')}
             >
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
@@ -141,6 +143,7 @@ function EventRow({ event, isLast }: { event: ActivityEvent; isLast: boolean }) 
 const INITIAL_VISIBLE = 5;
 
 export function ActivityFeed() {
+  const { t } = useI18n();
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? MOCK_EVENTS : MOCK_EVENTS.slice(0, INITIAL_VISIBLE);
 
@@ -151,11 +154,11 @@ export function ActivityFeed() {
         <div className="flex items-center gap-2">
           <Activity className="w-4 h-4 text-electric" />
           <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wide">
-            Atividade Recente
+            {t('pf.activity.title')}
           </h2>
         </div>
         <span className="text-xs text-gray-500 bg-volt-dark-700 px-2 py-0.5 rounded-full">
-          {MOCK_EVENTS.length} eventos
+          {MOCK_EVENTS.length} {t('pf.activity.events')}
         </span>
       </div>
 
@@ -179,8 +182,8 @@ export function ActivityFeed() {
         className="w-full py-2 text-sm font-medium text-electric hover:text-white hover:bg-electric/10 border border-electric/30 hover:border-electric/60 rounded-lg transition-colors"
       >
         {showAll
-          ? 'Ver menos'
-          : `Ver mais (${MOCK_EVENTS.length - INITIAL_VISIBLE} restantes)`}
+          ? t('pf.activity.less')
+          : `${t('pf.activity.more')} (${MOCK_EVENTS.length - INITIAL_VISIBLE} ${t('pf.activity.remaining')})`}
       </button>
     </div>
   );

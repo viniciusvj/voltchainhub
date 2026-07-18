@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Cpu, Zap, Wallet, ArrowLeftRight, Loader2, AlertCircle } from 'lucide-react'
 import { apiUrl, API_CONFIGURED } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
 interface Metrics {
   local: { devices: number; preferencesSet: number }
@@ -30,16 +31,18 @@ function StatRow({ label, value, icon: Icon, iconColor }: Row) {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n()
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-6 flex flex-col gap-0">
-      <h2 className="text-base font-semibold text-white mb-1">Rede VoltchainHub</h2>
-      <p className="text-xs text-gray-500 mb-4">Dados on-chain da testnet Amoy, em tempo real</p>
+      <h2 className="text-base font-semibold text-white mb-1">{t('db.net.title')}</h2>
+      <p className="text-xs text-gray-500 mb-4">{t('db.net.subtitle')}</p>
       {children}
     </div>
   )
 }
 
 export function NetworkStats() {
+  const { t } = useI18n()
   const { data, isLoading, isError } = useQuery<Metrics>({
     queryKey: ['metrics'],
     queryFn: async () => {
@@ -56,8 +59,7 @@ export function NetworkStats() {
     return (
       <Shell>
         <p className="text-xs text-gray-500 py-2">
-          Métricas da rede ficam disponíveis quando a API estiver publicada
-          (configure <code className="text-gray-400">NEXT_PUBLIC_API_URL</code>).
+          {t('db.net.noApiPre')}<code className="text-gray-400">NEXT_PUBLIC_API_URL</code>{t('db.net.noApiPost')}
         </p>
       </Shell>
     )
@@ -67,7 +69,7 @@ export function NetworkStats() {
     return (
       <Shell>
         <div className="flex items-center gap-2 text-sm text-gray-400 py-4">
-          <Loader2 className="w-4 h-4 animate-spin text-electric" /> Carregando métricas…
+          <Loader2 className="w-4 h-4 animate-spin text-electric" /> {t('db.net.loading')}
         </div>
       </Shell>
     )
@@ -77,7 +79,7 @@ export function NetworkStats() {
     return (
       <Shell>
         <div className="flex items-center gap-2 text-sm text-red-400 py-4">
-          <AlertCircle className="w-4 h-4" /> Não foi possível carregar as métricas.
+          <AlertCircle className="w-4 h-4" /> {t('db.net.error')}
         </div>
       </Shell>
     )
@@ -85,15 +87,15 @@ export function NetworkStats() {
 
   const chainOk = !('error' in data.chain)
   const chain = data.chain as { deviceCount: string; luzTotalSupply: string; tradeCount: string }
-  const deviceCount = chainOk ? chain.deviceCount : '—'
-  const luzSupply = chainOk ? chain.luzTotalSupply : '—'
-  const tradeCount = chainOk ? chain.tradeCount : '—'
+  const deviceCount = chainOk ? chain.deviceCount : '-'
+  const luzSupply = chainOk ? chain.luzTotalSupply : '-'
+  const tradeCount = chainOk ? chain.tradeCount : '-'
 
   const rows: Row[] = [
-    { label: 'Dispositivos registrados', value: deviceCount, icon: Cpu, iconColor: 'text-electric' },
-    { label: 'LuzTokens emitidos (kWh)', value: luzSupply, icon: Zap, iconColor: 'text-solar' },
-    { label: 'Trades no vault', value: tradeCount, icon: ArrowLeftRight, iconColor: 'text-purple-400' },
-    { label: 'Preferências de pagamento', value: String(data.local.preferencesSet), icon: Wallet, iconColor: 'text-green-400' },
+    { label: t('db.net.devices'), value: deviceCount, icon: Cpu, iconColor: 'text-electric' },
+    { label: t('db.net.luz'), value: luzSupply, icon: Zap, iconColor: 'text-solar' },
+    { label: t('db.net.trades'), value: tradeCount, icon: ArrowLeftRight, iconColor: 'text-purple-400' },
+    { label: t('db.net.prefs'), value: String(data.local.preferencesSet), icon: Wallet, iconColor: 'text-green-400' },
   ]
 
   return (

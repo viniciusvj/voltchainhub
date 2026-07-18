@@ -10,6 +10,14 @@ import {
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
+
+// Mapeia o nome canonico (PT) da fonte pra chave de traducao.
+const PORT_NAME_KEY: Record<string, 'pf.port.solar' | 'pf.port.battery' | 'pf.port.wind'> = {
+  Solar: 'pf.port.solar',
+  Bateria: 'pf.port.battery',
+  'Eólico': 'pf.port.wind',
+};
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 
@@ -38,11 +46,12 @@ interface CustomTooltipProps {
 }
 
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
+  const { t } = useI18n();
   if (!active || !payload?.length) return null;
   const item = payload[0];
   return (
     <div className="bg-volt-dark-700 border border-volt-dark-600 rounded-lg px-3 py-2 shadow-xl text-xs">
-      <p className="font-semibold text-white mb-0.5">{item.name}</p>
+      <p className="font-semibold text-white mb-0.5">{PORT_NAME_KEY[item.name] ? t(PORT_NAME_KEY[item.name]) : item.name}</p>
       <p className="text-gray-300">
         {item.value.toLocaleString('pt-BR', { minimumFractionDigits: 1 })} kWh
       </p>
@@ -54,6 +63,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 // ── Legend dots ───────────────────────────────────────────────────────────────
 
 function ChartLegend() {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-2 w-full">
       {PORTFOLIO_DATA.map((item) => (
@@ -63,7 +73,7 @@ function ChartLegend() {
               className="w-2.5 h-2.5 rounded-full flex-shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-sm text-gray-300">{item.name}</span>
+            <span className="text-sm text-gray-300">{PORT_NAME_KEY[item.name] ? t(PORT_NAME_KEY[item.name]) : item.name}</span>
           </div>
           <div className="flex items-center gap-2 text-right">
             <span className="text-sm font-medium text-white">
@@ -85,13 +95,14 @@ function ChartLegend() {
 // ── Main component ─────────────────────────────────────────────────────────────
 
 export function PortfolioSummary() {
+  const { t } = useI18n();
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-6 flex flex-col gap-5">
       {/* Header */}
       <div className="flex items-center gap-2">
         <TrendingUp className="w-4 h-4 text-solar" />
         <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wide">
-          Portfólio de Tokens
+          {t('pf.port.title')}
         </h2>
       </div>
 

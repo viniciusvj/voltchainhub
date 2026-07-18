@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Network, Percent, Cpu, ShieldCheck } from 'lucide-react'
 import { apiUrl, API_CONFIGURED } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
 interface Metrics {
   chain: { deviceCount: string } | { error: string }
@@ -35,6 +36,7 @@ function StatCard({ stat }: { stat: StatItem }) {
 }
 
 export function StatsGrid() {
+  const { t } = useI18n()
   const { data } = useQuery<Metrics>({
     queryKey: ['metrics'],
     queryFn: async () => {
@@ -48,35 +50,35 @@ export function StatsGrid() {
   })
 
   const deviceCount =
-    data && !('error' in data.chain) ? (data.chain as { deviceCount: string }).deviceCount : '—'
+    data && !('error' in data.chain) ? (data.chain as { deviceCount: string }).deviceCount : '-'
 
   const stats: StatItem[] = [
     {
-      label: 'Rede',
+      label: t('db.stats.network'),
       value: 'Polygon Amoy',
       icon: Network,
       iconBg: 'bg-electric/10',
       iconColor: 'text-electric',
-      subLabel: 'testnet',
+      subLabel: t('db.stats.testnet'),
     },
     {
-      label: 'Fee do protocolo',
-      value: '0,5%',
+      label: t('db.stats.fee'),
+      value: t('db.stats.feeValue'),
       icon: Percent,
       iconBg: 'bg-solar/10',
       iconColor: 'text-solar',
-      subLabel: 'swap atômico via Uniswap v3',
+      subLabel: t('db.stats.feeSub'),
     },
     {
-      label: 'Dispositivos na rede',
+      label: t('db.stats.devices'),
       value: deviceCount,
       icon: Cpu,
       iconBg: 'bg-purple-500/10',
       iconColor: 'text-purple-400',
-      subLabel: 'on-chain, DeviceRegistry',
+      subLabel: t('db.stats.devicesSub'),
     },
     {
-      label: 'Contratos verificados',
+      label: t('db.stats.contracts'),
       value: '6',
       icon: ShieldCheck,
       iconBg: 'bg-green-500/10',

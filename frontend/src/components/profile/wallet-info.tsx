@@ -12,6 +12,7 @@ import {
   CircleDot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Mock data ────────────────────────────────────────────────────────────────
 
@@ -42,19 +43,19 @@ function AddressAvatar({ address }: { address: string }) {
 // ── Disconnected state ────────────────────────────────────────────────────────
 
 function DisconnectedCard() {
+  const { t } = useI18n();
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-8 flex flex-col items-center justify-center gap-5 min-h-[300px]">
       <div className="w-16 h-16 rounded-full bg-volt-dark-700 flex items-center justify-center">
         <Wallet className="w-8 h-8 text-gray-500" />
       </div>
       <div className="text-center space-y-1">
-        <p className="text-lg font-semibold text-white">Conecte sua Carteira</p>
+        <p className="text-lg font-semibold text-white">{t('pf.wallet.connectTitle')}</p>
         <p className="text-sm text-gray-400">
-          Conecte sua carteira para ver detalhes, saldos e atividades do seu perfil de
-          prosumidor.
+          {t('pf.wallet.connectSub')}
         </p>
       </div>
-      <ConnectButton label="Conectar Carteira" />
+      <ConnectButton label={t('connect')} />
     </div>
   );
 }
@@ -63,6 +64,7 @@ function DisconnectedCard() {
 
 export function WalletInfo() {
   const { address, isConnected } = useAccount();
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   if (!isConnected || !address) {
@@ -85,7 +87,7 @@ export function WalletInfo() {
       <div className="flex items-center gap-2">
         <Wallet className="w-4 h-4 text-electric" />
         <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wide">
-          Informações da Carteira
+          {t('pf.wallet.title')}
         </h2>
       </div>
 
@@ -109,8 +111,8 @@ export function WalletInfo() {
                   ? 'text-green-400 bg-green-400/10'
                   : 'text-gray-400 hover:text-white hover:bg-volt-dark-700'
               )}
-              aria-label="Copiar endereço"
-              title={copied ? 'Copiado!' : 'Copiar endereço'}
+              aria-label={t('pf.wallet.copy')}
+              title={copied ? t('pf.wallet.copied') : t('pf.wallet.copy')}
             >
               {copied ? (
                 <ClipboardCheck className="w-4 h-4" />
@@ -120,7 +122,7 @@ export function WalletInfo() {
             </button>
           </div>
           {copied && (
-            <p className="text-xs text-green-400 mt-0.5">Endereço copiado!</p>
+            <p className="text-xs text-green-400 mt-0.5">{t('pf.wallet.copiedMsg')}</p>
           )}
         </div>
       </div>
@@ -130,7 +132,7 @@ export function WalletInfo() {
 
       {/* Network row */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-400">Rede</span>
+        <span className="text-sm text-gray-400">{t('db.stats.network')}</span>
         <div className="flex items-center gap-2">
           <CircleDot className="w-4 h-4 text-[#8247E5]" />
           <span className="text-sm font-medium text-white">Polygon Mumbai</span>
@@ -142,7 +144,7 @@ export function WalletInfo() {
 
       {/* MATIC balance row */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-400">Saldo MATIC</span>
+        <span className="text-sm text-gray-400">{t('pf.wallet.maticBalance')}</span>
         <div className="flex items-center gap-1.5">
           <span className="text-sm font-semibold text-white">
             {MOCK_MATIC_BALANCE.toLocaleString('pt-BR', {
@@ -156,7 +158,7 @@ export function WalletInfo() {
 
       {/* LUZ Token balance row */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-400">Saldo LUZ Token</span>
+        <span className="text-sm text-gray-400">{t('db.balance.title')}</span>
         <div className="flex items-center gap-1.5">
           <Zap className="w-3.5 h-3.5 text-electric" />
           <span className="text-sm font-semibold text-white">
@@ -165,7 +167,7 @@ export function WalletInfo() {
               maximumFractionDigits: 1,
             })}
           </span>
-          <span className="text-xs text-gray-400">kWh (todos os IDs)</span>
+          <span className="text-xs text-gray-400">{t('pf.wallet.allIds')}</span>
         </div>
       </div>
 
@@ -180,7 +182,7 @@ export function WalletInfo() {
         className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg border border-electric/40 text-electric text-sm font-medium hover:bg-electric/10 transition-colors"
       >
         <ExternalLink className="w-4 h-4" />
-        Ver no Explorer
+        {t('pf.wallet.viewExplorer')}
       </a>
     </div>
   );

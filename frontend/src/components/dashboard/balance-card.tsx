@@ -4,6 +4,7 @@ import { Zap, TrendingUp, Wallet } from 'lucide-react'
 import { useAccount, useReadContract } from 'wagmi'
 import { formatUnits } from 'viem'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 import { luzTokenAbi } from '@/contracts/abis/LuzToken'
 import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses'
 
@@ -54,6 +55,7 @@ function Sparkline() {
 
 export function BalanceCard() {
   const { isConnected, address } = useAccount()
+  const { t } = useI18n()
 
   const luzAddress = CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID].luzToken
   const { data: rawBalance } = useReadContract({
@@ -75,7 +77,7 @@ export function BalanceCard() {
           <Wallet className="w-6 h-6 text-gray-500" />
         </div>
         <p className="text-sm text-gray-400 text-center">
-          Conecte sua carteira para ver seu saldo
+          {t('db.balance.connect')}
         </p>
       </div>
     )
@@ -89,7 +91,7 @@ export function BalanceCard() {
           <div className="w-9 h-9 rounded-full bg-electric/10 flex items-center justify-center">
             <Zap className="w-5 h-5 text-electric" />
           </div>
-          <span className="text-sm font-medium text-gray-400">Saldo LUZ Token</span>
+          <span className="text-sm font-medium text-gray-400">{t('db.balance.title')}</span>
         </div>
         <span className="text-xs text-gray-500 bg-volt-dark-700 px-2 py-0.5 rounded-full">
           Polygon
@@ -116,7 +118,7 @@ export function BalanceCard() {
           <TrendingUp className="w-3 h-3" />
           on-chain
         </div>
-        <span className="text-xs text-gray-500">LuzToken #1 na Amoy</span>
+        <span className="text-xs text-gray-500">{t('db.balance.source')}</span>
       </div>
     </div>
   )

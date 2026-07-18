@@ -4,6 +4,7 @@ import { ArrowUpRight, ArrowDownLeft } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { shortenAddress } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
 type TxStatus = 'settled' | 'pending' | 'escrow'
 type TxType = 'sold' | 'bought'
@@ -67,17 +68,17 @@ const MOCK_TRANSACTIONS: Transaction[] = [
   },
 ]
 
-const STATUS_CONFIG: Record<TxStatus, { label: string; className: string }> = {
+const STATUS_CONFIG: Record<TxStatus, { labelKey: 'db.tx.settled' | 'db.tx.pending' | 'db.tx.escrow'; className: string }> = {
   settled: {
-    label: 'Liquidada',
+    labelKey: 'db.tx.settled',
     className: 'bg-green-500/10 text-green-400 border border-green-500/20',
   },
   pending: {
-    label: 'Pendente',
+    labelKey: 'db.tx.pending',
     className: 'bg-solar/10 text-solar border border-solar/20',
   },
   escrow: {
-    label: 'Em Escrow',
+    labelKey: 'db.tx.escrow',
     className: 'bg-electric/10 text-electric border border-electric/20',
   },
 }
@@ -87,6 +88,7 @@ interface TransactionRowProps {
 }
 
 function TransactionRow({ tx }: TransactionRowProps) {
+  const { t } = useI18n()
   const isSold = tx.type === 'sold'
   const status = STATUS_CONFIG[tx.status]
 
@@ -109,7 +111,7 @@ function TransactionRow({ tx }: TransactionRowProps) {
       {/* Counterparty + time */}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-white truncate">
-          {isSold ? 'Venda para' : 'Compra de'}{' '}
+          {isSold ? t('db.tx.soldTo') : t('db.tx.boughtFrom')}{' '}
           <span className="font-mono text-gray-300">
             {shortenAddress(tx.counterparty)}
           </span>
@@ -146,7 +148,7 @@ function TransactionRow({ tx }: TransactionRowProps) {
             status.className
           )}
         >
-          {status.label}
+          {t(status.labelKey)}
         </span>
       </div>
     </div>
@@ -154,16 +156,17 @@ function TransactionRow({ tx }: TransactionRowProps) {
 }
 
 export function RecentTransactions() {
+  const { t } = useI18n()
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-6 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-base font-semibold text-white">Transações Recentes</h2>
+        <h2 className="text-base font-semibold text-white">{t('db.tx.title')}</h2>
         <Link
           href="/trades"
           className="text-xs text-electric hover:text-electric/80 transition-colors font-medium"
         >
-          Ver todas &rarr;
+          {t('db.tx.viewAll')} &rarr;
         </Link>
       </div>
 

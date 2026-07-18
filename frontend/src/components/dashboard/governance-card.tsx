@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Vote, Loader2, AlertCircle } from 'lucide-react'
 import { apiUrl, API_CONFIGURED } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
 interface PreferenceStats {
   totalPreferencesSet: number
@@ -12,12 +13,9 @@ interface PreferenceStats {
   averageMaxSlippageBps: number
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  BRL_STABLE: 'BRL stable',
-  USD_STABLE: 'USD stable',
-  NATIVE_WRAPPED: 'Nativo/wrapped',
-  OTHER: 'Outros',
-}
+// Categorias fixas (a ordem/keys nao mudam); os rotulos traduziveis resolvem no
+// render via t(). BRL/USD stable sao termos que ficam iguais nos 3 idiomas.
+const CATEGORIES = ['BRL_STABLE', 'USD_STABLE', 'NATIVE_WRAPPED', 'OTHER'] as const
 
 const CATEGORY_COLORS: Record<string, string> = {
   BRL_STABLE: 'bg-electric',
@@ -27,6 +25,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n()
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-6 flex flex-col gap-4">
       <div className="flex items-center gap-2">
@@ -34,8 +33,8 @@ function Shell({ children }: { children: React.ReactNode }) {
           <Vote className="w-5 h-5 text-electric" />
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-200">Governança de pagamento</h3>
-          <p className="text-xs text-gray-500">Moeda de recebimento escolhida pelos prosumidores</p>
+          <h3 className="text-sm font-medium text-gray-200">{t('db.gov.title')}</h3>
+          <p className="text-xs text-gray-500">{t('db.gov.subtitle')}</p>
         </div>
       </div>
       {children}
@@ -44,6 +43,12 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 export function GovernanceCard() {
+  const { t } = useI18n()
+  const catLabel = (cat: string) =>
+    cat === 'BRL_STABLE' ? 'BRL stable'
+    : cat === 'USD_STABLE' ? 'USD stable'
+    : cat === 'NATIVE_WRAPPED' ? t('db.gov.catNative')
+    : t('db.gov.catOther')
   const { data, isLoading, isError } = useQuery<PreferenceStats>({
     queryKey: ['preferences-stats'],
     queryFn: async () => {
@@ -59,8 +64,7 @@ export function GovernanceCard() {
     return (
       <Shell>
         <p className="text-xs text-gray-500">
-          Dados de governança ficam disponíveis quando a API do backend estiver publicada
-          (configure <code className="text-gray-400">NEXT_PUBLIC_API_URL</code>).
+          {t('db.gov.noApiPre')}<code className="text-gray-400">NEXT_PUBLIC_API_URL</code>{t('db.net.noApiPost')}
         </p>
       </Shell>
     )
@@ -70,7 +74,7 @@ export function GovernanceCard() {
     return (
       <Shell>
         <div className="flex items-center gap-2 text-sm text-gray-400 py-4">
-          <Loader2 className="w-4 h-4 animate-spin text-electric" /> Carregando estatísticas…
+          <Loader2 className="w-4 h-4 animate-spin text-electric" /> {t('db.gov.loading')}
         </div>
       </Shell>
     )
@@ -80,21 +84,21 @@ export function GovernanceCard() {
     return (
       <Shell>
         <div className="flex items-center gap-2 text-sm text-red-400 py-4">
-          <AlertCircle className="w-4 h-4" /> Não foi possível carregar as estatísticas.
+          <AlertCircle className="w-4 h-4" /> {t('db.gov.error')}
         </div>
       </Shell>
     )
   }
 
   const total = data.totalPreferencesSet || 0
-  const categories = Object.keys(CATEGORY_LABELS)
+  const categories = CATEGORIES
 
   return (
     <Shell>
       <div>
         <p className="text-3xl font-bold text-white tracking-tight">
           {total.toLocaleString('pt-BR')}
-          <span className="text-sm font-medium text-gray-400 ml-2">preferências definidas</span>
+          <span className="text-sm font-medium text-gray-400 ml-2">{t('db.gov.prefsSet')}</span>
         </p>
       </div>
 
@@ -105,7 +109,7 @@ export function GovernanceCard() {
           const pct = total > 0 ? Math.round((count / total) * 100) : 0
           return (
             <div key={cat} className="flex items-center gap-2 text-xs">
-              <span className="w-28 text-gray-400">{CATEGORY_LABELS[cat]}</span>
+              <span className="w-28 text-gray-400">{catLabel(cat)}</span>
               <div className="flex-1 h-2 rounded-full bg-volt-dark-700 overflow-hidden">
                 <div className={cn('h-full rounded-full', CATEGORY_COLORS[cat])} style={{ width: `${pct}%` }} />
               </div>
@@ -127,7 +131,7 @@ export function GovernanceCard() {
       )}
 
       <p className="text-xs text-gray-500">
-        Slippage máximo médio: <span className="text-gray-300">{(data.averageMaxSlippageBps / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%</span>
+        {t('db.gov.avgSlippage')} <span className="text-gray-300">{(data.averageMaxSlippageBps / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%</span>
       </p>
     </Shell>
   )

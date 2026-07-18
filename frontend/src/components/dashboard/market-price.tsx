@@ -2,6 +2,7 @@
 
 import { TrendingUp, TrendingDown, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
 // Mock data - replace with PowerMatcher oracle feed when ready
 const MOCK_MARKET = {
@@ -14,6 +15,7 @@ const MOCK_MARKET = {
 }
 
 export function MarketPrice() {
+  const { t } = useI18n()
   const TrendIcon = MOCK_MARKET.changePositive ? TrendingUp : TrendingDown
 
   return (
@@ -24,7 +26,7 @@ export function MarketPrice() {
           <div className="w-9 h-9 rounded-full bg-solar/10 flex items-center justify-center">
             <Zap className="w-5 h-5 text-solar" />
           </div>
-          <span className="text-sm font-medium text-gray-400">Preço P2P</span>
+          <span className="text-sm font-medium text-gray-400">{t('db.market.title')}</span>
         </div>
         {/* PowerMatcher badge */}
         <span className="text-xs font-medium text-electric bg-electric/10 border border-electric/20 px-2 py-0.5 rounded-full">
@@ -42,7 +44,7 @@ export function MarketPrice() {
               maximumFractionDigits: 3,
             })}
           </p>
-          <p className="text-xs text-gray-500 mt-0.5">por kWh</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t('db.market.perKwh')}</p>
         </div>
 
         {/* 24h change */}
@@ -61,7 +63,7 @@ export function MarketPrice() {
       {/* Min / Max */}
       <div className="grid grid-cols-2 gap-3 pt-1 border-t border-volt-dark-600">
         <div>
-          <p className="text-xs text-gray-500 mb-0.5">Mínima do dia</p>
+          <p className="text-xs text-gray-500 mb-0.5">{t('db.market.dayMin')}</p>
           <p className="text-sm font-medium text-white">
             R${' '}
             {MOCK_MARKET.minDay.toLocaleString('pt-BR', {
@@ -71,7 +73,7 @@ export function MarketPrice() {
           </p>
         </div>
         <div>
-          <p className="text-xs text-gray-500 mb-0.5">Máxima do dia</p>
+          <p className="text-xs text-gray-500 mb-0.5">{t('db.market.dayMax')}</p>
           <p className="text-sm font-medium text-white">
             R${' '}
             {MOCK_MARKET.maxDay.toLocaleString('pt-BR', {
