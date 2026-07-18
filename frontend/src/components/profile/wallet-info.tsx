@@ -18,7 +18,7 @@ import { useI18n } from '@/lib/i18n';
 
 const MOCK_MATIC_BALANCE = 12.45;
 const MOCK_LUZ_BALANCE = 142.5; // kWh total across all token IDs
-const EXPLORER_BASE = 'https://mumbai.polygonscan.com/address/';
+const EXPLORER_BASE = 'https://amoy.polygonscan.com/address/';
 
 // ── Identicon gradient ────────────────────────────────────────────────────────
 
@@ -135,7 +135,7 @@ export function WalletInfo() {
         <span className="text-sm text-gray-400">{t('db.stats.network')}</span>
         <div className="flex items-center gap-2">
           <CircleDot className="w-4 h-4 text-[#8247E5]" />
-          <span className="text-sm font-medium text-white">Polygon Mumbai</span>
+          <span className="text-sm font-medium text-white">Polygon Amoy</span>
           <span className="text-xs bg-[#8247E5]/15 text-[#A97CF8] border border-[#8247E5]/30 px-2 py-0.5 rounded-full">
             Testnet
           </span>

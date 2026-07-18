@@ -25,21 +25,21 @@ const MOCK_EVENTS: ActivityEvent[] = [
     description: 'Vendeu 5,2 kWh para 0xAb12...',
     timestamp:   'há 2 min',
     color:       'green',
-    link:        'https://mumbai.polygonscan.com/tx/0xmock1',
+    link:        'https://amoy.polygonscan.com/tx/0xmock1',
   },
   {
     id:          2,
     description: 'Leitura verificada: 3,1 kWh',
     timestamp:   'há 15 min',
     color:       'blue',
-    link:        'https://mumbai.polygonscan.com/tx/0xmock2',
+    link:        'https://amoy.polygonscan.com/tx/0xmock2',
   },
   {
     id:          3,
     description: 'Comprou 10 kWh de 0xCd34...',
     timestamp:   'há 1h',
     color:       'solar',
-    link:        'https://mumbai.polygonscan.com/tx/0xmock3',
+    link:        'https://amoy.polygonscan.com/tx/0xmock3',
   },
   {
     id:          4,
@@ -52,14 +52,14 @@ const MOCK_EVENTS: ActivityEvent[] = [
     description: 'Trade liquidada: 8,0 kWh',
     timestamp:   'há 5h',
     color:       'green',
-    link:        'https://mumbai.polygonscan.com/tx/0xmock5',
+    link:        'https://amoy.polygonscan.com/tx/0xmock5',
   },
   {
     id:          6,
     description: 'Escrow criado: 15 kWh',
     timestamp:   'há 8h',
     color:       'blue',
-    link:        'https://mumbai.polygonscan.com/tx/0xmock6',
+    link:        'https://amoy.polygonscan.com/tx/0xmock6',
   },
   {
     id:          7,
@@ -72,7 +72,7 @@ const MOCK_EVENTS: ActivityEvent[] = [
     description: 'Recompensa treasury: 0,5 kWh',
     timestamp:   'há 1 dia',
     color:       'solar',
-    link:        'https://mumbai.polygonscan.com/tx/0xmock8',
+    link:        'https://amoy.polygonscan.com/tx/0xmock8',
   },
 ];
 
