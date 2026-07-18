@@ -26,7 +26,8 @@ compartilham identidade visual. Objetivo: que pareçam **um só produto**.
 - ✅ i18n PT/EN/ES no chrome do app (topbar, sidebar, footer + badge testnet) com switcher; persiste em localStorage
 - ✅ i18n dos cabeçalhos das páginas (título+subtítulo das 5 telas via `PageHeader` client, mantendo o `export metadata` dos Server Components) + abas de trades; DICT com `satisfies` pra checagem estática de chave
 - ✅ i18n dos cards de trade (trade-form + seller-onboard: abas, campos, resumo, botões, erros, hints) PT/EN/ES
-- ✅ i18n do wizard register-device (3 steps, campos, validações, resumo, sucesso/erro, navegação) PT/EN/ES. Faltam os cards de dashboard/* e profile/*
+- ✅ i18n do wizard register-device (3 steps, campos, validações, resumo, sucesso/erro, navegação) PT/EN/ES
+- ✅ i18n dos cards de dashboard/* (balance, market-price, stats-grid, network-stats, governance, recent-transactions, energy-chart) e profile/* (wallet-info, portfolio-summary, prosumidor-stats, activity-feed) PT/EN/ES. Faltam cards secundários de market/* (order-book, price-chart, clearing-info, market-history), trades/* (trade-stats, new-trade-wizard, trade-history, my-trades, dispute-modal) e devices/* (device-list, device-stats, device-readings)
 - ✅ Locale na URL (`?lang=en|es`): precedência URL > localStorage > pt; o switcher reflete o idioma na querystring (link compartilhável)
 - ✅ Página pública de status (`/status.html`): saúde da API + estado on-chain ao vivo (no-store, refresh 30s) + 6 contratos verificados; link Status na nav e footer da landing
 - ✅ nginx: `/app/` servido sem o sub_filter v2w (location próprio); cookie bar/analytics não aparecem mais no dApp
