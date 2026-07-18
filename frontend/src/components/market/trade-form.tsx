@@ -6,6 +6,7 @@ import { parseEther } from 'viem';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Minus, Plus, Info, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { energyVaultAbi } from '@/contracts/abis/EnergyVault';
 import { luzTokenAbi } from '@/contracts/abis/LuzToken';
 import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses';
@@ -22,6 +23,7 @@ type OrderType = 'limit' | 'market';
 
 export function TradeForm() {
   const { isConnected } = useAccount();
+  const { t } = useI18n();
 
   const [side,      setSide]      = useState<Side>('buy');
   const [orderType, setOrderType] = useState<OrderType>('limit');
@@ -44,7 +46,7 @@ export function TradeForm() {
   // The price is treated as the native-token price per kWh on the testnet.
   async function handleBuy() {
     setTxError(null);
-    if (!ADDRESS_RE.test(seller)) { setTxError('Informe o endereço do vendedor (0x...).'); return; }
+    if (!ADDRESS_RE.test(seller)) { setTxError(t('form.errSeller')); return; }
     setSubmitting(true);
     try {
       const energyWh = BigInt(Math.round(amount * 1000));
@@ -61,7 +63,7 @@ export function TradeForm() {
       });
       setTxHash(hash);
     } catch (err) {
-      setTxError(err instanceof Error ? err.message.split('\n')[0] : 'Falha na transação');
+      setTxError(err instanceof Error ? err.message.split('\n')[0] : t('form.errTx'));
     } finally {
       setSubmitting(false);
     }
@@ -81,7 +83,7 @@ export function TradeForm() {
       });
       setTxHash(hash);
     } catch (err) {
-      setTxError(err instanceof Error ? err.message.split('\n')[0] : 'Falha na transação');
+      setTxError(err instanceof Error ? err.message.split('\n')[0] : t('form.errTx'));
     } finally {
       setSubmitting(false);
     }
@@ -119,7 +121,7 @@ export function TradeForm() {
                 : 'text-gray-500 hover:text-gray-300',
             )}
           >
-            {s === 'buy' ? 'Comprar' : 'Vender'}
+            {s === 'buy' ? t('form.buy') : t('form.sell')}
           </button>
         ))}
       </div>
@@ -127,18 +129,18 @@ export function TradeForm() {
       <div className="p-4 flex flex-col gap-4">
         {/* Order type toggle */}
         <div className="flex gap-1 p-1 bg-volt-dark-700 rounded-lg">
-          {(['limit', 'market'] as OrderType[]).map((t) => (
+          {(['limit', 'market'] as OrderType[]).map((ot) => (
             <button
-              key={t}
-              onClick={() => setOrderType(t)}
+              key={ot}
+              onClick={() => setOrderType(ot)}
               className={cn(
                 'flex-1 py-1.5 text-xs font-medium rounded-md transition-colors',
-                orderType === t
+                orderType === ot
                   ? 'bg-volt-dark-600 text-gray-100'
                   : 'text-gray-500 hover:text-gray-300',
               )}
             >
-              {t === 'limit' ? 'Ordem Limitada' : 'Ordem de Mercado'}
+              {ot === 'limit' ? t('form.limit') : t('form.market')}
             </button>
           ))}
         </div>
@@ -147,9 +149,9 @@ export function TradeForm() {
         {!isConnected ? (
           <div className="flex flex-col items-center gap-3 py-4">
             <p className="text-sm text-gray-400 text-center">
-              Conecte sua carteira para negociar energia
+              {t('form.connectPrompt')}
             </p>
-            <ConnectButton label="Conectar Carteira" />
+            <ConnectButton label={t('connect')} />
           </div>
         ) : (
           <>
@@ -157,13 +159,13 @@ export function TradeForm() {
             {orderType === 'limit' && (
               <div>
                 <label className="block text-xs text-gray-400 mb-1.5">
-                  Preço <span className="text-gray-600">(R$/kWh)</span>
+                  {t('form.price')} <span className="text-gray-600">(R$/kWh)</span>
                 </label>
                 <div className={cn('flex items-center bg-volt-dark-700 border rounded-lg overflow-hidden', accentBorder)}>
                   <button
                     onClick={() => adjustPrice(-0.0001)}
                     className="px-3 py-2.5 text-gray-400 hover:text-gray-100 hover:bg-volt-dark-600 transition-colors"
-                    aria-label="Diminuir preço"
+                    aria-label={t('form.decrease')}
                   >
                     <Minus className="w-3.5 h-3.5" />
                   </button>
@@ -178,7 +180,7 @@ export function TradeForm() {
                   <button
                     onClick={() => adjustPrice(0.0001)}
                     className="px-3 py-2.5 text-gray-400 hover:text-gray-100 hover:bg-volt-dark-600 transition-colors"
-                    aria-label="Aumentar preço"
+                    aria-label={t('form.increase')}
                   >
                     <Plus className="w-3.5 h-3.5" />
                   </button>
@@ -190,7 +192,7 @@ export function TradeForm() {
             <div>
               <div className="flex justify-between items-center mb-1.5">
                 <label className="text-xs text-gray-400">
-                  Quantidade <span className="text-gray-600">(kWh)</span>
+                  {t('form.amount')} <span className="text-gray-600">(kWh)</span>
                 </label>
                 <span className={cn('text-xs font-mono font-semibold', accentText)}>
                   {amount.toFixed(1)} kWh
@@ -231,7 +233,7 @@ export function TradeForm() {
             {isBuy && (
               <div>
                 <label className="text-xs text-gray-400 mb-1.5 block">
-                  Vendedor <span className="text-gray-600">(endereço 0x)</span>
+                  {t('form.seller')} <span className="text-gray-600">{t('form.sellerAddr')}</span>
                 </label>
                 <input
                   type="text"
@@ -244,7 +246,7 @@ export function TradeForm() {
                   )}
                 />
                 <p className="text-[10px] text-gray-600 mt-1">
-                  O vendedor precisa ter aprovado o vault e ter LuzTokens; senão a transação reverte.
+                  {t('form.sellerHint')}
                 </p>
               </div>
             )}
@@ -252,18 +254,18 @@ export function TradeForm() {
             {/* Summary */}
             <div className="bg-volt-dark-700 rounded-lg p-3 space-y-1.5 text-xs">
               <div className="flex justify-between text-gray-400">
-                <span>Subtotal</span>
+                <span>{t('form.subtotal')}</span>
                 <span className="font-mono text-gray-300">R$ {total.toFixed(4)}</span>
               </div>
               <div className="flex justify-between text-gray-400">
                 <span className="flex items-center gap-1">
-                  Taxa protocolo (0,5%)
+                  {t('form.protocolFee')}
                   <Info className="w-3 h-3 text-gray-600" />
                 </span>
                 <span className="font-mono text-gray-300">R$ {fee.toFixed(4)}</span>
               </div>
               <div className="flex justify-between border-t border-volt-dark-600 pt-1.5 font-semibold">
-                <span className="text-gray-300">Total estimado</span>
+                <span className="text-gray-300">{t('form.estTotal')}</span>
                 <span className={cn('font-mono', accentText)}>
                   R$ {netTotal.toFixed(4)}
                 </span>
@@ -282,7 +284,7 @@ export function TradeForm() {
               )}
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isBuy ? 'Travar escrow (comprar)' : 'Aprovar vault (vender)'}
+              {isBuy ? t('form.lockEscrow') : t('form.approveVault')}
             </button>
 
             {txError && (
@@ -297,12 +299,12 @@ export function TradeForm() {
                 rel="noopener noreferrer"
                 className="block text-center text-[11px] text-[#0066FF] hover:underline break-all"
               >
-                Transação enviada, ver no PolygonScan
+                {t('form.txSent')}
               </a>
             )}
 
             <p className="text-center text-[11px] text-gray-600">
-              Taxa do protocolo: 0,5% • Liquidação via EnergyVault (testnet Amoy)
+              {t('form.footer')}
             </p>
           </>
         )}

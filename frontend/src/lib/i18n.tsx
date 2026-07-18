@@ -41,6 +41,40 @@ const DICT = {
   // Abas de trades
   'tabs.myTrades': { pt: 'Meus trades', en: 'My trades', es: 'Mis operaciones' },
   'tabs.history': { pt: 'Histórico', en: 'History', es: 'Historial' },
+
+  // Formulario de trade (comprar/vender)
+  'form.buy': { pt: 'Comprar', en: 'Buy', es: 'Comprar' },
+  'form.sell': { pt: 'Vender', en: 'Sell', es: 'Vender' },
+  'form.limit': { pt: 'Ordem Limitada', en: 'Limit Order', es: 'Orden Limitada' },
+  'form.market': { pt: 'Ordem de Mercado', en: 'Market Order', es: 'Orden de Mercado' },
+  'form.connectPrompt': { pt: 'Conecte sua carteira para negociar energia', en: 'Connect your wallet to trade energy', es: 'Conecta tu cartera para negociar energía' },
+  'form.price': { pt: 'Preço', en: 'Price', es: 'Precio' },
+  'form.amount': { pt: 'Quantidade', en: 'Amount', es: 'Cantidad' },
+  'form.decrease': { pt: 'Diminuir preço', en: 'Decrease price', es: 'Disminuir precio' },
+  'form.increase': { pt: 'Aumentar preço', en: 'Increase price', es: 'Aumentar precio' },
+  'form.seller': { pt: 'Vendedor', en: 'Seller', es: 'Vendedor' },
+  'form.sellerAddr': { pt: '(endereço 0x)', en: '(0x address)', es: '(dirección 0x)' },
+  'form.sellerHint': { pt: 'O vendedor precisa ter aprovado o vault e ter LuzTokens; senão a transação reverte.', en: 'The seller must have approved the vault and hold LuzTokens; otherwise the transaction reverts.', es: 'El vendedor debe haber aprobado el vault y tener LuzTokens; de lo contrario la transacción se revierte.' },
+  'form.subtotal': { pt: 'Subtotal', en: 'Subtotal', es: 'Subtotal' },
+  'form.protocolFee': { pt: 'Taxa protocolo (0,5%)', en: 'Protocol fee (0.5%)', es: 'Comisión del protocolo (0,5%)' },
+  'form.estTotal': { pt: 'Total estimado', en: 'Estimated total', es: 'Total estimado' },
+  'form.lockEscrow': { pt: 'Travar escrow (comprar)', en: 'Lock escrow (buy)', es: 'Bloquear escrow (comprar)' },
+  'form.approveVault': { pt: 'Aprovar vault (vender)', en: 'Approve vault (sell)', es: 'Aprobar vault (vender)' },
+  'form.txSent': { pt: 'Transação enviada, ver no PolygonScan', en: 'Transaction sent, view on PolygonScan', es: 'Transacción enviada, ver en PolygonScan' },
+  'form.footer': { pt: 'Taxa do protocolo: 0,5% • Liquidação via EnergyVault (testnet Amoy)', en: 'Protocol fee: 0.5% • Settlement via EnergyVault (Amoy testnet)', es: 'Comisión del protocolo: 0,5% • Liquidación vía EnergyVault (testnet Amoy)' },
+  'form.errSeller': { pt: 'Informe o endereço do vendedor (0x...).', en: 'Enter the seller address (0x...).', es: 'Ingresa la dirección del vendedor (0x...).' },
+  'form.errTx': { pt: 'Falha na transação', en: 'Transaction failed', es: 'Falla en la transacción' },
+
+  // Card de onboarding do vendedor
+  'sell.title': { pt: 'Vender energia', en: 'Sell energy', es: 'Vender energía' },
+  'sell.subtitle': { pt: 'Habilite seus LuzTokens para escrow no vault', en: 'Enable your LuzTokens for escrow in the vault', es: 'Habilita tus LuzTokens para escrow en el vault' },
+  'sell.balance': { pt: 'Seu saldo', en: 'Your balance', es: 'Tu saldo' },
+  'sell.vaultApproved': { pt: 'Vault aprovado', en: 'Vault approved', es: 'Vault aprobado' },
+  'sell.yes': { pt: 'Sim', en: 'Yes', es: 'Sí' },
+  'sell.no': { pt: 'Não', en: 'No', es: 'No' },
+  'sell.revoke': { pt: 'Revogar aprovação', en: 'Revoke approval', es: 'Revocar aprobación' },
+  'sell.enable': { pt: 'Habilitar venda (aprovar vault)', en: 'Enable selling (approve vault)', es: 'Habilitar venta (aprobar vault)' },
+  'sell.hint': { pt: 'Um comprador só consegue travar um trade com você depois desta aprovação.', en: 'A buyer can only lock a trade with you after this approval.', es: 'Un comprador solo puede bloquear una operación contigo tras esta aprobación.' },
 } satisfies Dict
 
 interface I18nCtx {
@@ -51,17 +85,37 @@ interface I18nCtx {
 
 const Ctx = createContext<I18nCtx>({ locale: 'pt', setLocale: () => {}, t: (k) => DICT[k]?.pt ?? String(k) })
 
+const isLocale = (v: string | null): v is Locale => v === 'pt' || v === 'en' || v === 'es'
+
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('pt')
 
+  // Precedencia na carga: ?lang= na URL (deep-link compartilhavel) > localStorage
+  // > padrao 'pt'. O parametro da URL tambem persiste no localStorage.
   useEffect(() => {
-    const stored = typeof window !== 'undefined' ? (localStorage.getItem('vch-locale') as Locale | null) : null
-    if (stored === 'pt' || stored === 'en' || stored === 'es') setLocaleState(stored)
+    if (typeof window === 'undefined') return
+    const fromUrl = new URLSearchParams(window.location.search).get('lang')
+    if (isLocale(fromUrl)) {
+      setLocaleState(fromUrl)
+      try { localStorage.setItem('vch-locale', fromUrl) } catch {}
+      return
+    }
+    try {
+      const stored = localStorage.getItem('vch-locale')
+      if (isLocale(stored)) setLocaleState(stored)
+    } catch {}
   }, [])
 
   const setLocale = (l: Locale) => {
     setLocaleState(l)
-    if (typeof window !== 'undefined') localStorage.setItem('vch-locale', l)
+    if (typeof window === 'undefined') return
+    try {
+      localStorage.setItem('vch-locale', l)
+      // Reflete o idioma na URL sem recarregar, pra o link ficar compartilhavel.
+      const u = new URL(window.location.href)
+      u.searchParams.set('lang', l)
+      window.history.replaceState({}, '', u)
+    } catch {}
   }
 
   const t = (key: keyof typeof DICT) => DICT[key]?.[locale] ?? DICT[key]?.pt ?? String(key)

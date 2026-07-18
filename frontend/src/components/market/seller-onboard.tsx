@@ -5,6 +5,7 @@ import { Zap, CheckCircle2, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { luzTokenAbi } from '@/contracts/abis/LuzToken'
 import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses'
+import { useI18n } from '@/lib/i18n'
 
 const LUZ_TOKEN_ID = BigInt(1)
 
@@ -14,6 +15,7 @@ const LUZ_TOKEN_ID = BigInt(1)
 export function SellerOnboard() {
   const { address, isConnected } = useAccount()
   const { writeContractAsync } = useWriteContract()
+  const { t, locale } = useI18n()
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
@@ -40,7 +42,7 @@ export function SellerOnboard() {
       })
       await refetch()
     } catch (e) {
-      setErr(e instanceof Error ? e.message.split('\n')[0] : 'Falha na transação')
+      setErr(e instanceof Error ? e.message.split('\n')[0] : t('form.errTx'))
     } finally { setBusy(false) }
   }
 
@@ -56,24 +58,24 @@ export function SellerOnboard() {
           <Zap className="w-4 h-4 text-solar" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-gray-200">Vender energia</h3>
-          <p className="text-xs text-gray-500">Habilite seus LuzTokens para escrow no vault</p>
+          <h3 className="text-sm font-semibold text-gray-200">{t('sell.title')}</h3>
+          <p className="text-xs text-gray-500">{t('sell.subtitle')}</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-400">Seu saldo</span>
-        <span className="font-semibold text-white tabular-nums">{kWh.toLocaleString('pt-BR')} LuzToken (kWh)</span>
+        <span className="text-gray-400">{t('sell.balance')}</span>
+        <span className="font-semibold text-white tabular-nums">{kWh.toLocaleString(locale)} LuzToken (kWh)</span>
       </div>
 
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-400">Vault aprovado</span>
+        <span className="text-gray-400">{t('sell.vaultApproved')}</span>
         {isApproved ? (
           <span className="flex items-center gap-1 text-green-400 text-xs font-medium">
-            <CheckCircle2 className="w-4 h-4" /> Sim
+            <CheckCircle2 className="w-4 h-4" /> {t('sell.yes')}
           </span>
         ) : (
-          <span className="text-xs text-gray-500">Não</span>
+          <span className="text-xs text-gray-500">{t('sell.no')}</span>
         )}
       </div>
 
@@ -88,7 +90,7 @@ export function SellerOnboard() {
           className="w-full py-2.5 rounded-lg text-sm font-medium border border-volt-dark-600 text-gray-400 hover:text-gray-200 disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {busy && <Loader2 className="w-4 h-4 animate-spin" />}
-          Revogar aprovação
+          {t('sell.revoke')}
         </button>
       ) : (
         <button
@@ -97,12 +99,12 @@ export function SellerOnboard() {
           className="w-full py-2.5 rounded-lg text-sm font-bold bg-[#FFB800] text-volt-dark-900 hover:bg-[#E5A600] disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {busy && <Loader2 className="w-4 h-4 animate-spin" />}
-          Habilitar venda (aprovar vault)
+          {t('sell.enable')}
         </button>
       )}
 
       <p className="text-[11px] text-gray-600">
-        Um comprador só consegue travar um trade com você depois desta aprovação.
+        {t('sell.hint')}
       </p>
     </div>
   )
