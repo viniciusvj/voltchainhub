@@ -12,6 +12,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { cn } from '@/lib/utils';
+import { useI18n, type Locale } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -21,6 +22,13 @@ interface DataPoint {
   time: string;
   price: number;
 }
+
+// Rotulos de dia da semana do periodo 7D, por locale (dado de eixo, nao chave de UI).
+const DAY_LABELS: Record<Locale, string[]> = {
+  pt: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  es: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+};
 
 // ── Mock data generators ──────────────────────────────────────────────────────
 
@@ -33,13 +41,6 @@ function generatePoints(count: number, labelFn: (i: number) => string): DataPoin
     return { time: labelFn(i), price: Math.round(price * 10000) / 10000 };
   });
 }
-
-const DATA: Record<Period, DataPoint[]> = {
-  '1H':  generatePoints(13, (i) => `${i * 5}m`),
-  '6H':  generatePoints(13, (i) => `${i * 30}m`),
-  '24H': generatePoints(25, (i) => `${String(i).padStart(2, '0')}h`),
-  '7D':  generatePoints(8,  (i) => ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'][i]),
-};
 
 // ── Custom Tooltip ────────────────────────────────────────────────────────────
 
@@ -58,7 +59,21 @@ function CustomTooltip({ active, payload, label }: any) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function PriceChart() {
+  const { t, locale } = useI18n();
   const [period, setPeriod] = useState<Period>('24H');
+
+  // Gera os precos uma unica vez; so os rotulos do 7D sao reetiquetados por locale.
+  const RAW = useMemo<Record<Period, DataPoint[]>>(() => ({
+    '1H':  generatePoints(13, (i) => `${i * 5}m`),
+    '6H':  generatePoints(13, (i) => `${i * 30}m`),
+    '24H': generatePoints(25, (i) => `${String(i).padStart(2, '0')}h`),
+    '7D':  generatePoints(8,  (i) => DAY_LABELS.pt[i]),
+  }), []);
+
+  const DATA = useMemo<Record<Period, DataPoint[]>>(() => ({
+    ...RAW,
+    '7D': RAW['7D'].map((d, i) => ({ ...d, time: DAY_LABELS[locale][i] })),
+  }), [RAW, locale]);
 
   const data = DATA[period];
 
@@ -83,7 +98,7 @@ export function PriceChart() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
         <div>
-          <h2 className="text-sm font-medium text-gray-400 mb-1">Preço P2P de Energia</h2>
+          <h2 className="text-sm font-medium text-gray-400 mb-1">{t('mk.pc.title')}</h2>
           <div className="flex items-baseline gap-3">
             <span className="text-2xl font-bold font-mono text-white">
               R$ {stats.current.toFixed(4)}
@@ -103,15 +118,15 @@ export function PriceChart() {
         {/* Stats row */}
         <div className="flex gap-5 text-xs">
           <div>
-            <p className="text-gray-500 mb-0.5">Máxima</p>
+            <p className="text-gray-500 mb-0.5">{t('mk.pc.high')}</p>
             <p className="font-mono text-green-400">R$ {stats.high.toFixed(4)}</p>
           </div>
           <div>
-            <p className="text-gray-500 mb-0.5">Mínima</p>
+            <p className="text-gray-500 mb-0.5">{t('mk.pc.low')}</p>
             <p className="font-mono text-red-400">R$ {stats.low.toFixed(4)}</p>
           </div>
           <div>
-            <p className="text-gray-500 mb-0.5">Média</p>
+            <p className="text-gray-500 mb-0.5">{t('mk.pc.avg')}</p>
             <p className="font-mono text-gray-300">R$ {stats.avg.toFixed(4)}</p>
           </div>
         </div>

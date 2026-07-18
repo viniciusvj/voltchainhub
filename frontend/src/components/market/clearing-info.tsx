@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Activity, Users, RotateCcw, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -23,6 +24,7 @@ function formatCountdown(secs: number) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function ClearingInfo() {
+  const { t } = useI18n();
   // Offset into the current 5-min cycle so countdown is always realistic
   const [remaining, setRemaining] = useState<number>(() => {
     const now = Math.floor(Date.now() / 1000);
@@ -114,31 +116,31 @@ export function ClearingInfo() {
               </span>
             </div>
           </div>
-          <p className="text-[11px] text-gray-500">Próximo Clearing</p>
+          <p className="text-[11px] text-gray-500">{t('mk.ci.next')}</p>
         </div>
 
         {/* Stats grid */}
         <div className="flex-1 grid grid-cols-2 gap-3 min-w-0">
           <StatCard
             icon={<Zap className="w-3.5 h-3.5" />}
-            label="Preço Último Clearing"
+            label={t('mk.ci.lastPrice')}
             value={`R$ ${lastClearing.price.toFixed(4)}`}
             mono
           />
           <StatCard
             icon={<Activity className="w-3.5 h-3.5" />}
-            label="Volume Liquidado"
+            label={t('mk.ci.settledVolume')}
             value={`${lastClearing.volume.toFixed(1)} kWh`}
             mono
           />
           <StatCard
             icon={<Users className="w-3.5 h-3.5" />}
-            label="Agentes Ativos"
+            label={t('mk.ci.activeAgents')}
             value={String(lastClearing.agents)}
           />
           <StatCard
             icon={<RotateCcw className="w-3.5 h-3.5" />}
-            label="Ciclo nº"
+            label={t('mk.ci.cycleNo')}
             value={`#${cycleNumber.toLocaleString('pt-BR')}`}
           />
         </div>
@@ -147,8 +149,8 @@ export function ClearingInfo() {
       {/* Progress bar */}
       <div className="mt-4">
         <div className="flex justify-between text-[10px] text-gray-600 mb-1">
-          <span>Ciclo atual</span>
-          <span>{progress.toFixed(0)}% concluído</span>
+          <span>{t('mk.ci.currentCycle')}</span>
+          <span>{progress.toFixed(0)}% {t('mk.ci.done')}</span>
         </div>
         <div className="h-1.5 bg-volt-dark-700 rounded-full overflow-hidden">
           <div

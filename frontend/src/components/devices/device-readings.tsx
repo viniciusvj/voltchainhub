@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { TrendingUp, Activity, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Mock data helpers ─────────────────────────────────────────────────────────
 
@@ -83,6 +84,7 @@ function StatPill({
 // ── DeviceReadings ────────────────────────────────────────────────────────────
 
 export function DeviceReadings({ deviceName = 'Nó Solar Principal' }: { deviceName?: string }) {
+  const { t } = useI18n();
   const data = useMemo(() => generateReadings(4.5, 0.8), []);
 
   const values  = data.map((d) => d.power);
@@ -95,12 +97,12 @@ export function DeviceReadings({ deviceName = 'Nó Solar Principal' }: { deviceN
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-gray-200">Leituras em Tempo Real</h2>
-          <p className="text-xs text-gray-500 mt-0.5">{deviceName} — última hora</p>
+          <h2 className="text-base font-semibold text-gray-200">{t('dv.dr.title')}</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{deviceName} · {t('dv.dr.lastHour')}</p>
         </div>
         <span className="flex items-center gap-1.5 text-xs text-green-400 bg-green-400/10 border border-green-400/20 rounded-full px-2.5 py-1">
           <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          Ao vivo
+          {t('dv.dr.live')}
         </span>
       </div>
 
@@ -143,19 +145,19 @@ export function DeviceReadings({ deviceName = 'Nó Solar Principal' }: { deviceN
       {/* Stats row */}
       <div className="flex flex-col sm:flex-row gap-3">
         <StatPill
-          label="Pico"
+          label={t('dv.dr.peak')}
           value={`${peak} kW`}
           icon={TrendingUp}
           color="text-green-400"
         />
         <StatPill
-          label="Média"
+          label={t('dv.dr.avg')}
           value={`${average} kW`}
           icon={Activity}
           color="text-[#0066FF]"
         />
         <StatPill
-          label="Mínimo"
+          label={t('dv.dr.min')}
           value={`${minimum} kW`}
           icon={TrendingDown}
           color="text-[#FFB800]"

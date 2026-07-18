@@ -15,6 +15,7 @@ import {
   Info,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { useAccount } from 'wagmi';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -33,24 +34,19 @@ interface WizardState {
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const DEADLINE_OPTIONS: { value: DeadlineOption; label: string }[] = [
-  { value: '5min', label: '5 minutos' },
-  { value: '15min', label: '15 minutos' },
-  { value: '30min', label: '30 minutos' },
-  { value: '1h', label: '1 hora' },
-];
+const DEADLINE_OPTIONS = [
+  { value: '5min', labelKey: 'tr.nt.dl5' },
+  { value: '15min', labelKey: 'tr.nt.dl15' },
+  { value: '30min', labelKey: 'tr.nt.dl30' },
+  { value: '1h', labelKey: 'tr.nt.dl1h' },
+] as const;
 
-const SOURCE_OPTIONS: {
-  value: SourcePreference;
-  label: string;
-  icon: React.FC<{ className?: string }>;
-  color: string;
-}[] = [
-  { value: 'solar', label: 'Solar', icon: Zap, color: 'text-[#FFB800]' },
-  { value: 'wind', label: 'Eólico', icon: Wind, color: 'text-cyan-400' },
-  { value: 'battery', label: 'Bateria', icon: Battery, color: 'text-green-400' },
-  { value: 'any', label: 'Qualquer', icon: Globe, color: 'text-gray-400' },
-];
+const SOURCE_OPTIONS = [
+  { value: 'solar', labelKey: 'pf.port.solar', icon: Zap, color: 'text-[#FFB800]' },
+  { value: 'wind', labelKey: 'pf.port.wind', icon: Wind, color: 'text-cyan-400' },
+  { value: 'battery', labelKey: 'pf.port.battery', icon: Battery, color: 'text-green-400' },
+  { value: 'any', labelKey: 'tr.nt.any', icon: Globe, color: 'text-gray-400' },
+] as const;
 
 const INITIAL_STATE: WizardState = {
   type: null,
@@ -60,16 +56,18 @@ const INITIAL_STATE: WizardState = {
   source: 'any',
 };
 
-const FEE_PERCENT = 0.01;
+// Fee display do wizard (mock, so alimenta a previa; nao ha tx on-chain aqui). 0,5% = fee real do protocolo.
+const FEE_PERCENT = 0.005;
 const MATIC_RATE = 0.042; // mock BRL/MATIC rate
 
 // ── Step indicator ────────────────────────────────────────────────────────────
 
 function StepIndicator({ current }: { current: number }) {
+  const { t } = useI18n();
   const steps = [
-    { n: 1, label: 'Tipo' },
-    { n: 2, label: 'Detalhes' },
-    { n: 3, label: 'Confirmar' },
+    { n: 1, label: t('tr.nt.stepType') },
+    { n: 2, label: t('tr.nt.stepDetails') },
+    { n: 3, label: t('tr.nt.stepConfirm') },
   ];
 
   return (
@@ -120,12 +118,13 @@ function StepType({
   onSelect,
 }: {
   selected: TradeType | null;
-  onSelect: (t: TradeType) => void;
+  onSelect: (type: TradeType) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-gray-400 text-center">
-        Selecione a direção da sua trade
+        {t('tr.nt.selectDirection')}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Buy */}
@@ -142,9 +141,9 @@ function StepType({
             <ArrowDownLeft className="w-7 h-7 text-[#FFB800]" />
           </div>
           <div className="text-center">
-            <p className="text-base font-bold text-white">Comprar Energia</p>
+            <p className="text-base font-bold text-white">{t('tr.nt.buyEnergy')}</p>
             <p className="text-xs text-gray-400 mt-1">
-              Adquira energia de produtores da rede P2P
+              {t('tr.nt.buyDesc')}
             </p>
           </div>
           {selected === 'buy' && (
@@ -166,9 +165,9 @@ function StepType({
             <ArrowUpRight className="w-7 h-7 text-[#0066FF]" />
           </div>
           <div className="text-center">
-            <p className="text-base font-bold text-white">Vender Energia</p>
+            <p className="text-base font-bold text-white">{t('tr.nt.sellEnergy')}</p>
             <p className="text-xs text-gray-400 mt-1">
-              Venda seu excedente de energia na rede P2P
+              {t('tr.nt.sellDesc')}
             </p>
           </div>
           {selected === 'sell' && (
@@ -189,13 +188,14 @@ function StepDetails({
   state: WizardState;
   onChange: (patch: Partial<WizardState>) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-5">
       {/* Amount slider */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-gray-300">
-            Quantidade de energia
+            {t('tr.nt.energyAmount')}
           </label>
           <span className="text-sm font-bold text-white">
             {state.amountKwh} kWh
@@ -219,7 +219,7 @@ function StepDetails({
       {/* Price input */}
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-gray-300">
-          Preço por kWh (R$)
+          {t('tr.nt.pricePerKwh')}
         </label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-medium">
@@ -240,16 +240,16 @@ function StepDetails({
       {/* Deadline */}
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-gray-300">
-          Prazo de entrega
+          {t('tr.nt.deliveryDeadline')}
         </label>
         <select
           value={state.deadline}
           onChange={(e) => onChange({ deadline: e.target.value as DeadlineOption })}
           className="w-full px-3 py-2.5 bg-volt-dark-700 border border-volt-dark-600 rounded-lg text-white text-sm focus:outline-none focus:border-[#0066FF] transition-colors cursor-pointer"
         >
-          {DEADLINE_OPTIONS.map(({ value, label }) => (
+          {DEADLINE_OPTIONS.map(({ value, labelKey }) => (
             <option key={value} value={value}>
-              {label}
+              {t(labelKey)}
             </option>
           ))}
         </select>
@@ -258,10 +258,10 @@ function StepDetails({
       {/* Source preference */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-300">
-          Preferência de fonte
+          {t('tr.nt.sourcePref')}
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {SOURCE_OPTIONS.map(({ value, label, icon: Icon, color }) => (
+          {SOURCE_OPTIONS.map(({ value, labelKey, icon: Icon, color }) => (
             <button
               key={value}
               onClick={() => onChange({ source: value })}
@@ -273,7 +273,7 @@ function StepDetails({
               )}
             >
               <Icon className={cn('w-5 h-5', color)} />
-              <span className="text-xs font-medium text-gray-300">{label}</span>
+              <span className="text-xs font-medium text-gray-300">{t(labelKey)}</span>
             </button>
           ))}
         </div>
@@ -293,55 +293,56 @@ function StepConfirm({
   onSubmit: () => void;
   isConnected: boolean;
 }) {
+  const { t } = useI18n();
   const gross = state.amountKwh * state.pricePerKwh;
   const fee = gross * FEE_PERCENT;
   const net = state.type === 'buy' ? gross + fee : gross - fee;
   const maticEquiv = net / (1 / MATIC_RATE);
 
-  const sourceLabel =
-    SOURCE_OPTIONS.find((s) => s.value === state.source)?.label ?? 'Qualquer';
-  const deadlineLabel =
-    DEADLINE_OPTIONS.find((d) => d.value === state.deadline)?.label ?? '';
+  const src = SOURCE_OPTIONS.find((s) => s.value === state.source);
+  const sourceLabel = src ? t(src.labelKey) : t('tr.nt.any');
+  const dl = DEADLINE_OPTIONS.find((d) => d.value === state.deadline);
+  const deadlineLabel = dl ? t(dl.labelKey) : '';
 
   return (
     <div className="flex flex-col gap-5">
       {/* Summary card */}
       <div className="bg-volt-dark-700 border border-volt-dark-600 rounded-xl p-4 flex flex-col gap-3">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-          Resumo da trade
+          {t('tr.nt.tradeSummary')}
         </p>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-          <SummaryRow label="Tipo" value={state.type === 'buy' ? 'Compra' : 'Venda'} />
-          <SummaryRow label="Quantidade" value={`${state.amountKwh} kWh`} />
+          <SummaryRow label={t('tr.nt.stepType')} value={state.type === 'buy' ? t('tr.purchase') : t('tr.sale')} />
+          <SummaryRow label={t('form.amount')} value={`${state.amountKwh} kWh`} />
           <SummaryRow
-            label="Preço/kWh"
+            label={t('tr.nt.pricePerKwhShort')}
             value={`R$ ${state.pricePerKwh.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
           />
-          <SummaryRow label="Prazo" value={deadlineLabel} />
-          <SummaryRow label="Fonte" value={sourceLabel} />
+          <SummaryRow label={t('tr.nt.deadline')} value={deadlineLabel} />
+          <SummaryRow label={t('tr.nt.source')} value={sourceLabel} />
         </div>
       </div>
 
       {/* Fee breakdown */}
       <div className="bg-volt-dark-700 border border-volt-dark-600 rounded-xl p-4 flex flex-col gap-2">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-          Detalhamento de valores
+          {t('tr.nt.valueBreakdown')}
         </p>
         <div className="flex justify-between text-sm text-gray-400">
-          <span>Subtotal</span>
+          <span>{t('form.subtotal')}</span>
           <span className="text-white">
             R$ {gross.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}
           </span>
         </div>
         <div className="flex justify-between text-sm text-gray-400">
-          <span>Taxa da plataforma (1%)</span>
+          <span>{t('tr.nt.platformFee')}</span>
           <span className="text-red-400">
             − R$ {fee.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}
           </span>
         </div>
         <div className="flex justify-between text-sm font-semibold text-white border-t border-volt-dark-600 pt-2 mt-1">
-          <span>{state.type === 'buy' ? 'Total a pagar' : 'Total a receber'}</span>
+          <span>{state.type === 'buy' ? t('tr.nt.totalToPay') : t('tr.nt.totalToReceive')}</span>
           <div className="text-right">
             <p>R$ {net.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}</p>
             <p className="text-xs text-gray-500 font-normal">
@@ -356,8 +357,7 @@ function StepConfirm({
         <div className="flex items-start gap-2 bg-[#FFB800]/10 border border-[#FFB800]/30 rounded-lg p-3">
           <Wallet className="w-4 h-4 text-[#FFB800] mt-0.5 flex-shrink-0" />
           <p className="text-xs text-[#FFB800]">
-            Conecte sua carteira para criar a trade. O contrato de escrow exige
-            uma assinatura de transação na rede Polygon.
+            {t('tr.nt.walletWarn')}
           </p>
         </div>
       )}
@@ -366,8 +366,7 @@ function StepConfirm({
       <div className="flex items-start gap-2 bg-[#0066FF]/10 border border-[#0066FF]/20 rounded-lg p-3">
         <Info className="w-4 h-4 text-[#0066FF] mt-0.5 flex-shrink-0" />
         <p className="text-xs text-gray-400">
-          Os fundos serão bloqueados em escrow no contrato inteligente até a
-          confirmação de entrega ou expiração do prazo.
+          {t('tr.nt.escrowInfo')}
         </p>
       </div>
 
@@ -382,7 +381,7 @@ function StepConfirm({
             : 'bg-volt-dark-600 text-gray-500 cursor-not-allowed'
         )}
       >
-        Criar Trade
+        {t('tr.nt.createTrade')}
       </button>
     </div>
   );
@@ -400,6 +399,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function NewTradeWizard() {
+  const { t } = useI18n();
   const { isConnected } = useAccount();
   const [step, setStep] = useState(1);
   const [state, setState] = useState<WizardState>(INITIAL_STATE);
@@ -434,9 +434,9 @@ export function NewTradeWizard() {
         <div className="w-16 h-16 rounded-full bg-[#0066FF]/10 flex items-center justify-center">
           <CheckCircle2 className="w-8 h-8 text-[#0066FF]" />
         </div>
-        <p className="text-lg font-bold text-white">Trade criada!</p>
+        <p className="text-lg font-bold text-white">{t('tr.nt.tradeCreated')}</p>
         <p className="text-sm text-gray-400 text-center">
-          Seu escrow foi registrado na blockchain. Aguardando contraparte.
+          {t('tr.nt.escrowRegistered')}
         </p>
       </div>
     );
@@ -448,9 +448,9 @@ export function NewTradeWizard() {
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-6 flex flex-col gap-6">
       {/* Header */}
       <div>
-        <h3 className="text-base font-bold text-white">Nova Trade</h3>
+        <h3 className="text-base font-bold text-white">{t('tr.nt.newTrade')}</h3>
         <p className="text-xs text-gray-500 mt-0.5">
-          Configure e publique uma oferta de energia P2P
+          {t('tr.nt.newTradeSub')}
         </p>
       </div>
 
@@ -486,7 +486,7 @@ export function NewTradeWizard() {
               className="flex items-center gap-1.5 px-4 py-2.5 border border-volt-dark-600 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg text-sm font-medium transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
-              Voltar
+              {t('dev.back')}
             </button>
           )}
           <button
@@ -499,7 +499,7 @@ export function NewTradeWizard() {
                 : 'bg-volt-dark-600 text-gray-500 cursor-not-allowed'
             )}
           >
-            Próximo
+            {t('dev.next')}
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -511,7 +511,7 @@ export function NewTradeWizard() {
           className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-volt-dark-600 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg text-sm font-medium transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
-          Voltar
+          {t('dev.back')}
         </button>
       )}
     </div>

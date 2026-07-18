@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -127,29 +128,27 @@ const MOCK_HISTORY: HistoryEntry[] = [
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const STATUS_MAP: Record<
-  TradeStatus,
-  { label: string; classes: string }
-> = {
+const STATUS_MAP = {
   settled: {
-    label: 'Liquidada',
+    labelKey: 'db.tx.settled',
     classes: 'bg-green-500/10 text-green-400 border-green-500/30',
   },
   expired: {
-    label: 'Expirada',
+    labelKey: 'tr.th.expired',
     classes: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
   },
   disputed: {
-    label: 'Disputada',
+    labelKey: 'tr.th.disputed',
     classes: 'bg-red-500/10 text-red-400 border-red-500/30',
   },
-};
+} as const satisfies Record<TradeStatus, { labelKey: string; classes: string }>;
 
 const PAGE_SIZE = 5;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TradeHistory() {
+  const { t } = useI18n();
   const [page, setPage] = useState(1);
   const [sortAsc, setSortAsc] = useState(false);
 
@@ -170,27 +169,27 @@ export function TradeHistory() {
                   onClick={() => setSortAsc((p) => !p)}
                   className="flex items-center gap-1 hover:text-white transition-colors"
                 >
-                  Data
+                  {t('tr.th.date')}
                   <ArrowUpDown className="w-3 h-3" />
                 </button>
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Tipo
+                {t('tr.th.type')}
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Contraparte
+                {t('tr.th.counterparty')}
               </th>
               <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Quantidade
+                {t('form.amount')}
               </th>
               <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Preço
+                {t('form.price')}
               </th>
               <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Total
+                {t('tr.th.total')}
               </th>
               <th className="text-center px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Status
+                {t('tr.th.status')}
               </th>
             </tr>
           </thead>
@@ -198,7 +197,7 @@ export function TradeHistory() {
           {/* Body */}
           <tbody className="divide-y divide-volt-dark-600">
             {paginated.map((entry) => {
-              const { label, classes } = STATUS_MAP[entry.status];
+              const { labelKey, classes } = STATUS_MAP[entry.status];
               return (
                 <tr
                   key={entry.id}
@@ -219,7 +218,7 @@ export function TradeHistory() {
                           : 'bg-[#0066FF]/10 text-[#0066FF]'
                       )}
                     >
-                      {entry.type === 'buy' ? 'Compra' : 'Venda'}
+                      {entry.type === 'buy' ? t('tr.purchase') : t('tr.sale')}
                     </span>
                   </td>
 
@@ -257,7 +256,7 @@ export function TradeHistory() {
                         classes
                       )}
                     >
-                      {label}
+                      {t(labelKey)}
                     </span>
                   </td>
                 </tr>
@@ -270,8 +269,8 @@ export function TradeHistory() {
       {/* Pagination */}
       <div className="flex items-center justify-between px-1">
         <p className="text-xs text-gray-500">
-          Mostrando {(page - 1) * PAGE_SIZE + 1}–
-          {Math.min(page * PAGE_SIZE, sorted.length)} de {sorted.length} trades
+          {t('tr.th.showing')} {(page - 1) * PAGE_SIZE + 1}-
+          {Math.min(page * PAGE_SIZE, sorted.length)} {t('tr.th.of')} {sorted.length} trades
         </p>
 
         <div className="flex items-center gap-1">

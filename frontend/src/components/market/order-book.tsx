@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -95,6 +96,7 @@ function OrderRow({
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function OrderBook() {
+  const { t } = useI18n();
   const sellWithCum = computeCumulative([...SELL_ORDERS].reverse()).reverse();
   const buyWithCum  = computeCumulative(BUY_ORDERS);
 
@@ -111,16 +113,16 @@ export function OrderBook() {
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl flex flex-col overflow-hidden">
       <div className="px-4 py-3 border-b border-volt-dark-600">
-        <h2 className="text-sm font-semibold text-gray-100">Livro de Ordens</h2>
+        <h2 className="text-sm font-semibold text-gray-100">{t('mk.ob.title')}</h2>
       </div>
 
       {/* Column headers */}
       <table className="w-full table-fixed">
         <thead>
           <tr className="border-b border-volt-dark-600/50">
-            <th className={headerCls}>Preço (R$)</th>
-            <th className={headerCls}>Qtd (kWh)</th>
-            <th className={headerCls}>Total (R$)</th>
+            <th className={headerCls}>{t('mk.ob.price')}</th>
+            <th className={headerCls}>{t('mk.ob.qty')}</th>
+            <th className={headerCls}>{t('mk.ob.total')}</th>
           </tr>
         </thead>
       </table>
@@ -138,7 +140,7 @@ export function OrderBook() {
 
       {/* Spread */}
       <div className="flex items-center justify-between px-4 py-2 bg-volt-dark-700/50 border-y border-volt-dark-600">
-        <span className="text-[10px] text-gray-500 uppercase tracking-wider">Spread</span>
+        <span className="text-[10px] text-gray-500 uppercase tracking-wider">{t('mk.ob.spread')}</span>
         <span className="font-mono text-xs text-gray-300">
           R$ {spread}{' '}
           <span className="text-gray-500">({spreadPct}%)</span>

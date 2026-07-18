@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -44,23 +45,24 @@ const HISTORY = buildHistory();
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function MarketHistory() {
+  const { t } = useI18n();
   return (
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl overflow-hidden">
       <div className="px-4 py-3 border-b border-volt-dark-600 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-gray-100">Histórico de Clearings</h2>
-        <span className="text-[11px] text-gray-500">Últimas 10 liquidações</span>
+        <h2 className="text-sm font-semibold text-gray-100">{t('mk.mh.title')}</h2>
+        <span className="text-[11px] text-gray-500">{t('mk.mh.subtitle')}</span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
           <thead>
             <tr className="border-b border-volt-dark-600/60">
-              <Th>Horário</Th>
-              <Th right>Preço Equilíbrio</Th>
-              <Th right>Volume</Th>
-              <Th right>Agentes</Th>
-              <Th right>Ciclo</Th>
-              <Th right>Status</Th>
+              <Th>{t('mk.mh.time')}</Th>
+              <Th right>{t('mk.mh.price')}</Th>
+              <Th right>{t('mk.mh.volume')}</Th>
+              <Th right>{t('mk.mh.agents')}</Th>
+              <Th right>{t('mk.mh.cycle')}</Th>
+              <Th right>{t('mk.mh.status')}</Th>
             </tr>
           </thead>
           <tbody>
@@ -93,7 +95,7 @@ export function MarketHistory() {
                   <td className="px-4 py-2.5 text-right">
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/25 text-green-400 text-[10px] font-semibold uppercase tracking-wide">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-                      Liquidado
+                      {t('mk.mh.settled')}
                     </span>
                   </td>
                 </tr>

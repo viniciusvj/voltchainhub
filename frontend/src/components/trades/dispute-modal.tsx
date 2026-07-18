@@ -9,6 +9,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -26,16 +27,17 @@ interface DisputeModalProps {
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const REASONS: { value: DisputeReason; label: string }[] = [
-  { value: 'not-delivered', label: 'Energia não entregue' },
-  { value: 'wrong-amount', label: 'Quantidade incorreta' },
-  { value: 'reading-quality', label: 'Qualidade da leitura' },
-  { value: 'other', label: 'Outro' },
-];
+const REASONS = [
+  { value: 'not-delivered', labelKey: 'tr.dm.reasonNotDelivered' },
+  { value: 'wrong-amount', labelKey: 'tr.dm.reasonWrongAmount' },
+  { value: 'reading-quality', labelKey: 'tr.dm.reasonReadingQuality' },
+  { value: 'other', labelKey: 'dev.other' },
+] as const;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
+  const { t } = useI18n();
   const [reason, setReason] = useState<DisputeReason>('not-delivered');
   const [description, setDescription] = useState('');
   const [fileAttached, setFileAttached] = useState(false);
@@ -106,13 +108,13 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
               id="dispute-modal-title"
               className="text-base font-bold text-white"
             >
-              Abrir Disputa
+              {t('tr.dm.title')}
             </h2>
           </div>
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-volt-dark-700 transition-colors"
-            aria-label="Fechar modal"
+            aria-label={t('tr.dm.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -126,17 +128,17 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
               <ShieldAlert className="w-7 h-7 text-red-400" />
             </div>
             <p className="text-base font-bold text-white">
-              Disputa enviada!
+              {t('tr.dm.sent')}
             </p>
             <p className="text-sm text-gray-400 text-center">
-              Sua disputa foi registrada. Nossa equipe analisará dentro de 24h.
+              {t('tr.dm.sentDesc')}
             </p>
           </div>
         ) : (
           <div className="flex flex-col gap-5 px-6 py-5 overflow-y-auto max-h-[70vh]">
             {/* Trade ID */}
             <div className="flex items-center gap-2 bg-volt-dark-700 rounded-lg px-3 py-2">
-              <span className="text-xs text-gray-500">Trade ID:</span>
+              <span className="text-xs text-gray-500">{t('tr.dm.tradeId')}</span>
               <span className="text-xs font-mono font-semibold text-white flex-1">
                 {tradeId}
               </span>
@@ -145,10 +147,10 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
             {/* Reason radios */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-300">
-                Motivo da disputa
+                {t('tr.dm.reasonLabel')}
               </label>
               <div className="flex flex-col gap-2">
-                {REASONS.map(({ value, label }) => (
+                {REASONS.map(({ value, labelKey }) => (
                   <label
                     key={value}
                     className={cn(
@@ -166,7 +168,7 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
                       onChange={() => setReason(value)}
                       className="accent-red-500 w-4 h-4 cursor-pointer"
                     />
-                    <span className="text-sm text-gray-300">{label}</span>
+                    <span className="text-sm text-gray-300">{t(labelKey)}</span>
                   </label>
                 ))}
               </div>
@@ -178,7 +180,7 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
                 htmlFor="dispute-description"
                 className="text-sm font-medium text-gray-300"
               >
-                Descrição detalhada{' '}
+                {t('tr.dm.descLabel')}{' '}
                 <span className="text-red-400">*</span>
               </label>
               <textarea
@@ -186,7 +188,7 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Descreva o problema com detalhes suficientes para análise..."
+                placeholder={t('tr.dm.descPh')}
                 className="w-full px-3 py-2.5 bg-volt-dark-700 border border-volt-dark-600 rounded-lg text-white text-sm placeholder-gray-600 resize-none focus:outline-none focus:border-red-500/50 transition-colors"
               />
               <p className="text-xs text-gray-600 text-right">
@@ -197,7 +199,7 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
             {/* Evidence upload placeholder */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-300">
-                Evidências (opcional)
+                {t('tr.dm.evidence')}
               </label>
               <button
                 type="button"
@@ -212,12 +214,12 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
                 <Upload className="w-5 h-5" />
                 <span className="text-xs">
                   {fileAttached
-                    ? 'evidencia_trade.png selecionada'
-                    : 'Clique para anexar arquivo ou captura de tela'}
+                    ? `evidencia_trade.png ${t('tr.dm.selected')}`
+                    : t('tr.dm.attachPrompt')}
                 </span>
                 {!fileAttached && (
                   <span className="text-xs text-gray-600">
-                    PNG, JPG, PDF — máx. 5 MB
+                    {t('tr.dm.fileTypes')}
                   </span>
                 )}
               </button>
@@ -227,9 +229,7 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
             <div className="flex items-start gap-2 bg-[#FFB800]/10 border border-[#FFB800]/30 rounded-lg p-3">
               <AlertTriangle className="w-4 h-4 text-[#FFB800] mt-0.5 flex-shrink-0" />
               <p className="text-xs text-[#FFB800]">
-                Disputas são analisadas por árbitros descentralizados. O
-                processo pode levar até 24 horas. Disputas infundadas podem
-                resultar em penalidades de reputação.
+                {t('tr.dm.warn')}
               </p>
             </div>
           </div>
@@ -242,7 +242,7 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
               onClick={onClose}
               className="flex-1 px-4 py-2.5 border border-volt-dark-600 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg text-sm font-medium transition-colors"
             >
-              Cancelar
+              {t('tr.dm.cancel')}
             </button>
             <button
               onClick={handleSubmit}
@@ -257,12 +257,12 @@ export function DisputeModal({ isOpen, onClose, tradeId }: DisputeModalProps) {
               {submitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Enviando...
+                  {t('tr.dm.submitting')}
                 </>
               ) : (
                 <>
                   <ShieldAlert className="w-4 h-4" />
-                  Enviar Disputa
+                  {t('tr.dm.submit')}
                 </>
               )}
             </button>

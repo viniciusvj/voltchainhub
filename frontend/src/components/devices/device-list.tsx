@@ -12,6 +12,7 @@ import {
   BatteryCharging,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -101,10 +102,11 @@ function SignalBar({ pct }: { pct: number }) {
 }
 
 function PowerBadge({ kw, mode }: { kw: number; mode: PowerMode }) {
+  const { t } = useI18n();
   const configs: Record<PowerMode, { label: string; color: string; Icon: React.ElementType }> = {
-    generating: { label: 'Gerando',   color: 'text-green-400',   Icon: TrendingUp      },
-    consuming:  { label: 'Consumindo', color: 'text-orange-400', Icon: TrendingDown    },
-    charging:   { label: 'Carregando', color: 'text-[#0066FF]', Icon: BatteryCharging },
+    generating: { label: t('dv.dl.generating'), color: 'text-green-400',  Icon: TrendingUp      },
+    consuming:  { label: t('dv.dl.consuming'),  color: 'text-orange-400', Icon: TrendingDown    },
+    charging:   { label: t('dv.dl.charging'),   color: 'text-[#0066FF]',  Icon: BatteryCharging },
   };
   const { label, color, Icon } = configs[mode];
   const display = kw < 0 ? `${Math.abs(kw).toFixed(1)} kW` : `${kw.toFixed(1)} kW`;
@@ -121,6 +123,7 @@ function PowerBadge({ kw, mode }: { kw: number; mode: PowerMode }) {
 // ── DeviceCard ────────────────────────────────────────────────────────────────
 
 function DeviceCard({ device }: { device: MockDevice }) {
+  const { t } = useI18n();
   const [deactivating, setDeactivating] = useState(false);
 
   function handleDeactivate() {
@@ -155,7 +158,7 @@ function DeviceCard({ device }: { device: MockDevice }) {
 
       {/* Model */}
       <div className="text-xs text-gray-500">
-        Inversor: <span className="text-gray-300 font-medium">{device.model}</span>
+        {t('dv.dl.inverter')} <span className="text-gray-300 font-medium">{device.model}</span>
       </div>
 
       {/* Power reading */}
@@ -163,7 +166,7 @@ function DeviceCard({ device }: { device: MockDevice }) {
 
       {/* Energy today */}
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-500">Energia hoje</span>
+        <span className="text-gray-500">{t('dv.dl.energyToday')}</span>
         <span className="text-[#FFB800] font-semibold">
           {device.energyTodayKwh.toFixed(1)} kWh
         </span>
@@ -184,7 +187,7 @@ function DeviceCard({ device }: { device: MockDevice }) {
       {/* Last seen */}
       <div className="flex items-center gap-1.5 text-xs text-gray-600">
         <Clock className="w-3 h-3" />
-        Última leitura: {device.lastSeenLabel}
+        {t('dv.dl.lastReading')} {device.lastSeenLabel}
       </div>
 
       {/* Action buttons */}
@@ -196,7 +199,7 @@ function DeviceCard({ device }: { device: MockDevice }) {
             'hover:bg-[#0066FF]/20 transition-colors'
           )}
         >
-          Detalhes
+          {t('dv.dl.details')}
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
 
@@ -211,7 +214,7 @@ function DeviceCard({ device }: { device: MockDevice }) {
           )}
         >
           <PowerOff className="w-3 h-3" />
-          {deactivating ? 'Aguarde…' : 'Desativar'}
+          {deactivating ? t('dv.dl.wait') : t('dv.dl.deactivate')}
         </button>
       </div>
     </div>
@@ -221,14 +224,15 @@ function DeviceCard({ device }: { device: MockDevice }) {
 // ── DeviceList ────────────────────────────────────────────────────────────────
 
 export function DeviceList() {
+  const { t } = useI18n();
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-semibold text-gray-200">
-          Meus Dispositivos
+          {t('dv.dl.title')}
         </h2>
         <span className="text-xs text-gray-500">
-          {MOCK_DEVICES.length} dispositivo{MOCK_DEVICES.length !== 1 ? 's' : ''}
+          {MOCK_DEVICES.length} {t('dv.dl.devicesWord')}
         </span>
       </div>
 

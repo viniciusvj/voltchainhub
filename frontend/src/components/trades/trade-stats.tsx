@@ -2,11 +2,12 @@
 
 import { Lock, Activity, CheckCircle, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 const STATS = [
   {
-    label: 'Escrows Ativos',
+    labelKey: 'tr.ts.activeEscrows',
     value: '2',
     unit: '',
     icon: Lock,
@@ -15,7 +16,7 @@ const STATS = [
     borderAccent: 'border-[#0066FF]/20',
   },
   {
-    label: 'Volume 24h',
+    labelKey: 'tr.ts.volume24h',
     value: '45,2',
     unit: 'kWh',
     icon: Activity,
@@ -24,7 +25,7 @@ const STATS = [
     borderAccent: 'border-[#FFB800]/20',
   },
   {
-    label: 'Trades Concluídas',
+    labelKey: 'pf.stats.completedTrades',
     value: '127',
     unit: '',
     icon: CheckCircle,
@@ -33,7 +34,7 @@ const STATS = [
     borderAccent: 'border-green-500/20',
   },
   {
-    label: 'Disputas Abertas',
+    labelKey: 'tr.ts.openDisputes',
     value: '0',
     unit: '',
     icon: AlertTriangle,
@@ -41,16 +42,17 @@ const STATS = [
     iconColor: 'text-gray-400',
     borderAccent: 'border-gray-500/20',
   },
-];
+] as const;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TradeStats() {
+  const { t } = useI18n();
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {STATS.map(({ label, value, unit, icon: Icon, iconBg, iconColor, borderAccent }) => (
+      {STATS.map(({ labelKey, value, unit, icon: Icon, iconBg, iconColor, borderAccent }) => (
         <div
-          key={label}
+          key={labelKey}
           className={cn(
             'bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-5 flex flex-col gap-3',
             'hover:border-opacity-80 transition-colors',
@@ -70,7 +72,7 @@ export function TradeStats() {
                 <span className="text-sm font-medium text-gray-400 ml-1">{unit}</span>
               )}
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{t(labelKey)}</p>
           </div>
         </div>
       ))}

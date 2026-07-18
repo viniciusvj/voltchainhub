@@ -6,8 +6,8 @@ import { Loader2, RefreshCw, ExternalLink } from 'lucide-react'
 import { energyVaultAbi } from '@/contracts/abis/EnergyVault'
 import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/lib/i18n'
 
-const STATUS = ['Pendente', 'Travado', 'Entregue', 'Liquidado', 'Expirado', 'Disputado'] as const
 const STATUS_STYLE: Record<number, string> = {
   1: 'bg-electric/10 text-electric',
   2: 'bg-amber-400/10 text-amber-400',
@@ -29,9 +29,20 @@ const TRADE_LOCKED = energyVaultAbi.find(
 ) as never
 
 export function MyTrades() {
+  const { t } = useI18n()
   const { address, isConnected } = useAccount()
   const publicClient = usePublicClient({ chainId: DEFAULT_CHAIN_ID })
   const { writeContractAsync } = useWriteContract()
+
+  // Rotulos de status por indice (ordem = enum on-chain do EnergyVault).
+  const STATUS = [
+    t('db.tx.pending'),
+    t('tr.mt.stLocked'),
+    t('tr.mt.stDelivered'),
+    t('mk.mh.settled'),
+    t('tr.mt.stExpired'),
+    t('tr.mt.stDisputed'),
+  ]
 
   const vault = CONTRACT_ADDRESSES[DEFAULT_CHAIN_ID].energyVault
   const [trades, setTrades] = useState<Trade[]>([])
@@ -73,11 +84,11 @@ export function MyTrades() {
       }
       setTrades(out)
     } catch (err) {
-      setError(err instanceof Error ? err.message.split('\n')[0] : 'Falha ao ler os trades')
+      setError(err instanceof Error ? err.message.split('\n')[0] : t('tr.mt.errRead'))
     } finally {
       setLoading(false)
     }
-  }, [address, publicClient, vault])
+  }, [address, publicClient, vault, t])
 
   useEffect(() => { void load() }, [load])
 
@@ -94,21 +105,21 @@ export function MyTrades() {
       })
       await load()
     } catch (err) {
-      setError(err instanceof Error ? err.message.split('\n')[0] : 'Falha na transação')
+      setError(err instanceof Error ? err.message.split('\n')[0] : t('form.errTx'))
     } finally {
       setBusy(null)
     }
   }
 
   if (!isConnected) {
-    return <p className="text-sm text-gray-400 py-6 text-center">Conecte a carteira para ver seus trades on-chain.</p>
+    return <p className="text-sm text-gray-400 py-6 text-center">{t('tr.mt.connectPrompt')}</p>
   }
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-500">Trades do EnergyVault (últimos ~50k blocos) da sua carteira</span>
-        <button onClick={() => void load()} className="text-gray-400 hover:text-white" aria-label="Recarregar">
+        <span className="text-xs text-gray-500">{t('tr.mt.subtitle')}</span>
+        <button onClick={() => void load()} className="text-gray-400 hover:text-white" aria-label={t('tr.mt.reload')}>
           <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
         </button>
       </div>
@@ -119,49 +130,49 @@ export function MyTrades() {
 
       {loading && trades.length === 0 && (
         <div className="flex items-center gap-2 text-sm text-gray-400 py-4">
-          <Loader2 className="w-4 h-4 animate-spin text-electric" /> Lendo trades on-chain…
+          <Loader2 className="w-4 h-4 animate-spin text-electric" /> {t('tr.mt.reading')}
         </div>
       )}
 
       {!loading && trades.length === 0 && !error && (
-        <p className="text-sm text-gray-500 py-4 text-center">Nenhum trade encontrado para esta carteira.</p>
+        <p className="text-sm text-gray-500 py-4 text-center">{t('tr.mt.empty')}</p>
       )}
 
-      {trades.map((t) => {
-        const isBuyer = t.buyer.toLowerCase() === address?.toLowerCase()
+      {trades.map((trade) => {
+        const isBuyer = trade.buyer.toLowerCase() === address?.toLowerCase()
         return (
-          <div key={t.tradeId} className="border border-volt-dark-600 rounded-lg p-3 flex flex-col gap-2">
+          <div key={trade.tradeId} className="border border-volt-dark-600 rounded-lg p-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <a
                 href={`https://amoy.polygonscan.com/address/${vault}`}
                 target="_blank" rel="noopener noreferrer"
                 className="font-mono text-xs text-gray-400 hover:text-white flex items-center gap-1"
               >
-                {t.tradeId.slice(0, 10)}…{t.tradeId.slice(-6)} <ExternalLink className="w-3 h-3" />
+                {trade.tradeId.slice(0, 10)}…{trade.tradeId.slice(-6)} <ExternalLink className="w-3 h-3" />
               </a>
-              <span className={cn('text-xs font-medium px-2 py-0.5 rounded-full', STATUS_STYLE[t.status] || 'bg-gray-500/10 text-gray-400')}>
-                {STATUS[t.status] ?? '?'}
+              <span className={cn('text-xs font-medium px-2 py-0.5 rounded-full', STATUS_STYLE[trade.status] || 'bg-gray-500/10 text-gray-400')}>
+                {STATUS[trade.status] ?? '?'}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs text-gray-400">
-              <span>{isBuyer ? 'Você compra' : 'Você vende'} · {(Number(t.energyWh) / 1000).toLocaleString('pt-BR')} kWh</span>
+              <span>{isBuyer ? t('tr.mt.youBuy') : t('tr.mt.youSell')} · {(Number(trade.energyWh) / 1000).toLocaleString('pt-BR')} kWh</span>
               <div className="flex gap-2">
-                {isBuyer && t.status === 1 && (
+                {isBuyer && trade.status === 1 && (
                   <button
-                    onClick={() => act('confirmDelivery', t.tradeId)}
-                    disabled={busy === t.tradeId + 'confirmDelivery'}
+                    onClick={() => act('confirmDelivery', trade.tradeId)}
+                    disabled={busy === trade.tradeId + 'confirmDelivery'}
                     className="text-xs font-semibold px-2.5 py-1 rounded bg-electric text-white hover:bg-[#0055DD] disabled:opacity-50"
                   >
-                    {busy === t.tradeId + 'confirmDelivery' ? 'Enviando…' : 'Confirmar entrega'}
+                    {busy === trade.tradeId + 'confirmDelivery' ? t('tr.mt.sending') : t('tr.mt.confirmDelivery')}
                   </button>
                 )}
-                {t.status === 2 && (
+                {trade.status === 2 && (
                   <button
-                    onClick={() => act('settleTrade', t.tradeId)}
-                    disabled={busy === t.tradeId + 'settleTrade'}
+                    onClick={() => act('settleTrade', trade.tradeId)}
+                    disabled={busy === trade.tradeId + 'settleTrade'}
                     className="text-xs font-semibold px-2.5 py-1 rounded bg-green-500 text-volt-dark-900 hover:bg-green-400 disabled:opacity-50"
                   >
-                    {busy === t.tradeId + 'settleTrade' ? 'Enviando…' : 'Liquidar'}
+                    {busy === trade.tradeId + 'settleTrade' ? t('tr.mt.sending') : t('tr.mt.settle')}
                   </button>
                 )}
               </div>
