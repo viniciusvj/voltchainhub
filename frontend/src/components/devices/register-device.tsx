@@ -13,6 +13,7 @@ import {
 import { useAccount, useWriteContract } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { deviceRegistryAbi } from '@/contracts/abis/DeviceRegistry';
 import { CONTRACT_ADDRESSES, DEFAULT_CHAIN_ID } from '@/contracts/addresses';
 
@@ -48,10 +49,10 @@ const INVERTER_MODELS = [
 ];
 
 const STEPS = [
-  { label: 'Informações', short: '1' },
-  { label: 'Attestation',  short: '2' },
-  { label: 'Confirmação', short: '3' },
-];
+  { labelKey: 'dev.step.info', short: '1' },
+  { labelKey: 'dev.step.attestation', short: '2' },
+  { labelKey: 'dev.step.confirm', short: '3' },
+] as const;
 
 const EMPTY_FORM: FormData = {
   name:     '',
@@ -75,6 +76,7 @@ function isBytes32(v: string) {
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function StepIndicator({ current }: { current: number }) {
+  const { t } = useI18n();
   return (
     <div className="flex items-center gap-0 w-full mb-6">
       {STEPS.map((step, idx) => {
@@ -83,7 +85,7 @@ function StepIndicator({ current }: { current: number }) {
         const last   = idx === STEPS.length - 1;
 
         return (
-          <div key={step.label} className="flex items-center flex-1 last:flex-none">
+          <div key={step.labelKey} className="flex items-center flex-1 last:flex-none">
             {/* Circle */}
             <div className="flex flex-col items-center">
               <div
@@ -102,7 +104,7 @@ function StepIndicator({ current }: { current: number }) {
                   active ? 'text-[#0066FF] font-medium' : done ? 'text-gray-400' : 'text-gray-600'
                 )}
               >
-                {step.label}
+                {t(step.labelKey)}
               </span>
             </div>
 
@@ -227,22 +229,25 @@ function Step1({
   errors: FieldError;
   onChange: (field: keyof FormData, value: string) => void;
 }) {
+  const { t } = useI18n();
+  // 'Outro' e o unico rotulo traduzivel; os demais modelos sao nomes proprios.
+  const models = INVERTER_MODELS.map((m) => (m === 'Outro' ? t('dev.other') : m));
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Nome */}
       <div className="sm:col-span-2">
-        <Label required>Nome do dispositivo</Label>
+        <Label required>{t('dev.name')}</Label>
         <Input
           value={data.name}
           onChange={(v) => onChange('name', v)}
-          placeholder="ex: Nó Solar Garagem"
+          placeholder={t('dev.namePh')}
           error={errors.name}
         />
       </div>
 
       {/* Device ID */}
       <div className="sm:col-span-2">
-        <Label required>ID do Dispositivo (bytes32)</Label>
+        <Label required>{t('dev.deviceId')}</Label>
         <Input
           value={data.deviceId}
           onChange={(v) => onChange('deviceId', v)}
@@ -250,12 +255,12 @@ function Step1({
           error={errors.deviceId}
           monospace
         />
-        <p className="text-xs text-gray-600 mt-1">Formato: 0x seguido de 64 hex chars</p>
+        <p className="text-xs text-gray-600 mt-1">{t('dev.hexHint')}</p>
       </div>
 
       {/* Pub Key X */}
       <div>
-        <Label required>Chave Pública X (bytes32)</Label>
+        <Label required>{t('dev.pubX')}</Label>
         <Input
           value={data.pubKeyX}
           onChange={(v) => onChange('pubKeyX', v)}
@@ -267,7 +272,7 @@ function Step1({
 
       {/* Pub Key Y */}
       <div>
-        <Label required>Chave Pública Y (bytes32)</Label>
+        <Label required>{t('dev.pubY')}</Label>
         <Input
           value={data.pubKeyY}
           onChange={(v) => onChange('pubKeyY', v)}
@@ -279,19 +284,19 @@ function Step1({
 
       {/* Modelo inversor */}
       <div>
-        <Label required>Modelo do inversor</Label>
+        <Label required>{t('dev.model')}</Label>
         <Select
           value={data.model}
           onChange={(v) => onChange('model', v)}
-          options={INVERTER_MODELS}
-          placeholder="Selecione o modelo"
+          options={models}
+          placeholder={t('dev.modelPh')}
           error={errors.model}
         />
       </div>
 
       {/* Capacidade */}
       <div>
-        <Label required>Capacidade instalada (kW)</Label>
+        <Label required>{t('dev.capacity')}</Label>
         <Input
           value={data.capacity}
           onChange={(v) => onChange('capacity', v)}
@@ -303,18 +308,18 @@ function Step1({
 
       {/* Localização */}
       <div className="sm:col-span-2">
-        <Label required>Localização</Label>
+        <Label required>{t('dev.location')}</Label>
         <Input
           value={data.location}
           onChange={(v) => onChange('location', v)}
-          placeholder="ex: Belo Horizonte, MG"
+          placeholder={t('dev.locationPh')}
           error={errors.location}
         />
       </div>
 
       {/* IPFS CID */}
       <div className="sm:col-span-2">
-        <Label>Metadata IPFS CID <span className="text-gray-600 font-normal">(opcional)</span></Label>
+        <Label>{t('dev.ipfs')} <span className="text-gray-600 font-normal">{t('dev.optional')}</span></Label>
         <Input
           value={data.ipfsCid}
           onChange={(v) => onChange('ipfsCid', v)}
@@ -326,20 +331,19 @@ function Step1({
 }
 
 function Step2({ data }: { data: FormData }) {
+  const { t } = useI18n();
   const fields: { label: string; value: string; mono?: boolean }[] = [
-    { label: 'ID do Dispositivo', value: data.deviceId || '—', mono: true },
-    { label: 'Chave Pública X',   value: data.pubKeyX  || '—', mono: true },
-    { label: 'Chave Pública Y',   value: data.pubKeyY  || '—', mono: true },
+    { label: t('dev.deviceIdShort'), value: data.deviceId || '-', mono: true },
+    { label: t('dev.pubXShort'),     value: data.pubKeyX  || '-', mono: true },
+    { label: t('dev.pubYShort'),     value: data.pubKeyY  || '-', mono: true },
   ];
 
   return (
     <div className="flex flex-col gap-4">
       <div className="bg-volt-dark-700 border border-volt-dark-600 rounded-lg p-4 text-sm text-gray-400">
-        <p className="font-medium text-gray-200 mb-2">Attestation on-chain</p>
+        <p className="font-medium text-gray-200 mb-2">{t('dev.attestTitle')}</p>
         <p className="text-xs leading-relaxed">
-          O contrato <span className="text-[#0066FF] font-mono">DeviceRegistry</span> irá verificar
-          o par de chaves públicas (X, Y) e vincular o ID do dispositivo ao seu endereço de carteira.
-          Esta etapa não envolve ativos — apenas a identidade criptográfica do ESP32-S3.
+          {t('dev.attestPre')}<span className="text-[#0066FF] font-mono">DeviceRegistry</span>{t('dev.attestPost')}
         </p>
       </div>
 
@@ -362,8 +366,7 @@ function Step2({ data }: { data: FormData }) {
       <div className="flex items-start gap-2 text-xs text-[#FFB800] bg-[#FFB800]/5 border border-[#FFB800]/20 rounded-lg p-3">
         <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
         <p>
-          Certifique-se de que o firmware do ESP32-S3 está configurado com as mesmas chaves antes
-          de confirmar. Chaves incorretas exigirão um novo registro.
+          {t('dev.attestWarn')}
         </p>
       </div>
     </div>
@@ -371,12 +374,13 @@ function Step2({ data }: { data: FormData }) {
 }
 
 function Step3({ data, submitting }: { data: FormData; submitting: boolean }) {
+  const { t } = useI18n();
   const summary = [
-    { label: 'Nome',       value: data.name },
-    { label: 'Modelo',     value: data.model },
-    { label: 'Capacidade', value: `${data.capacity} kW` },
-    { label: 'Localização', value: data.location },
-    { label: 'IPFS CID',   value: data.ipfsCid || 'Não informado' },
+    { label: t('dev.sumName'),     value: data.name },
+    { label: t('dev.sumModel'),    value: data.model },
+    { label: t('dev.sumCapacity'), value: `${data.capacity} kW` },
+    { label: t('dev.sumLocation'), value: data.location },
+    { label: t('dev.sumIpfs'),     value: data.ipfsCid || t('dev.notProvided') },
   ];
 
   return (
@@ -393,15 +397,14 @@ function Step3({ data, submitting }: { data: FormData; submitting: boolean }) {
       <div className="flex items-start gap-2 text-xs text-[#0066FF] bg-[#0066FF]/5 border border-[#0066FF]/20 rounded-lg p-3">
         <LinkIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
         <p>
-          A transação será enviada para a Polygon Amoy Testnet. Custo estimado: &lt; 0,01 MATIC.
-          Aguarde a confirmação do bloco antes de fechar esta janela.
+          {t('dev.txInfo')}
         </p>
       </div>
 
       {submitting && (
         <div className="flex items-center gap-3 text-sm text-gray-400 bg-volt-dark-700 border border-volt-dark-600 rounded-lg px-4 py-3">
           <Loader2 className="w-4 h-4 animate-spin text-[#0066FF]" />
-          Enviando transação…
+          {t('dev.sending')}
         </div>
       )}
     </div>
@@ -412,6 +415,7 @@ function Step3({ data, submitting }: { data: FormData; submitting: boolean }) {
 
 export function RegisterDevice() {
   const { isConnected } = useAccount();
+  const { t } = useI18n();
 
   const [step,       setStep]       = useState(0);
   const [form,       setForm]       = useState<FormData>(EMPTY_FORM);
@@ -431,22 +435,22 @@ export function RegisterDevice() {
   function validateStep1(): boolean {
     const newErrors: FieldError = {};
 
-    if (!form.name.trim())          newErrors.name     = 'Nome é obrigatório';
-    if (!form.deviceId.trim())      newErrors.deviceId = 'ID do dispositivo é obrigatório';
-    else if (!isBytes32(form.deviceId)) newErrors.deviceId = 'Deve ser 0x seguido de 64 hex chars';
+    if (!form.name.trim())          newErrors.name     = t('dev.errName');
+    if (!form.deviceId.trim())      newErrors.deviceId = t('dev.errDeviceId');
+    else if (!isBytes32(form.deviceId)) newErrors.deviceId = t('dev.errBytes32');
 
-    if (!form.pubKeyX.trim())       newErrors.pubKeyX  = 'Chave X é obrigatória';
-    else if (!isBytes32(form.pubKeyX))  newErrors.pubKeyX  = 'Formato bytes32 inválido';
+    if (!form.pubKeyX.trim())       newErrors.pubKeyX  = t('dev.errPubX');
+    else if (!isBytes32(form.pubKeyX))  newErrors.pubKeyX  = t('dev.errBytes32fmt');
 
-    if (!form.pubKeyY.trim())       newErrors.pubKeyY  = 'Chave Y é obrigatória';
-    else if (!isBytes32(form.pubKeyY))  newErrors.pubKeyY  = 'Formato bytes32 inválido';
+    if (!form.pubKeyY.trim())       newErrors.pubKeyY  = t('dev.errPubY');
+    else if (!isBytes32(form.pubKeyY))  newErrors.pubKeyY  = t('dev.errBytes32fmt');
 
-    if (!form.model)                newErrors.model    = 'Selecione um modelo';
-    if (!form.capacity.trim())      newErrors.capacity = 'Capacidade é obrigatória';
+    if (!form.model)                newErrors.model    = t('dev.errModel');
+    if (!form.capacity.trim())      newErrors.capacity = t('dev.errCapacity');
     else if (isNaN(Number(form.capacity)) || Number(form.capacity) <= 0)
-      newErrors.capacity = 'Informe um valor numérico positivo';
+      newErrors.capacity = t('dev.errCapacityNum');
 
-    if (!form.location.trim())      newErrors.location = 'Localização é obrigatória';
+    if (!form.location.trim())      newErrors.location = t('dev.errLocation');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -489,7 +493,7 @@ export function RegisterDevice() {
       setTxHash(hash);
       setDone(true);
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Falha ao enviar a transação');
+      setSubmitError(err instanceof Error ? err.message : t('dev.errSubmit'));
     } finally {
       setSubmitting(false);
     }
@@ -508,9 +512,9 @@ export function RegisterDevice() {
     <div className="bg-volt-dark-800 border border-volt-dark-600 rounded-xl p-6">
       {/* Title */}
       <div className="mb-6">
-        <h2 className="text-base font-semibold text-gray-200">Registrar Novo Dispositivo</h2>
+        <h2 className="text-base font-semibold text-gray-200">{t('dev.title')}</h2>
         <p className="text-xs text-gray-500 mt-0.5">
-          Conecte um ESP32-S3 à rede VoltchainHub via contrato DeviceRegistry
+          {t('dev.subtitle')}
         </p>
       </div>
 
@@ -521,12 +525,12 @@ export function RegisterDevice() {
             <Wallet className="w-6 h-6 text-gray-500" />
           </div>
           <div className="text-center">
-            <p className="text-sm font-medium text-gray-300">Carteira não conectada</p>
+            <p className="text-sm font-medium text-gray-300">{t('dev.walletNotConnected')}</p>
             <p className="text-xs text-gray-500 mt-1">
-              Conecte sua carteira para registrar dispositivos
+              {t('dev.connectPrompt')}
             </p>
           </div>
-          <ConnectButton label="Conectar Carteira" />
+          <ConnectButton label={t('connect')} />
         </div>
       ) : done ? (
         /* Success state */
@@ -535,10 +539,9 @@ export function RegisterDevice() {
             <Check className="w-7 h-7 text-green-400" />
           </div>
           <div className="text-center">
-            <p className="text-sm font-medium text-gray-200">Dispositivo registrado!</p>
+            <p className="text-sm font-medium text-gray-200">{t('dev.registered')}</p>
             <p className="text-xs text-gray-500 mt-1">
-              <span className="font-medium text-gray-300">{form.name}</span> foi adicionado
-              à rede com sucesso.
+              <span className="font-medium text-gray-300">{form.name}</span>{t('dev.addedSuffix')}
             </p>
             {txHash && (
               <a
@@ -547,7 +550,7 @@ export function RegisterDevice() {
                 rel="noopener noreferrer"
                 className="text-xs text-[#0066FF] hover:underline mt-2 inline-block break-all"
               >
-                Ver transação no PolygonScan
+                {t('dev.viewTx')}
               </a>
             )}
           </div>
@@ -555,7 +558,7 @@ export function RegisterDevice() {
             onClick={handleReset}
             className="text-sm text-[#0066FF] hover:underline"
           >
-            Registrar outro dispositivo
+            {t('dev.registerAnother')}
           </button>
         </div>
       ) : (
@@ -588,7 +591,7 @@ export function RegisterDevice() {
               )}
             >
               <ChevronLeft className="w-4 h-4" />
-              Voltar
+              {t('dev.back')}
             </button>
 
             {step < STEPS.length - 1 ? (
@@ -599,7 +602,7 @@ export function RegisterDevice() {
                   'bg-[#0066FF] text-white hover:bg-[#0055DD] transition-colors'
                 )}
               >
-                Próximo
+                {t('dev.next')}
                 <ChevronRight className="w-4 h-4" />
               </button>
             ) : (
@@ -615,12 +618,12 @@ export function RegisterDevice() {
                 {submitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Registrando…
+                    {t('dev.registering')}
                   </>
                 ) : (
                   <>
                     <LinkIcon className="w-4 h-4" />
-                    Registrar on-chain
+                    {t('dev.registerOnchain')}
                   </>
                 )}
               </button>
